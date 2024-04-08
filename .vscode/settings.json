@@ -1,0 +1,8 @@
+{
+    "zipViewer.textFileAssociations": [
+        {
+            "zipPath": "/bundle/ingestion_program.zip",
+            "subfilePath": "ingestion.R"
+        }
+    ]
+}

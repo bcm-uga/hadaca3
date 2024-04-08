@@ -1,0 +1,1 @@
+The starting kit can be downloaded from the Files sections. 
