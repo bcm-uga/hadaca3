@@ -8,30 +8,44 @@ The HADACA 3 challenge begins with a bulk dataset in the form of a matrix, conta
 
 Participants will submit their method in the form of an R program, which will then be ingested and scored using a ground truth matrix. In the final phase of this challenge, the best method submitted by each participant will be evaluated on a different dataset. The aim of this final phase is to ensure the method is not overfitted.
 
-## Docker image
+## Download git 
 
 ```
-cd ~/projets
-git clone .../hadacah3.git
+cd ~ && mkdir projects
+cd ~/projects
+git clone .../hadaca3.git
 cd hadaca3
 ```
 
 ## Build bundle and deploy on codabench
 
 ```
-cd bunlde/
-zip ../bundle.zip *
-cd ..
+#cd bunlde/
+#zip ../bundle.zip * 
+#cd ..
+
+zip -FS -r -j bundle.zip bundle/*
 
 ```
+
+Log in codabench website, then from the benchmark dropdown menu select Management. 
+Select upload and select the bundle.zip created earlier. 
+
 
 
 ## Docker image 
 
 ```
 cd docker/codabench_legacy
-sudo docker build -t codabench_legacy . 
+
+sudo docker build -t light_hadaca .
+
 sudo docker images
+
+
 # upload on docker hub
-#
+sudo docker login -u  ombresocial
+sudo docker tag light_hadaca ombresocial/hadaca3_ligth
+udo docker push ombresocial/hadaca3_ligth:latest
+
 ```
