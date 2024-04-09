@@ -38,14 +38,21 @@ Select upload and select the bundle.zip created earlier.
 ```
 cd docker/codabench_legacy
 
-sudo docker build -t light_hadaca .
+sudo docker build -t ombresocial/hadaca3_ligth .
 
-sudo docker images
+sudo docker images #see existing images 
 
 
 # upload on docker hub
 sudo docker login -u  ombresocial
-sudo docker tag light_hadaca ombresocial/hadaca3_ligth
-udo docker push ombresocial/hadaca3_ligth:latest
+
+#sudo docker tag light_hadaca ombresocial/hadaca3_ligth # rename image if necessary  
+sudo docker push ombresocial/hadaca3_ligth:latest
+
+#Single command 
+sudo docker build -t ombresocial/hadaca3_ligth . sudo docker push ombresocial/hadaca3_ligth:latest
+
 
 ```
+
+

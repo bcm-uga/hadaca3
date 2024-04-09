@@ -1,7 +1,9 @@
 # Python requirements
 FROM debian:11.0
 
-# Install anaconda
+RUN apt update --fix-missing
+
+# # Install anaconda
 # RUN apt-get update --fix-missing && apt-get install -y wget bzip2 ca-certificates \
 #     libglib2.0-0 libxext6 libsm6 libxrender1 \
 #     git mercurial subversion
@@ -17,16 +19,18 @@ ENV PATH /opt/conda/bin:$PATH
 ENV R_LIBS=/usr/local/lib/R/site-library
 
 # C#, R, etc. requirements
-RUN apt-get update && apt-get install -y --fix-missing r-base mono-runtime 
-#libgomp1 libc6
+RUN apt-get update && apt-get install -y --fix-missing r-base 
+#mono-runtime libgomp1 libc6
 
 # Fix for 'xgboost' missing
 # RUN conda install libgcc
 #RUN conda install -c conda-forge tensorflow
 
 # RUN echo "deb http://http.us.debian.org/debian/ testing non-free contrib main" > /etc/apt/sources.list && \
-#     apt-get update && \
-#     apt-get -y -t testing install python3.9 python3-pip
+#     apt-get update 
+    # apt-get -y -t testing install python3.9 python3-pip
+
+RUN apt-get install gzip
 
 # RUN pip3 install \
 #         theano==1.0.5 \
@@ -41,12 +45,17 @@ RUN apt-get update && apt-get install -y --fix-missing r-base mono-runtime
 #         tensorflow==2.9.1
 
 
-# RUN  Rscript -e 'install.packages(pkgs = c("devtools", "remotes", "BiocManager"), repos = "https://cloud.r-project.org"); update.packages(ask = FALSE); BiocManager::install(ask = FALSE); remotes::update_packages(upgrade = "always")'
-
 RUN  Rscript -e 'install.packages(pkgs = "BiocManager")'
 
 RUN  Rscript -e 'BiocManager::install(pkgs = "Biobase")'
 RUN  Rscript -e 'install.packages(pkgs = "zip")'
-# RUN  Rscript -e 'install.packages(pkgs = "NMF", repos = "https://cloud.r-project.org")'
+RUN Rscript -e 'install.packages(pkgs=c("utf8", "farver", "labeling", "munsell", "R6", "viridisLite", "fansi", "pillar", "pkgconfig", "cli", "glue", "lifecycle", "magrittr", "rlang", "stringi", "vctrs", "iterators", "gtable", "isoband", "scales", "tibble", "withr", "plyr", "Rcpp", "registry", "rngtools", "stringr", "digest", "gridBase", "colorspace", "RColorBrewer", "foreach", "doParallel", "ggplot2", "reshape2"))'
+RUN Rscript -e 'install.packages(pkgs=c("fs", "rappdirs", "base64enc", "cachem", "fastmap", "memoise", "mime", "sass", "highr", "bslib", "evaluate", "fontawesome", "htmltools", "jquerylib", "jsonlite", "knitr", "tinytex", "xfun", "yaml"))'
+RUN Rscript -e 'install.packages(pkgs=c( "combinat",  "rmarkdown", "clue","infotheo"))'
+
+
+
+RUN  Rscript -e 'install.packages(pkgs = "NMF", repos = "https://cloud.r-project.org")'
+
 
 # RUN  Rscript -e 'install.packages(pkgs = "NMF"), repos = "https://cloud.r-project.org"); update.packages(ask = FALSE);
