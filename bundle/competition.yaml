@@ -1,6 +1,6 @@
 version: '2'
 title: LIGHT COMETH deconvolution data challenge
-docker_image: a2alexis/codalab2019
+docker_image: ombresocial/hadaca3_ligth
 queue: null
 description: Test
 registration_auto_approve: true

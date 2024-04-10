@@ -31,6 +31,7 @@ RUN apt-get update && apt-get install -y --fix-missing r-base
     # apt-get -y -t testing install python3.9 python3-pip
 
 RUN apt-get install gzip
+RUN  apt-get -y install pandoc && apt-get clean && apt-get auto-clean && apt-get -y auto-remove
 
 # RUN pip3 install \
 #         theano==1.0.5 \
@@ -53,9 +54,7 @@ RUN Rscript -e 'install.packages(pkgs=c("utf8", "farver", "labeling", "munsell",
 RUN Rscript -e 'install.packages(pkgs=c("fs", "rappdirs", "base64enc", "cachem", "fastmap", "memoise", "mime", "sass", "highr", "bslib", "evaluate", "fontawesome", "htmltools", "jquerylib", "jsonlite", "knitr", "tinytex", "xfun", "yaml"))'
 RUN Rscript -e 'install.packages(pkgs=c( "combinat",  "rmarkdown", "clue","infotheo"))'
 
-
-
 RUN  Rscript -e 'install.packages(pkgs = "NMF", repos = "https://cloud.r-project.org")'
 
+RUN Rscript -e 'install.packages(pkgs=c( "bitops",  "caTools", "gplots","viridis"))'
 
-# RUN  Rscript -e 'install.packages(pkgs = "NMF"), repos = "https://cloud.r-project.org"); update.packages(ask = FALSE);

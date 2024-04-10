@@ -13,7 +13,7 @@ Participants will submit their method in the form of an R program, which will th
 ```
 cd ~ && mkdir projects
 cd ~/projects
-git clone .../hadaca3.git
+git clone git@github.com:bcm-uga/hadaca3.git
 cd hadaca3
 ```
 
@@ -40,17 +40,21 @@ cd docker/codabench_legacy
 
 sudo docker build -t ombresocial/hadaca3_ligth .
 
-sudo docker images #see existing images 
+#see existing images 
+sudo docker images 
 
 
-# upload on docker hub
+# log in on docker hub (the username here is ombresocial)
 sudo docker login -u  ombresocial
 
-#sudo docker tag light_hadaca ombresocial/hadaca3_ligth # rename image if necessary  
+# rename image if necessary  
+#sudo docker tag light_hadaca ombresocial/hadaca3_ligth 
+
+#upload on dockerhub
 sudo docker push ombresocial/hadaca3_ligth:latest
 
-#Single command 
-sudo docker build -t ombresocial/hadaca3_ligth . sudo docker push ombresocial/hadaca3_ligth:latest
+#Single command to build and push. 
+sudo docker build -t ombresocial/hadaca3_ligth .  && sudo docker push ombresocial/hadaca3_ligth:latest
 
 
 ```
