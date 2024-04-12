@@ -26,6 +26,8 @@ cd hadaca3
 
 zip -FS -r -j bundle.zip bundle/*
 
+# zip folder 
+zip -FS -j -r  bundle/scoring_program.zip scoring_program.zip_unzipped/
 ```
 
 Log in codabench website, then from the benchmark dropdown menu select Management. 
@@ -38,24 +40,23 @@ Select upload and select the bundle.zip created earlier.
 ```
 cd docker/codabench_legacy
 
-sudo docker build -t ombresocial/hadaca3_ligth .
+sudo docker build -t hombergn/hadaca3_light .
 
 #see existing images 
 sudo docker images 
 
 
-# log in on docker hub (the username here is ombresocial)
-sudo docker login -u  ombresocial
+# log in on docker hub (the username here is hombergn)
+sudo docker login -u  hombergn
 
 # rename image if necessary  
-#sudo docker tag light_hadaca ombresocial/hadaca3_ligth 
+#sudo docker tag light_hadaca hombergn/hadaca3_light 
 
 #upload on dockerhub
-sudo docker push ombresocial/hadaca3_ligth:latest
+sudo docker push hombergn/hadaca3_light:latest
 
 #Single command to build and push. 
-sudo docker build -t ombresocial/hadaca3_ligth .  && sudo docker push ombresocial/hadaca3_ligth:latest
-
+sudo docker build -t hombergn/hadaca3_light .  && sudo docker push hombergn/hadaca3_light:latest
 
 ```
 

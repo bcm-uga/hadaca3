@@ -1,0 +1,73 @@
+---
+title: "Detailed results"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    fig_caption: yes
+    toc: yes
+    toc_depth: 5
+---
+
+```{r label = "header", echo = FALSE, eval = TRUE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "", echo = FALSE)
+ if ( !{ "gplots" %in% installed.packages( ) } ) {
+      install.packages(pkgs = "gplots")
+    }
+```
+
+## Summary of the submission with scores
+
+- estimated **A** :
+```{r A_est}
+for (A in Aest) {
+    str(object = A)
+}
+remove(list = "A")
+```
+
+- scores      :
+```{r }
+print(x = scores)
+
+print(x = "Summary :")
+print(x = summary(object = scores) )
+
+print(x = "Standard deviation :")
+print(x = sd(x = scores) )
+
+scores_full 
+```
+
+## Scoring steps
+
+
+```{r }
+#for (i in seq_len(length.out = length(x = Aest) )) {
+#A_est = Aest[[i]]
+#if ( nrow(x = A_est) < nrow(x = Aref[[i]]) ) {  print("Add rows of 0 to match the exact number of K")}
+#if ( nrow(x = A_est) > nrow(x = Aref[[i]]) ) { print("Number of cell type exceded K, only the K most contributing cell types were kept for scoring.")}
+
+#filteredout=rowMeans(A_est)>3e-2
+#print("those components are not kept for analysis :", which(!filteredout))
+#}
+```
+
+
+
+
+## Heatmap of the estimated **A** matrices REF, EST, and EST after filtration
+```{r }
+
+colors=viridis::viridis(5)
+cols = colorRampPalette(colors)(50)
+
+
+for (i in seq_len(length.out = length(x = Aest) ) ) {
+layout(matrix(c(1,2,3),1,3, byrow=T), respect=T)
+image(as.matrix(Aref[[i]]), axes=FALSE, col = cols , ylab = colnames(Aref[[i]]), xlab = rownames(Aref[[i]]))
+image(as.matrix(Aest[[i]]), axes=FALSE, col = cols , ylab = colnames(Aest[[i]]), xlab = rownames(Aest[[i]]))
+image(as.matrix(estimates[[i]]), axes=FALSE, col = cols , ylab = colnames(estimates[[i]]), xlab = rownames(estimates[[i]]))
+}
+
+ 
+```

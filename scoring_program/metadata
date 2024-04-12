@@ -1,0 +1,1 @@
+command: Rscript $program/scoring.R $input $output $program

@@ -1,14 +1,21 @@
-ingestion_program.zip_unzipped/
-ingestion_program.zip_unzipped/*
+# ingestion_program.zip_unzipped/
+# ingestion_program.zip_unzipped/*
 
-scoring_program.zip_unzipped/
-scoring_program.zip_unzipped/*
+# scoring_program.zip_unzipped/
+# scoring_program.zip_unzipped/*
 
-starting_kit/
-starting_kit/*
+starting_kit/submissions/
+starting_kit/submissions/*
+
+# starting_kit/*
 
 docker/codabench_legacy/
 docker/codabench_legacy/*
 
 bundle.zip
 logs_light_doc_V1
+
+
+scoring_program.zip
+ingestion_program.zip
+starting_kit.zip
