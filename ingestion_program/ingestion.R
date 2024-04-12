@@ -64,7 +64,6 @@ if (file.exists(file)) {
   print("execution of the program") 
   
   #Define the number of dataset
-  # test_data <- readRDS(file = paste0(input, .Platform$file.sep, "test_data.rds") )
   test_data <- readRDS(file = paste0(input, .Platform$file.sep, "public_data_rna.rds") )
   test_data = list(test_data) #remove this if your input data is already a list!
   nb_dataset = length(test_data)

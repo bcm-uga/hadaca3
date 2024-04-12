@@ -31,7 +31,8 @@ source(
 
 
 ## read input data :
-test_data <- readRDS(file = paste0(input, .Platform$file.sep, "test_data.rds") )
+test_data <- readRDS(file = paste0(input, .Platform$file.sep, "public_data_rna.rds") )
+
 test_data = list(test_data) #remove this if your input data is already a list!
 print(paste0("length of test_data : ", length(test_data)))
 print(paste0("type of test data : ", typeof(test_data)))
