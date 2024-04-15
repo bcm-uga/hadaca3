@@ -7,6 +7,9 @@
 starting_kit/submissions/
 starting_kit/submissions/*
 
+test_output/
+test_output/*
+
 # starting_kit/*
 
 docker/codabench_legacy/

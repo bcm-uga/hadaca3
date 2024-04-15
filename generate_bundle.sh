@@ -9,3 +9,6 @@ zip -FS -j -r  bundle/input_data.zip input_data/
 
 
 zip -FS -r -j bundle.zip bundle/
+
+
+echo "READY to upload bundle.zip on codabench ! "

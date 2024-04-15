@@ -17,21 +17,49 @@ git clone git@github.com:bcm-uga/hadaca3.git
 cd hadaca3
 ```
 
+
+## Generate a submission 
+
+```
+cd starting_kit
+Rscript submission_script.R
+
+```
+
+
+## Run Script locally 
+
+Once "submissions" folder created by the submission script inside starting kit, you can test locally the ingestion and scoring program. 
+
+```
+cd ~/projects/hadaca3
+cd ~/projects/hadaca3
+sh prepare2score_locally.sh
+
+Rscript ingestion_program/ingestion.R \
+    ingestion_program \
+    input_data \
+    test_output/res \
+    starting_kit/submissions
+
+Rscript scoring_program/scoring.R  \
+    test_output \
+    test_output \
+    scoring_program
+
+```
+
 ## Build bundle and deploy on codabench
 
 ```
-#cd bunlde/
-#zip ../bundle.zip * 
-#cd ..
+cd ~/projects/hadaca3
 
-zip -FS -r -j bundle.zip bundle/*
-
-# zip folder 
-zip -FS -j -r  bundle/scoring_program.zip scoring_program.zip_unzipped/
+sh generate_bundle.sh
 ```
 
 Log in codabench website, then from the benchmark dropdown menu select Management. 
 Select upload and select the bundle.zip created earlier. 
+
 
 
 
@@ -62,11 +90,42 @@ sudo docker build -t hombergn/hadaca3_light .  && sudo docker push hombergn/hada
 ```
 
 
+
 ### Run docker image locally
 
+First prepare the submission by creating 
 
 ```
-sudo docker run  hombergn/hadaca3_light Rscript  ingestion_program/ingestion.R ingestion_program/ 
+cd ~/projects/hadaca3
+sh prepare2score_locally.sh
 ```
 
-$ $ingestion_program $input $output $submission_program 
+```
+sudo docker run --rm  \
+    -v /home/hombergn/projects/hadaca3/ingestion_program:/app/program  \
+    -v /home/hombergn/projects/hadaca3/test_output/res:/app/output  \
+    -v /home/hombergn/projects/hadaca3/starting_kit/submissions:/app/ingested_program  \
+    -w /app/program \ 
+    -v /home/hombergn/projects/hadaca3/input_data:/app/input_data \
+    hombergn/hadaca3_light \
+    Rscript /app/program/ingestion.R /app/program /app/input_data /app/output /app/ingested_program
+```
+
+```
+sudo docker run --rm  -v /home/hombergn/projects/hadaca3/ingestion_program:/app/program  -v /home/hombergn/projects/hadaca3/test_output/res:/app/output  -v /home/hombergn/projects/hadaca3/starting_kit/submissions:/app/ingested_program  -w /app/program  -v /home/hombergn/projects/hadaca3/input_data:/app/input_data hombergn/hadaca3_light Rscript /app/program/ingestion.R /app/program /app/input_data /app/output /app/ingested_program
+```
+
+
+```
+sudo docker run --rm \
+    -v /home/hombergn/projects/hadaca3/scoring_program:/app/program \
+    -v /home/hombergn/projects/hadaca3/test_output:/app/output \
+    -w /app/program 
+    -v /home/hombergn/projects/hadaca3/test_output:/app/input \
+    hombergn/hadaca3_light \
+    Rscript /app/program/scoring.R /app/input /app/output /app/program
+```
+ ```   
+sudo docker run --rm  -v /home/hombergn/projects/hadaca3/scoring_program:/app/program  -v /home/hombergn/projects/hadaca3/test_output:/app/output  -w /app/program  -v /home/hombergn/projects/hadaca3/test_output:/app/input  hombergn/hadaca3_light  Rscript /app/program/scoring.R /app/input /app/output /app/program
+
+```
