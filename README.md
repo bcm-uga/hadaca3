@@ -37,8 +37,10 @@ Select upload and select the bundle.zip created earlier.
 
 ## Docker image 
 
+
+### Build docker images
 ```
-cd docker/codabench_legacy
+cd docker/codabench_hadaca3_light
 
 sudo docker build -t hombergn/hadaca3_light .
 
@@ -57,7 +59,14 @@ sudo docker push hombergn/hadaca3_light:latest
 
 #Single command to build and push. 
 sudo docker build -t hombergn/hadaca3_light .  && sudo docker push hombergn/hadaca3_light:latest
-
 ```
 
 
+### Run docker image locally
+
+
+```
+sudo docker run  hombergn/hadaca3_light Rscript  ingestion_program/ingestion.R ingestion_program/ 
+```
+
+$ $ingestion_program $input $output $submission_program 
