@@ -31,7 +31,7 @@ phases:
   name: Cell type proportion estimation from transcriptome data
   description: gl
   start: '2024-03-20'
-  end: '2024-04-17'
+  end: '2030-12-17'
   max_submissions_per_day: 5
   max_submissions: 100
   execution_time_limit: 600

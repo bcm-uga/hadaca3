@@ -5,6 +5,8 @@
 # magali.richard@univ-grenoble-alpes.fr
 # ---
 
+#to get list of function before sourcing new functions
+before <- ls()
 ########################################################
 ### Package dependencies /!\ DO NOT CHANGE THIS PART ###
 ########################################################
@@ -57,6 +59,8 @@ if ( params$install_dependencies ) {
 ### Result submission mode  
 # Participants have to make a zip file (no constrain on the namefile), with your results as a matrix inside a rds file named `results_1.rds`.
 
+
+
 ##################################################################################################
 ### Submission modes /!\ EDIT THE FOLLOWING CODE BY COMMENTING/UNCOMMENTING THE REQUIRED PARTS ###
 ##################################################################################################
@@ -78,52 +82,15 @@ data_test <- readRDS(file = "public_data_rna.rds") #Comment if you want to predi
 #' @return The proportion A_matrix and the cell-type specific profiles T_matrix
 #' @examples
 #' program(D_matrix = data_test, k = 3)
+
+#CAREFUL: submission_script_module.R or other sourced files should be on the same folder. 
+# Please don't source inside the program. 
+source("modules/submission_script_module.R")
+
 program <- 
-    
-    ##
-    ## YOUR CODE BEGINS HERE
-    ## 
 
     function(D_matrix,  k = 5) { #CAREFUL: don't forget to set the paramater k to the number of cell types you want to estimate
-
-    if ( !{ "NMF" %in% installed.packages( ) } ) {
-            install.packages(pkgs = "NMF", repos = "https://cloud.r-project.org")
-        }
-
-        ## we compute the estimation of A for the data set :
-        A_matrix <- NULL
-        if ( !is.null(x = D_matrix) ) {
-          
-            ## /!\ temporary hack : we keep only the 10 000 first lines in order to save time for the baseline
-            if ( nrow(x = D_matrix) > 1e4 ) {
-                D_matrix[seq_len(length.out = 1e4), ]
-            }
-            ## /!\ END of temporary hack 
-            
-            #use NMF as deconvolution algorithm
-            res   <- NMF::nmf(x = D_matrix, rank = k, method = "lee") 
-            
-            #transform the matrix res into a proportion matrix
-            A_matrix <- apply(
-                X      = res@fit@H
-              , MARGIN = 2
-              , FUN    = function( x ) {
-                  x / sum( x )
-              }
-            )
-            
-            # estimate the cell-type specific profiles
-            T_matrix = NMF::basis(res)
-            
-            remove(list = "res")
-        }
-
-    
-    ##
-    ## YOUR CODE ENDS HERE
-    ##
-
-    return( list(A_matrix = A_matrix, T_matrix = T_matrix) )
+        return(sub_program(D_matrix, k))   #sub programme is included from submission_script_module.R
     
 }
 
@@ -146,20 +113,40 @@ if ( !dir.exists(paths = "submissions") ) {
     dir.create(path = "submissions")
 }
 
+
+# list all functions to dump them.  
+after <- ls()
+changed <- setdiff(after, before)
+changed_objects <- mget(changed, inherits = T)
+changed_function <- do.call(rbind, lapply(changed_objects, is.function))
+new_functions <- changed[changed_function]
+new_functions
+
 # we save the source code as a R file named 'program.R' :
 dump(
-    list = c("program")
+    # list = c("program")
+    list = new_functions
   , file = paste0("submissions", .Platform$file.sep, "program.R")
 )
 
 
 # we create the associated zip file :
 zip_program <- paste0("submissions", .Platform$file.sep, "program_", format(x = Sys.time( ), format = "%Y_%m_%d_%S"), ".zip")
-zip::zipr(
-         zipfile = zip_program
-       #, files   = paste0("submissions", .Platform$file.sep, c("program.R", "metadata") )
-       , files   = paste0("submissions", .Platform$file.sep, "program.R")
-     )
+# zip::zip(zipfile= zip_program
+#                 , files= paste0("modules", .Platform$file.sep)
+#                 , mode = "cherry-pick")
+# zip::zip_append(
+#          zipfile = zip_program
+#        #, files   = paste0("submissions", .Platform$file.sep, c("program.R", "metadata") )
+#        , files   = paste0("submissions", .Platform$file.sep, "program.R")
+#        , mode = "cherry-pick"
+#      )
+zip::zip(zipfile= zip_program
+                , files= paste0("submissions", .Platform$file.sep, "program.R")
+                , mode = "cherry-pick"
+                )
+
+zip::zip_list(zip_program)
 print(x = zip_program)
 
 ###############################
