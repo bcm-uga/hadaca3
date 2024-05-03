@@ -3,10 +3,18 @@
 ##
 ## ------------------------------------
 
+
+
 print(x = "System information :")
 print(x = Sys.info( ) )
 print(x = Sys.getenv( ) )
 print(x = "")
+
+
+# Create symbolic link with 
+
+try(system("ln -s  ../ingested_program/modules/ modules", intern = TRUE, ignore.stderr = TRUE))
+
 
 # source(file = "Detach_packages.R")
 

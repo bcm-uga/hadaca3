@@ -6,7 +6,7 @@
 # ---
 
 #to get list of function before sourcing new functions
-before <- ls()
+# before <- ls()
 ########################################################
 ### Package dependencies /!\ DO NOT CHANGE THIS PART ###
 ########################################################
@@ -83,13 +83,11 @@ data_test <- readRDS(file = "public_data_rna.rds") #Comment if you want to predi
 #' @examples
 #' program(D_matrix = data_test, k = 3)
 
-#CAREFUL: submission_script_module.R or other sourced files should be on the same folder. 
-# Please don't source inside the program. 
-source("modules/submission_script_module.R")
 
 program <- 
-
     function(D_matrix,  k = 5) { #CAREFUL: don't forget to set the paramater k to the number of cell types you want to estimate
+        #CAREFUL: submission_script_module.R or other sourced files should be on the same folder modules. 
+        source("modules/submission_script_module.R")
         return(sub_program(D_matrix, k))   #sub programme is included from submission_script_module.R
     
 }
@@ -114,37 +112,37 @@ if ( !dir.exists(paths = "submissions") ) {
 }
 
 
-# list all functions to dump them.  
-after <- ls()
-changed <- setdiff(after, before)
-changed_objects <- mget(changed, inherits = T)
-changed_function <- do.call(rbind, lapply(changed_objects, is.function))
-new_functions <- changed[changed_function]
-new_functions
+## list all functions to dump them inside R the program.R.  
+# after <- ls()
+# changed <- setdiff(after, before)
+# changed_objects <- mget(changed, inherits = T)
+# changed_function <- do.call(rbind, lapply(changed_objects, is.function))
+# new_functions <- changed[changed_function]
+# new_functions
 
 # we save the source code as a R file named 'program.R' :
 dump(
-    # list = c("program")
-    list = new_functions
+    list = c("program")
+    # list = new_functions
   , file = paste0("submissions", .Platform$file.sep, "program.R")
 )
 
 
 # we create the associated zip file :
 zip_program <- paste0("submissions", .Platform$file.sep, "program_", format(x = Sys.time( ), format = "%Y_%m_%d_%S"), ".zip")
-# zip::zip(zipfile= zip_program
-#                 , files= paste0("modules", .Platform$file.sep)
-#                 , mode = "cherry-pick")
-# zip::zip_append(
-#          zipfile = zip_program
-#        #, files   = paste0("submissions", .Platform$file.sep, c("program.R", "metadata") )
-#        , files   = paste0("submissions", .Platform$file.sep, "program.R")
-#        , mode = "cherry-pick"
-#      )
 zip::zip(zipfile= zip_program
-                , files= paste0("submissions", .Platform$file.sep, "program.R")
-                , mode = "cherry-pick"
-                )
+                , files= paste0("modules", .Platform$file.sep)
+                , mode = "cherry-pick")
+zip::zip_append(
+         zipfile = zip_program
+       #, files   = paste0("submissions", .Platform$file.sep, c("program.R", "metadata") )
+       , files   = paste0("submissions", .Platform$file.sep, "program.R")
+       , mode = "cherry-pick"
+     )
+# zip::zip(zipfile= zip_program
+#                 , files= paste0("submissions", .Platform$file.sep, "program.R")
+#                 , mode = "cherry-pick"
+#                 )
 
 zip::zip_list(zip_program)
 print(x = zip_program)
