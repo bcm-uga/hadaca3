@@ -18,6 +18,8 @@ docker/codabench_legacy/*
 bundle.zip
 logs_light_doc_V1
 
+.vscode
+.vscode/*
 
 scoring_program.zip
 ingestion_program.zip
