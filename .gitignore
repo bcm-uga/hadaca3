@@ -21,6 +21,9 @@ logs_light_doc_V1
 .vscode
 .vscode/*
 
+modules
+ingestion_program/modules
+
 scoring_program.zip
 ingestion_program.zip
 starting_kit.zip
