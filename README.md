@@ -1,6 +1,8 @@
+
 # hadaca 3 - Health Data Challenge
 
 HADACA 3 is the third edition of a Health Data Challenge, organized by the PEPR Santé Numérique (M4DI axis) and the University Grenoble-Alpes data challenges hub (TIMC, IAB and GRICAD). It will take place from December 2nd to 6th, 2024,
+
 
 The goal of this challenge is to explore and potentially discover new methods to resolve deconvolution problems.
 
