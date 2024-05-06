@@ -20,18 +20,19 @@ tasks:
 - index: 0
   name: LIGHT Cell type proportion estimation from transcriptome data
   description: LIGHT COMETH data challenge
-  is_public: false
+  is_public: true
   input_data: input_data.zip
-  reference_data: ground_truth.zip  #rename to ground_truth! 
   scoring_program: scoring_program.zip
   ingestion_program: ingestion_program.zip
+  is_public: false
+  reference_data: ground_truth.zip  #rename to ground_truth! 
 solutions: []
 phases:
 - index: 0
   name: Cell type proportion estimation from transcriptome data
   description: gl
   start: '2024-03-20'
-  end: '2030-12-17'
+  # end: '2030-12-17'
   max_submissions_per_day: 5
   max_submissions: 100
   execution_time_limit: 600
