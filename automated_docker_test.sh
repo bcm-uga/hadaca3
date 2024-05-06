@@ -1,40 +1,40 @@
 echo "Building Docker"
 cd docker/codabench_hadaca3_light
-sudo docker build -t hombergn/hadaca3_light .
+sudo docker build -t hombergn/hadaca3_light .  >> logs
 cd -
-echo "\n\nDocker created\n\n"
+echo "Docker created"
 
-echo "\n\nCreate submission program\n\n"
+echo "Create submission program"
 cd starting_kit/
-Rscript submission_script.R
+Rscript submission_script.R >> logs
 cd - 
-echo "\n\nDone"
+echo "Done"
 
-echo "\n\nPreparing data\n\n"
+echo "Preparing data"
 sh prepare2score_locally.sh
 
 
-echo "\n\nRunning ingestion Program\n\n"
-sudo docker run --rm  -v /home/hombergn/projects/hadaca3/ingestion_program:/app/program  -v /home/hombergn/projects/hadaca3/test_output/res:/app/output  -v /home/hombergn/projects/hadaca3/starting_kit/submissions:/app/ingested_program  -w /app/program  -v /home/hombergn/projects/hadaca3/input_data:/app/input_data hombergn/hadaca3_light Rscript /app/program/ingestion.R /app/program /app/input_data /app/output /app/ingested_program
-echo "\n\nIngestion progam done\n\n"
+echo "Running ingestion Program"
+sudo docker run --rm  -v $PWD/ingestion_program:/app/program  -v $PWD/test_output/res:/app/output  -v $PWD/starting_kit/submissions:/app/ingested_program  -w /app/program  -v $PWD/input_data:/app/input_data hombergn/hadaca3_light Rscript /app/program/ingestion.R /app/program /app/input_data /app/output /app/ingested_program >> logs
+echo "Ingestion progam done"
 
 
-echo "\n\nRunning Scoring Program\n\n"
-sudo docker run --rm  -v /home/hombergn/projects/hadaca3/ingestion_program:/app/program  -v /home/hombergn/projects/hadaca3/test_output/res:/app/output  -v /home/hombergn/projects/hadaca3/starting_kit/submissions:/app/ingested_program  -w /app/program  -v /home/hombergn/projects/hadaca3/input_data:/app/input_data hombergn/hadaca3_light Rscript /app/program/ingestion.R /app/program /app/input_data /app/output /app/ingested_program
-echo "\n\nScoring program done\n\n"
+echo "Running Scoring Program"
+sudo docker run --rm  -v $PWD/ingestion_program:/app/program  -v $PWD/test_output/res:/app/output  -v $PWD/starting_kit/submissions:/app/ingested_program  -w /app/program  -v $PWD/input_data:/app/input_data hombergn/hadaca3_light Rscript /app/program/ingestion.R /app/program /app/input_data /app/output /app/ingested_program >> logs 
+echo "Scoring program done"
 
 
-echo "Test if the result exist"
+echo "Test if the file result_1.rds exist"
 filename='test_output/res/results_1.rds'
 if [ -f $filename ]; then
-    echo 'SUCCES The result file exists.'
+    echo 'SUCCE! The result file exists.'
 else
-    echo 'FAILURE ! The file does not exist.'
+    echo 'FAILURE! The file does not exist.'
 fi
 
 
-echo "\nnCleaning"
-sh clean.sh
+echo "Cleaning"
+sh clean.sh 1>> logs 2>> logs
 echo 'DONE'
 
 

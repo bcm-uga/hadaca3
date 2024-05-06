@@ -96,7 +96,7 @@ sudo docker build -t hombergn/hadaca3_light .  && sudo docker push hombergn/hada
 
 Run "automated_docker_test.sh" form hadaca3 folder. 
 
-or the manully with the 
+Or test iterativelly with the following commands :
 
 First prepare the docker submission with the script prepare2score_locally
 
@@ -108,33 +108,33 @@ sh prepare2score_locally.sh
 The first case is only there to show all arguments in a digestible way. 
 ```
 #sudo docker run --rm  \
-#    -v /home/hombergn/projects/hadaca3/ingestion_program:/app/program  \
-#    -v /home/hombergn/projects/hadaca3/test_output/res:/app/output  \
-#    -v /home/hombergn/projects/hadaca3/starting_kit/submissions:/app/ingested_program  \
+#    -v $PWD/ingestion_program:/app/program  \
+#    -v $PWD/test_output/res:/app/output  \
+#    -v $PWD/starting_kit/submissions:/app/ingested_program  \
 #    -w /app/program \ 
-#    -v /home/hombergn/projects/hadaca3/input_data:/app/input_data \
+#    -v $PWD/input_data:/app/input_data \
 #    hombergn/hadaca3_light \
 #    Rscript /app/program/ingestion.R /app/program /app/input_data /app/output /app/ingested_program
 ```
 
 Run the follwing command to test the ingestion using the docker.  
 ```
-sudo docker run --rm  -v /home/hombergn/projects/hadaca3/ingestion_program:/app/program  -v /home/hombergn/projects/hadaca3/test_output/res:/app/output  -v /home/hombergn/projects/hadaca3/starting_kit/submissions:/app/ingested_program  -w /app/program  -v /home/hombergn/projects/hadaca3/input_data:/app/input_data hombergn/hadaca3_light Rscript /app/program/ingestion.R /app/program /app/input_data /app/output /app/ingested_program
+sudo docker run --rm  -v $PWD/ingestion_program:/app/program  -v $PWD/test_output/res:/app/output  -v $PWD/starting_kit/submissions:/app/ingested_program  -w /app/program  -v $PWD/input_data:/app/input_data hombergn/hadaca3_light Rscript /app/program/ingestion.R /app/program /app/input_data /app/output /app/ingested_program
 ```
 
 This case is only there to show all arguments in a digestible way. 
 ```
 #sudo docker run --rm \
-#    -v /home/hombergn/projects/hadaca3/scoring_program:/app/program \
-#    -v /home/hombergn/projects/hadaca3/test_output:/app/output \
+#    -v $PWD/scoring_program:/app/program \
+#    -v $PWD/test_output:/app/output \
 #    -w /app/program 
-#    -v /home/hombergn/projects/hadaca3/test_output:/app/input \
+#    -v $PWD/test_output:/app/input \
 #    hombergn/hadaca3_light \
 #    Rscript /app/program/scoring.R /app/input /app/output /app/program
 ```
 
 Run the following command to test scoring using dockers.
  ```   
-sudo docker run --rm  -v /home/hombergn/projects/hadaca3/scoring_program:/app/program  -v /home/hombergn/projects/hadaca3/test_output:/app/output  -w /app/program  -v /home/hombergn/projects/hadaca3/test_output:/app/input  hombergn/hadaca3_light  Rscript /app/program/scoring.R /app/input /app/output /app/program
+sudo docker run --rm  -v $PWD/scoring_program:/app/program  -v $PWD/test_output:/app/output  -w /app/program  -v $PWD/test_output:/app/input  hombergn/hadaca3_light  Rscript /app/program/scoring.R /app/input /app/output /app/program
 
 ```
