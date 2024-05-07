@@ -86,14 +86,28 @@ data_test <- readRDS(file = "public_data_rna.rds") #Comment if you want to predi
 
 program <- 
 
-    ##
-    ## YOUR CODE BEGINS HERE
-    ## 
     function(D_matrix,  k = 5){
+        ##
+        ## YOUR CODE BEGINS HERE
+        ## 
+        
+        ## NMF should already be installed on the docker, however in case it does not work: 
         if ( !{ "NMF" %in% installed.packages( ) } ) {
             install.packages(pkgs = "NMF", repos = "https://cloud.r-project.org")
         }
         
+        ##Install additionnal package this way: 
+        if ( !{ "lemon" %in% installed.packages( ) } ) {
+            install.packages(pkgs = "lemon", repos = "https://cloud.r-project.org")
+        }
+        ##Demonstration if the package is working:
+        head(D_matrix) 
+        library(lemon)
+        knit_print.data.frame <- lemon_print
+        print('With the use of Lemon:')
+        head(D_matrix)
+
+
 
         ## we compute the estimation of A for the data set :
         A_matrix <- NULL

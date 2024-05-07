@@ -85,51 +85,12 @@ data_test <- readRDS(file = "public_data_rna.rds") #Comment if you want to predi
 
 
 program <- 
-
-    ##
-    ## YOUR CODE BEGINS HERE
-    ## 
-    function(D_matrix,  k = 5){
-        if ( !{ "NMF" %in% installed.packages( ) } ) {
-            install.packages(pkgs = "NMF", repos = "https://cloud.r-project.org")
-        }
-        
-
-        ## we compute the estimation of A for the data set :
-        A_matrix <- NULL
-        if ( !is.null(x = D_matrix) ) {
-          
-            ## /!\ temporary hack : we keep only the 10 000 first lines in order to save time for the baseline
-            if ( nrow(x = D_matrix) > 1e4 ) {
-                D_matrix[seq_len(length.out = 1e4), ]
-            }
-            ## /!\ END of temporary hack 
-            
-            #use NMF as deconvolution algorithm
-            res   <- NMF::nmf(x = D_matrix, rank = k, method = "lee") 
-            
-            #transform the matrix res into a proportion matrix
-            A_matrix <- apply(
-                X      = res@fit@H
-              , MARGIN = 2
-              , FUN    = function( x ) {
-                  x / sum( x )
-              }
-            )
-            
-            # estimate the cell-type specific profiles
-            T_matrix = NMF::basis(res)
-            
-            remove(list = "res")
-        }
-
+    function(D_matrix,  k = 5) { #CAREFUL: don't forget to set the paramater k to the number of cell types you want to estimate
+        #CAREFUL: submission_script_module.R or other sourced files should be on the same folder modules. 
+        source("modules/module_script.R")
+        return(sub_program(D_matrix, k))   #sub programme is included from submission_script_module.R
     
-    return( list(A_matrix = A_matrix, T_matrix = T_matrix) )
 }
-    ##
-    ## YOUR CODE ENDS HERE
-    ## 
-
 
 ##############################################################
 ### Generate a submission file /!\ DO NOT CHANGE THIS PART ###
@@ -170,9 +131,18 @@ dump(
 # we create the associated zip file :
 zip_program <- paste0("submissions", .Platform$file.sep, "program_", format(x = Sys.time( ), format = "%Y_%m_%d_%S"), ".zip")
 zip::zip(zipfile= zip_program
-                , files= paste0("submissions", .Platform$file.sep, "program.R")
-                , mode = "cherry-pick"
-                )
+                , files= paste0("modules", .Platform$file.sep)
+                , mode = "cherry-pick")
+zip::zip_append(
+         zipfile = zip_program
+       #, files   = paste0("submissions", .Platform$file.sep, c("program.R", "metadata") )
+       , files   = paste0("submissions", .Platform$file.sep, "program.R")
+       , mode = "cherry-pick"
+     )
+# zip::zip(zipfile= zip_program
+#                 , files= paste0("submissions", .Platform$file.sep, "program.R")
+#                 , mode = "cherry-pick"
+#                 )
 
 zip::zip_list(zip_program)
 print(x = zip_program)
