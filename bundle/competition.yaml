@@ -1,21 +1,29 @@
 version: '2'
-title: LIGHT COMETH deconvolution data challenge
+title: Health Data Challenge 3rd ed. : Multimodal data integration to quantify tumor heterogeneity in cancer research
 docker_image: hombergn/hadaca3_light
 queue: null
-description: Light or "template" challenge for the hadaca3 challenge
+description: HADACA3
 registration_auto_approve: true
 enable_detailed_results: true
-image: COMETH_TWITTER.png
+image: HADACA3_com.png
 terms: terms.md
 pages:
+- title: Overview
+  file: overview.md
 - title: Aim of the challenge
   file: aim-of-the-challenge.md
 - title: How do I start?
   file: how-do-i-start.md
+- title: Data
+  file: data.md
+- title: Baseline
+  file: baseline.md
+- title: Submission
+  file: submission.md
 - title: Evaluation and scoring
   file: evaluation-and-scoring.md
-- title: Download starting kit
-  file: download-starting-kit.md
+- title: FAQ
+  file: FAQ.md
 tasks:
 - index: 0
   name: LIGHT Cell type proportion estimation from transcriptome data
