@@ -9,7 +9,7 @@
 
 When the status of your submission is finished (don't forget to refresh the page to update the status) :
 
- [6]  Click on the green button 'add to leaderboard' to see your score
+ Click on the green button 'add to leaderboard' to see your score
   
 By clicking on your submission in the submissions summary table, you will access to:
 
@@ -22,4 +22,4 @@ By clicking on your submission in the submissions summary table, you will access
   
   - a submission metadata edition menu
   
-[7]  Check the leaderboard in the *Results*  menu
+Check the leaderboard in the *Results*  menu
