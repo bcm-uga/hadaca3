@@ -1,5 +1,5 @@
 version: '2'
-title: Health Data Challenge 3rd ed. : Multimodal data integration to quantify tumor heterogeneity in cancer research
+title: Multimodal data integration to quantify tumor heterogeneity in cancer research
 docker_image: hombergn/hadaca3_light
 queue: null
 description: HADACA3
