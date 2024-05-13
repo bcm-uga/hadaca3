@@ -215,7 +215,7 @@ Aest = readRDS(file = paste0(input, .Platform$file.sep, "res", .Platform$file.se
 
 
 ## load R profiling of the estimation of A :
-# profiling <- readRDS(file = paste0(input, .Platform$file.sep, "res", .Platform$file.sep, "Rprof.rds") )
+profiling <- readRDS(file = paste0(input, .Platform$file.sep, "res", .Platform$file.sep, "Rprof.rds") )
 
 
 
@@ -266,13 +266,16 @@ Aest = readRDS(file = paste0(input, .Platform$file.sep, "res", .Platform$file.se
         #     cat(paste0("Accuracy_mean: " , mean(x = scores ), "\n"), file = output_file, append = FALSE)
         #     cat(paste0("Accuracy_sd: "   , 0, "\n"), file = output_file, append = TRUE )
         #     cat(paste0("Time: "     , sum( profiling$by.total$total.time ) / length(x = Aref), "\n"), file = output_file, append = TRUE )
-        # } else {
+        # } 
+        # else {
         #     print("Scores : Accuracy_mean, Accuracy_sd and Time computed")
         #     cat(paste0("Accuracy_mean: " , mean(x = scores ), "\n"), file = output_file, append = FALSE)
         #     cat(paste0("Accuracy_sd: "   , sd(  x = scores ), "\n"), file = output_file, append = TRUE )
         #     cat(paste0("Time: "     , sum( profiling$by.total$total.time ) / length(x = Aref), "\n"), file = output_file, append = TRUE )
         # }
 
+        cat(paste0("Accuracy_mean: " , mean(x = scores ), "\n"), file = output_file, append = FALSE)
+        cat(paste0("Time: "     , sum( profiling$by.total$total.time ) / length(x = Aref), "\n"), file = output_file, append = TRUE )
 
         print(x = list.files(path = output, all.files = TRUE, full.names = TRUE, recursive = TRUE) )
 

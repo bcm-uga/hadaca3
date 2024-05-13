@@ -63,7 +63,7 @@ Rprof(
   , line.profiling   = FALSE
 )
 
-#Check it is a result submission or a progran submission
+#Check it is a result submission or a program submission
 file  = paste0(submission_program, .Platform$file.sep, "program.R")
 print(file)
 
@@ -72,22 +72,29 @@ if (file.exists(file)) {
   print("execution of the program") 
   
   #Define the number of dataset
-  test_data <- readRDS(file = paste0(input, .Platform$file.sep, "public_data_rna.rds") )
-  test_data = list(test_data) #remove this if your input data is already a list!
-  nb_dataset = length(test_data)
-  print(x = paste0("Number of test dataset is :", nb_dataset) )
+  # test_data <- readRDS(file = paste0(input, .Platform$file.sep, "public_data_rna.rds") )
+  # test_data = list(test_data) #remove this if your input data is already a list!
+  # nb_dataset = length(test_data)
+  # print(x = paste0("Number of test dataset is :", nb_dataset) )
 
-  for ( i in seq_len(length.out = nb_dataset) ) {
-      print(x = paste0("Test : ", i) )
-      output_results <- paste0(output, .Platform$file.sep, "results_", i, ".rds")
-      output_A <- paste0(output, .Platform$file.sep, "results_A_", i, ".csv")
-      output_T <- paste0(output, .Platform$file.sep, "results_T_", i, ".csv")
-      print(x = "")
+  # for ( i in seq_len(length.out = nb_dataset) ) {
+  #     print(x = paste0("Test : ", i) )
+  #     output_results <- paste0(output, .Platform$file.sep, "results_", i, ".rds")
+  #     output_A <- paste0(output, .Platform$file.sep, "results_A_", i, ".csv")
+  #     output_T <- paste0(output, .Platform$file.sep, "results_T_", i, ".csv")
+  #     print(x = "")
     
-      system(command = paste("Rscript", paste0(ingestion_program, .Platform$file.sep, "sub_ingestion.R"), i, input, output_results,  output_A,  output_T, submission_program, sep = " ") )
-  
-  }
-  remove(list = "i")
+  #     system(command = paste("Rscript", paste0(ingestion_program, .Platform$file.sep, "sub_ingestion.R"), i, input, output_results,  output_A,  output_T, submission_program, sep = " ") )
+
+  # }
+  # remove(list = "i")
+
+  output_results <- paste0(output, .Platform$file.sep, "prediction.rds")
+  # system(command = paste("Rscript", paste0(ingestion_program, .Platform$file.sep, "sub_ingestion.R"), i, input, output_results,  output_A,  output_T, submission_program, sep = " ") )
+  cmd = paste("Rscript", paste0(ingestion_program, .Platform$file.sep, "sub_ingestion.R"), input, output_results, submission_program, sep = " ") 
+  print(cmd)
+  system(command = paste("Rscript", paste0(ingestion_program, .Platform$file.sep, "sub_ingestion.R"), input, output_results, submission_program, sep = " ") )
+
 } else { 
     print("no program to execute, go straight to scoring step") 
 }
