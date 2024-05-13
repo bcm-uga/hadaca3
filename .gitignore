@@ -7,12 +7,16 @@
 starting_kit/submissions/
 starting_kit/submissions/*
 
+
+data_old/
+data_old/*
+starting_kit_old
+
 test_output/
 test_output/*
 
 data/*
 data/
-
 # starting_kit/*
 
 docker/codabench_legacy/
@@ -34,3 +38,12 @@ input_data.zip
 ground_truth.zip
 
 logs
+
+
+*.rds
+
+ground_truth/
+ground_truth/*
+
+input_data/
+input_data/*
