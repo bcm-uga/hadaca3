@@ -10,7 +10,24 @@ The HADACA 3 challenge begins with a bulk dataset in the form of a matrix, conta
 
 Participants will submit their method in the form of an R program, which will then be ingested and scored using a ground truth matrix. In the final phase of this challenge, the best method submitted by each participant will be evaluated on a different dataset. The aim of this final phase is to ensure the method is not overfitted.
 
-## Download git 
+# Scripts availabale and guide: 
+Summary of scripts available: 
+* `generate_fake_data.R`: R script to generates fake data. It does not take any argument. 
+* `clean.sh`: Bash script that deletes temporary file and all data.
+* `generate_data.sh`: Bash script that either take one argument and generates the real data or no argument and execute `generate_fake_data.R`.
+* `prepare2score_locally.sh`: Bash script that generates temporary path and folder used by the ingestion and scoring program when executed locally. It depends on `clean.sh` and `generate_data.sh` and therefor **take one optionnal argument** to either generates real data or fake. 
+* **`automated_docker_test.sh`**: Bash script that test the ingestion and scoring program locally with the docker container. It takes **take one optionnal argument** to either generates real data or fake and executes the following steps: 
+    1. Build the docker image.
+    2. Generates data with `generate_data.sh`.
+    3. Run the submission script to generates a submission program. Note: It will create and use the `Program.R` inside the *submissions* folder of the *startink_kit kit*.
+    4. Prepare the data to be executed locally with; `prepare2score_locally.sh`.
+    5. Execute the ingestion program on docker
+    6. Execute the scoring program on docker with the prediction file created with the previous step.
+    7. Test the existence of the output file *accuracy.rds*.  If this file exist: it is a sucess, otherwise it is a failure and the script stop here. In that case the file *logs* contain potentially usefull informations to debug.
+    8. If the test was a sucess, `clean.sh` is exectued.
+* **`generate_bundle.sh`**: Bash script that will generates data and creates *bundle.zip* with all its dependancies. *bundle.zip* is ready to be uploaded on Codabench, under benchmark, management and then the green bouton upload. It also takes **take one optionnal argument** to either generates real data or fake
+
+## Download git:
 
 ```
 cd ~ && mkdir projects
@@ -20,16 +37,14 @@ cd hadaca3
 ```
 
 
-## Generate a submission 
+## Generate a submission:
 
 ```
 cd starting_kit
 Rscript submission_script.R
-
 ```
 
-
-## Run Script locally 
+## Run Script locally:
 
 /!\ This local test no longer works when using sourced files in program.R that call sub_programm in the folder modules.
 

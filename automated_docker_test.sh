@@ -8,8 +8,8 @@ cd -
 echo "Docker created"
 
 echo "Generate data"
-# sh generate_data.sh $1
-sh generate_data.sh real
+sh generate_data.sh $1
+# sh generate_data.sh real
 echo "data Generated"
 
 echo "Create submission program"
@@ -36,7 +36,7 @@ echo "Scoring program done"
 echo "Test if the output file accuracy.rds exist"
 filename='test_output/accuracy.rds'
 if [ -f $filename ]; then
-    echo 'SUCCE! The result file exists.'
+    echo 'SUCESS! The result file exists.'
 else
     echo 'FAILURE! The file does not exist.'
     exit 1
