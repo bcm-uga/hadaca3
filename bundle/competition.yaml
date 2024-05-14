@@ -24,6 +24,10 @@ pages:
   file: evaluation-and-scoring.md
 - title: FAQ
   file: FAQ.md
+- title: Organization 
+  file: organization.md
+- title: Sponsors
+  file: sponsors.md  
 tasks:
 - index: 0
   name: LIGHT Cell type proportion estimation from transcriptome data
