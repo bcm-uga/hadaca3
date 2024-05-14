@@ -57,6 +57,14 @@ echo $1
 
 # cd ~/projects/hadaca3_private
 
+# # Get data from cargo
+# mkdir -p ~/projects/datashare/data_cometh_lot1/methylation/.
+# mkdir -p  ~/projects/pancreas_deconv_data/results/20210624/02.1_output/
+# rsync -auvP cargo:../richamag/projects/datashare/data_cometh_lot1/methylation/test_data_rna.rds ~/projects/datashare/data_cometh_lot1/methylation/.
+# rsync -auvP cargo:../richamag/projects/datashare/data_cometh_lot1/methylation/test_data_met.rds ~/projects/datashare/data_cometh_lot1/methylation/
+# rsync -auvP cargo:../richamag/projects/pancreas_deconv_data/results/20210624/02.1_output/peng_pool_labelled.rds ~/projects/pancreas_deconv_data/results/20210624/02.1_output/
+
+
 # mamba env create -f 01_generate_data_condaenv_LL_06-05-24.yml
 # conda activate hadaca3
 # Rscript -e "rmarkdown::render('01_generate_data.Rmd',params=list(args = myarg))"
