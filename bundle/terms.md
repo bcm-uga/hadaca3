@@ -1,3 +1,8 @@
 By participating to this challenge, you accept to publicly share your submissions.
 
-You can freely test your methods on this benchmark and compare yourself to the reference methods. When your development is finished or stable, please create a team with the following nomenclature : “Feature selection for DNAm” [met] + “Feature selection for RNA” [rna] / “Deconvolution method” [both]. The idea is to gather the similar approaches under the same team. Don’t hesitate to send an email to the organisers if you have any questions or issues.
+You may submit 5 submissions every day and 100 in total.
+
+This challenge is governed by the general [ChaLearn contest rules](https://www.causality.inf.ethz.ch/GeneralChalearnContestRuleTerms.html).
+
+
+

@@ -1,25 +1,13 @@
+## Overview of the processs
 
-[1] Go on the challenge page, in the *Get started* menu, in the *Dowload starting kit* tab : download the starting kit.
+[1] Go to the challenge webpage on Codabench platform, navigate to the *Get started* menu, and select the *Files* tab. Download the `starting_kit` corresponding to the phase you are participating in.
 
-[2] Make a submission (follow the guidelines in the submission section)
+[2] Get familiar with the dataset description (*Data* tab) and the baseline methods suggested by the organizer (*Baseline* tab).
 
-[3] Check you score
+[3] Make a first submission using the baseline method (follow the guidelines in the *Submission* tab)
 
-**How to see your score ?**
+[4] Check you score (more information on the scoring and ranking pipelines can be found on the *Evaluation and scoring* tab).
 
-When the status of your submission is finished (don't forget to refresh the page to update the status) :
+[5] Improve you method by editing the `submission_script.R` contained in the `starting_kit` and resubmit your program to enhance your score.
 
- Click on the green button 'add to leaderboard' to see your score
-  
-By clicking on your submission in the submissions summary table, you will access to:
 
-  - details of your submission (downloaded)
-	-> submitted files, 
-	-> prediction results (ingestion output) 
-	-> scoring results (scoring outputs) 
-			
-  - some execution logs
-  
-  - a submission metadata edition menu
-  
-Check the leaderboard in the *Results*  menu
