@@ -24,6 +24,10 @@ pages:
   file: evaluation-and-scoring.md
 - title: FAQ
   file: FAQ.md
+- title: Organization 
+  file: organization.md
+- title: Sponsors
+  file: sponsors.md  
 tasks:
 - index: 0
   name: LIGHT Cell type proportion estimation from transcriptome data
@@ -37,7 +41,7 @@ tasks:
 solutions: []
 phases:
 - index: 0
-  name: Cell type proportion estimation from transcriptome data
+  name: Cell type proportion estimation from transcriptome and methylome data, using multimodal references.
   description: gl
   start: '2024-03-20'
   # end: '2030-12-17'
