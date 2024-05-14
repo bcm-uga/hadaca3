@@ -53,7 +53,14 @@ Finally, Gaussian noise was added to the matrix of convoluted methylation profil
        [1] 824678      5
 
        # format of scRNAseq references
-
+       > dim(reference$scRNAseq$counts) # 23376 gene expression for 20146 cells
+       [1] 23376      20146
+       > dim(reference$scRNAseq$metadata) # cell labels
+       [1] 20146      1
+       > table(reference$scRNAseq$metadata[,1])
+       [1] basal classic    endo   fibro  immune 
+           2036    2178    8874    3946    3112 
+  
 
 ### Phase 3 : 
 
