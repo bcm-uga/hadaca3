@@ -30,7 +30,7 @@ pages:
   file: sponsors.md  
 tasks:
 - index: 0
-  name: LIGHT Cell type proportion estimation from transcriptome and methylome data, using multimodal references.
+  name: LIGHT Cell type proportion estimation from transcriptome 
   description: LIGHT COMETH data challenge
   is_public: true
   input_data: input_data.zip
