@@ -5,8 +5,8 @@
 The unziped starting_kit directory contains now:
 
 - A `submission_script.R` -> *to modify and to use to submit your code*
-- The `public_data_met.rds` -> *DNA methylation D matrix*
--The `public_data_rna.rds` -> *transcriptome D matrix*
+- The `reference_data.rds` -> *reference data, i.e. typical molecular profiles of expected cell types*
+- The `mixes_data.rds` -> *mixes from which you will estimate cell type proportions (matching RNA and DNA methylation data)*
  
 [2] In the R console launch the following command (or run the `submission_script.R` in RStudio):
 		 
@@ -18,12 +18,7 @@ The unziped starting_kit directory contains now:
 
 Edit the `submission_script.R` to replace the baseline method by the method of your choice. 
 
-1) First, define the type of data you want to use to estimate tumor heterogeneity:
-		 data_test <- readRDS(file = "public_data_rna.rds") #Comment if you want to predict from methylome data
-		#data_test <- readRDS(file = "public_data_met.rds") #Uncomment if you want to predict from methylome data
-
-2) Then, edit the code inside the following chunk (i.e. the `program` function): 
-    
+Edit the code inside the following chunk (i.e. the `program` function):     
 		## 
 		## YOUR CODE BEGINS HERE 
 		##
@@ -32,7 +27,7 @@ Edit the `submission_script.R` to replace the baseline method by the method of y
 		## YOUR CODE ENDS HERE
 		## 
 
-	Don't forget to specify the `program` function parameter `k`, which corresponds to the number of cell types you want to estimate. It is set to `k=3` by default.
+
 
 ## How to submit your results ?
 
