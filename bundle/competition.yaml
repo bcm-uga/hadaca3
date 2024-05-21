@@ -4,9 +4,11 @@ docker_image: hombergn/hadaca3_light
 queue: null
 description: HADACA3
 registration_auto_approve: true
-enable_detailed_results: true
+enable_detailed_results: false
 image: HADACA3_com.png
 terms: terms.md
+make_programs_available: true
+make_input_data_available: false
 pages:
 - title: Overview
   file: overview.md
@@ -32,12 +34,10 @@ tasks:
 - index: 0
   name: LIGHT Cell type proportion estimation from transcriptome data
   description: LIGHT COMETH data challenge
-  is_public: true
+  reference_data: ground_truth.zip  #rename to ground_truth! 
   input_data: input_data.zip
   scoring_program: scoring_program.zip
   ingestion_program: ingestion_program.zip
-  is_public: false
-  reference_data: ground_truth.zip  #rename to ground_truth! 
 solutions: []
 phases:
 - index: 0
