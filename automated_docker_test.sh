@@ -1,5 +1,5 @@
 
-
+type Rscript >/dev/null 2>&1 || { echo >&2 "Rscript requiered but it's not installed.  Aborting."; exit 1; }
 
 echo "Building Docker"
 cd docker/codabench_hadaca3_light
