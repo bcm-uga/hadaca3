@@ -37,6 +37,7 @@ starting_kit.zip
 input_data.zip
 ground_truth.zip
 
+
 logs
 
 
@@ -47,3 +48,6 @@ ground_truth/*
 
 input_data/
 input_data/*
+
+
+backup*
