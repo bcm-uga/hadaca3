@@ -26,29 +26,29 @@ jobs:
           r-version: ${{ matrix.r-version }}
 
       - name: Install dependencies
+        shell: Rscript 
         run: |
           install.packages(c("remotes", "rcmdcheck"))
           remotes::install_deps(dependencies = TRUE)
-          shell: Rscript {0}
       - name: Check
+        shell: Rscript 
         run: rcmdcheck::rcmdcheck(args = "--no-manual", error_on = "error")
-        shell: Rscript {0}
 
       - name: Check Data Generation
+        shell: Rscript 
         run: generate_fake_data.R
-        shell: Rscript {0}
 
       - name: Build the Docker image
         run: docker build . --file Dockerfile --tag hombergn/hadaca3_light
       
       - name: Create submission program
+        shell: Rscript 
         run: starting_kit/submission_script.R
-        shell: Rscript {0}
       - name: Prepare files
+        shell: bash
         run: |
           chmod +x prepare2score_locally.sh
           prepare2score_locally.sh
-        shell: bash
       - name: Running ingestion Program
         run: docker run --rm  -v $PWD/ingestion_program:/app/program  -v $PWD/test_output/res:/app/output  -v $PWD/starting_kit/submissions:/app/ingested_program  -w /app/program  -v $PWD/input_data:/app/input_data hombergn/hadaca3_light Rscript /app/program/ingestion.R /app/program /app/input_data /app/output /app/ingested_program 
         
