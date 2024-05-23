@@ -43,8 +43,8 @@ else
 fi
 
 
-echo "Cleaning"
-sh clean.sh 1>> logs 2>> logs
-echo 'DONE'
+# echo "Cleaning"
+# sh clean.sh 1>> logs 2>> logs
+# echo 'DONE'
 
 

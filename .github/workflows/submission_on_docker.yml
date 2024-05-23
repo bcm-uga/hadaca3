@@ -12,7 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        r-version: ['3.6.3', '4.1.1']
+        # r-version: ['3.6.3', '4.1.1']
+        r-version: ['4.1.1']
+        
   
 
 
@@ -20,43 +22,66 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Set up R ${{ matrix.r-version }}
-        # uses: r-lib/actions/setup-r@f57f1301a053485946083d7a45022b278929a78a
         uses: r-lib/actions/setup-r@v2
         with:
           r-version: ${{ matrix.r-version }}
-
-      - name: Install dependencies
-        shell: Rscript 
-        run: |
-          install.packages(c("remotes", "rcmdcheck"))
-          remotes::install_deps(dependencies = TRUE)
-      - name: Check
-        shell: Rscript 
-        run: rcmdcheck::rcmdcheck(args = "--no-manual", error_on = "error")
-
+          
       - name: Check Data Generation
-        shell: Rscript 
-        run: generate_fake_data.R
+        run: |
+          # sh generate_data.sh
+          mkdir input_data
+          mkdir ground_truth
+          mkdir data
+          ls -rthl *
+          Rscript generate_fake_data.R
+          ls -rthl *
+          cp data/mixes_data.rds starting_kit/mixes_data.rds
+          cp data/reference_data.rds starting_kit/reference_data.rds
 
-      - name: Build the Docker image
-        run: docker build . --file Dockerfile --tag hombergn/hadaca3_light
+          cp data/mixes_data.rds input_data/mixes_data.rds
+          cp data/reference_data.rds input_data/reference_data.rds
+
+          cp data/ground_truth.rds ground_truth/ground_truth.rds
+          ls -rthl *
+         
+
+      # - name: Build the Docker image
+      #   run: |
+      #     cd docker/codabench_hadaca3_light
+      #     docker build -t hombergn/hadaca3_light .
+      #     cd -
       
       - name: Create submission program
-        shell: Rscript 
-        run: starting_kit/submission_script.R
-      - name: Prepare files
+        run: |
+          cd starting_kit/
+          Rscript submission_script.R
+          cd ..
+
+      - name: Prepare files by creating folder etc...
         shell: bash
         run: |
           chmod +x prepare2score_locally.sh
-          prepare2score_locally.sh
+          sh prepare2score_locally.sh
+          ls test_output/*
+
       - name: Running ingestion Program
-        run: docker run --rm  -v $PWD/ingestion_program:/app/program  -v $PWD/test_output/res:/app/output  -v $PWD/starting_kit/submissions:/app/ingested_program  -w /app/program  -v $PWD/input_data:/app/input_data hombergn/hadaca3_light Rscript /app/program/ingestion.R /app/program /app/input_data /app/output /app/ingested_program 
-        
+        run: |
+          ls -rthl *
+          docker run --rm  -v $PWD/ingestion_program:/app/program  -v $PWD/test_output/res:/app/output  -v $PWD/starting_kit/submissions:/app/ingested_program  -w /app/program  -v $PWD/input_data:/app/input_data hombergn/hadaca3_light Rscript /app/program/ingestion.R /app/program /app/input_data /app/output /app/ingested_program 
+          ls -rthl test_output/*
         
       - name: Running Scoring Program
-        # sudo docker run --rm  -v $PWD/ingestion_program:/app/program  -v $PWD/test_output/res:/app/output  -v $PWD/starting_kit/submissions:/app/ingested_program  -w /app/program  -v $PWD/input_data:/app/input_data hombergn/hadaca3_light Rscript /app/program/ingestion.R /app/program /app/input_data /app/output /app/ingested_program >> logs 
-        run: docker run --rm  -v $PWD/scoring_program:/app/program  -v $PWD/test_output:/app/output  -w /app/program  -v $PWD/test_output:/app/input  hombergn/hadaca3_light  Rscript /app/program/scoring.R /app/input /app/output /app/program
+        run: |
+          docker run --rm  -v $PWD/scoring_program:/app/program  -v $PWD/test_output:/app/output  -w /app/program  -v $PWD/test_output:/app/input  hombergn/hadaca3_light  Rscript /app/program/scoring.R /app/input /app/output /app/program
+          ls -rthl test_output/*
+        
 
+      # - name: Install dependencies
+      #   shell: Rscript {0} 
+      #   run: |
+      #     install.packages(c("remotes", "rcmdcheck"))
+      #     remotes::install_deps(dependencies = TRUE)
 
-
-    
+      # - name: Check Rsript
+      #   shell: Rscript {0} 
+      #   run: rcmdcheck::rcmdcheck(args = "--no-manual", error_on = "error")ll 

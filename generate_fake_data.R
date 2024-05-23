@@ -1,8 +1,12 @@
 
+print('debut du script')
+
 ##Parameters
 Seed = 42 
 
-DEBUG = FALSE
+# DEBUG = FALSE
+DEBUG = TRUE
+
 #Number of cells types  /!\ change also cell_name_list
 k = 5 
 #Number of Probes
@@ -141,6 +145,7 @@ saveRDS(D, file = paste0("data/", name_D,".rds"))
 saveRDS(T, file = paste0("data/", name_T,".rds"))
 saveRDS(A, file = paste0("data/",name_A,".rds"))
 
+print('fin du script')
 
 ### Read data 
 
