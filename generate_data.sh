@@ -79,6 +79,8 @@ echo "$path_data"
 
 cp "$path_data"mixes_data.rds starting_kit/mixes_data.rds
 cp "$path_data"reference_data.rds starting_kit/reference_data.rds
+
 cp "$path_data"mixes_data.rds input_data/mixes_data.rds
 cp "$path_data"reference_data.rds input_data/reference_data.rds
+
 cp "$path_data"ground_truth.rds ground_truth/ground_truth.rds

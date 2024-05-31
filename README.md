@@ -1,5 +1,10 @@
 
+<!-- badges: start -->
+[![Docker Image CI](https://github.com/bcm-uga/hadaca3/actions/workflows/submission_on_docker.yml/badge.svg?branch=data_generation_migration)](https://github.com/bcm-uga/hadaca3/actions/workflows/submission_on_docker.yml)
+<!-- badges: end -->
+
 # hadaca 3 - Health Data Challenge
+
 
 HADACA 3 is the third edition of a Health Data Challenge, organized by the PEPR Santé Numérique (M4DI axis) and the University Grenoble-Alpes data challenges hub (TIMC, IAB and GRICAD). It will take place from December 2nd to 6th, 2024,
 
