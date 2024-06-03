@@ -235,9 +235,10 @@ dump(
   , file = paste0("submissions", .Platform$file.sep, "program.R")
 )
 
+date_suffix = format(x = Sys.time( ), format = "%Y_%m_%d_%H_%M_%S")
 
 # we create the associated zip file :
-zip_program <- paste0("submissions", .Platform$file.sep, "program_", format(x = Sys.time( ), format = "%Y_%m_%d_%S"), ".zip")
+zip_program <- paste0("submissions", .Platform$file.sep, "program_", date_suffix, ".zip")
 zip::zip(zipfile= zip_program
                 , files= paste0("submissions", .Platform$file.sep, "program.R")
                 , mode = "cherry-pick"
@@ -264,7 +265,7 @@ object = pred_prop
 # write_rds(pred_prop, file = "prediction_hugo.rds")
 
 ## we create the associated zip file :
-zip_results <- paste0("submissions", .Platform$file.sep, "results_", format(x = Sys.time( ), format = "%Y_%m_%d_%S"), ".zip")
+zip_results <- paste0("submissions", .Platform$file.sep, "results_", date_suffix, ".zip")
 zip::zipr(
          zipfile = zip_results
        , files   = paste0("submissions", .Platform$file.sep, c(prediction_name) )
