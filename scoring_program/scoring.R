@@ -26,6 +26,7 @@ homgeneized_cor_mat =function(A_r, A_est) {
 #########################
 # Estimated A pre-treatment
 
+#not usefull because reference based algorithm
 prepare_A <- function(A_r, A_est) {
     N <- ncol(x = A_r)
     K <- nrow(x = A_r)
@@ -125,7 +126,9 @@ eval_MAE = function (A_r , Aest_p){
 
 scoring_function <- function(Aref, Aest) {
   #  pretreatment of estimated A
-  Aest_p = prepare_A(A_r = Aref, A_est = Aest)
+#   Aest_p = prepare_A(A_r = Aref, A_est = Aest)
+  Aest_p = Aest[rownames(Aref),]
+  
   #  scoring
   mae = eval_MAE(Aref, Aest_p)
   cr = correlation_row(Aref, Aest_p)
@@ -196,18 +199,20 @@ output_file <- paste0(output, .Platform$file.sep, "scores.txt")
 ## Load reference data
 Aref =  readRDS(file = paste0(input, .Platform$file.sep, "ref", .Platform$file.sep, "ground_truth.rds") )
 # Aref =  readRDS(file = paste0(input, .Platform$file.sep, "ref", .Platform$file.sep, "test_solution.rds") )
-Aref = list(Aref) #remove this if you ref is already a list
-nb_dataset = length(Aref)
-print(x = paste0("Number of test dataset is :", nb_dataset) )
+# Aref = list(Aref) #remove this if you ref is already a list
+# nb_dataset = length(Aref)
+# print(x = paste0("Number of test dataset is :", nb_dataset) )
 
 
 ## load submited results from participant program :
-Aest <- lapply(
-    X   = seq_len(length.out = nb_dataset )
-  , FUN = function( i ) {
-      readRDS(file = paste0(input, .Platform$file.sep, "res", .Platform$file.sep, "results_", i, ".rds") )
-  }
-)
+# Aest <- lapply(
+#     X   = seq_len(length.out = nb_dataset )
+#   , FUN = function( i ) {
+#       readRDS(file = paste0(input, .Platform$file.sep, "res", .Platform$file.sep, "results_", i, ".rds") )
+#   }
+# )
+Aest = readRDS(file = paste0(input, .Platform$file.sep, "res", .Platform$file.sep, "prediction.rds") )
+
 
 ## load R profiling of the estimation of A :
 profiling <- readRDS(file = paste0(input, .Platform$file.sep, "res", .Platform$file.sep, "Rprof.rds") )
@@ -218,57 +223,69 @@ profiling <- readRDS(file = paste0(input, .Platform$file.sep, "res", .Platform$f
 
 
 #compute scores
-    scores_full <- sapply(
-    X   = seq_len(length.out = nb_dataset  )
-    , FUN = function( i ) {
-      print(i)
-        scoring_function(Aref = as.matrix(Aref[[ i ]]),  Aest = as.matrix(Aest[[ i ]] ))
-    }
-    )
-    if (nb_dataset > 1) {scores = as.numeric(scores_full[1,])}
-    if (nb_dataset == 1) {scores = as.numeric(scores_full[1])}
-    
+    # scores_full <- sapply(
+    # X   = seq_len(length.out = nb_dataset  )
+    # , FUN = function( i ) {
+    #   print(i)
+    #     scoring_function(Aref = as.matrix(Aref[[ i ]]),  Aest = as.matrix(Aest[[ i ]] ))
+    # }
+    # )
+
+    scores_full = scoring_function(Aref = as.matrix(Aref),  Aest = as.matrix(Aest))
+    # if (nb_dataset > 1) {scores = as.numeric(scores_full[1,])}
+    # if (nb_dataset == 1) {scores = as.numeric(scores_full[1])}
+    scores = as.numeric(scores_full)
+
+
     #generate estimated pre-treated A matrix for visualisation purposes
-    estimates = list()
-    for (i in seq_len(length.out = length(x = Aest) ) ) {
-        print(x = paste0("A matrix ", i) )
-       estimates[[i]] = prepare_A(A_r = as.matrix(Aref[[ i ]]), A_est = as.matrix(Aest[[ i ]] ) )
-    }
-    remove(list = "i")
+    # estimates = list()
+    # for (i in seq_len(length.out = length(x = Aest) ) ) {
+    #     print(x = paste0("A matrix ", i) )
+    #    estimates[[i]] = prepare_A(A_r = as.matrix(Aref[[ i ]]), A_est = as.matrix(Aest[[ i ]] ) )
+    # }
+    # remove(list = "i")
     
 
     #generate result table using aggregated score
-        res <- data.frame(
-        A         = seq_len(length.out = nb_dataset  )
-        , scoring = rep(x = program,   times = nb_dataset)
-        , accuracy     = scores
-        )
+        # res <- data.frame(
+        # A         = seq_len(length.out = nb_dataset  )
+        # , scoring = rep(x = program,   times = nb_dataset)
+        # , accuracy     = scores
+        # )
     
         #saving and visualisation
     
-        saveRDS(res, paste0(output,"/res_df.rds"))
+        # saveRDS(res, paste0(output,"/res_df.rds"))
+        saveRDS(scores, paste0(output,"/accuracy.rds"))
 
         stopifnot(exprs = all( !is.na(x = scores) ) )
         print(x = paste0("Scores : ", paste(scores, collapse = ", ") ) )
 
-        if (nb_dataset == 1){
-            print("Scores : No Accuracy_sd computed because there is only one solution to be tested")
-            cat(paste0("Accuracy_mean: " , mean(x = scores ), "\n"), file = output_file, append = FALSE)
-            cat(paste0("Accuracy_sd: "   , 0, "\n"), file = output_file, append = TRUE )
-            cat(paste0("Time: "     , sum( profiling$by.total$total.time ) / length(x = Aref), "\n"), file = output_file, append = TRUE )
-        } else {
-            print("Scores : Accuracy_mean, Accuracy_sd and Time computed")
-            cat(paste0("Accuracy_mean: " , mean(x = scores ), "\n"), file = output_file, append = FALSE)
-            cat(paste0("Accuracy_sd: "   , sd(  x = scores ), "\n"), file = output_file, append = TRUE )
-            cat(paste0("Time: "     , sum( profiling$by.total$total.time ) / length(x = Aref), "\n"), file = output_file, append = TRUE )
-        }
+        # if (nb_dataset == 1){
+        #     print("Scores : No Accuracy_sd computed because there is only one solution to be tested")
+        #     cat(paste0("Accuracy_mean: " , mean(x = scores ), "\n"), file = output_file, append = FALSE)
+        #     cat(paste0("Accuracy_sd: "   , 0, "\n"), file = output_file, append = TRUE )
+        #     cat(paste0("Time: "     , sum( profiling$by.total$total.time ) / length(x = Aref), "\n"), file = output_file, append = TRUE )
+        # } 
+        # else {
+        #     print("Scores : Accuracy_mean, Accuracy_sd and Time computed")
+        #     cat(paste0("Accuracy_mean: " , mean(x = scores ), "\n"), file = output_file, append = FALSE)
+        #     cat(paste0("Accuracy_sd: "   , sd(  x = scores ), "\n"), file = output_file, append = TRUE )
+        #     cat(paste0("Time: "     , sum( profiling$by.total$total.time ) / length(x = Aref), "\n"), file = output_file, append = TRUE )
+        # }
+
+        cat(paste0("Accuracy_mean: " , mean(x = scores ), "\n"), file = output_file, append = FALSE)
+        cat(paste0("Time: "     , sum( profiling$by.total$total.time ) / length(x = Aref), "\n"), file = output_file, append = TRUE )
+
         print(x = list.files(path = output, all.files = TRUE, full.names = TRUE, recursive = TRUE) )
 
         rmarkdown::render(
         input       = paste0(program, .Platform$file.sep, "detailed_results.Rmd")
         , envir       = parent.frame( )
         , output_dir  = output
-        , output_file = "scores.html"
+        # , output_file = "scores.html"
+        , output_file = "detailed_results.html"
+        
         )
 
         print(x = "Output :")

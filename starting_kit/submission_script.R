@@ -59,76 +59,145 @@ if ( params$install_dependencies ) {
 ### Result submission mode  
 # Participants have to make a zip file (no constrain on the namefile), with your results as a matrix inside a rds file named `results_1.rds`.
 
+# if ( !( "tidyverse" %in% installed.packages() ) ) {
+#     install.packages(pkgs = "tidyverse", repos = "https://cloud.r-project.org")
+# }
+
+# require(tidyverse)
 
 
 ##################################################################################################
 ### Submission modes /!\ EDIT THE FOLLOWING CODE BY COMMENTING/UNCOMMENTING THE REQUIRED PARTS ###
 ##################################################################################################
+#New data 
 
 
-## define the data set that you will use for your prediction (in this example, transcriptome data) :
-data_test <- readRDS(file = "public_data_rna.rds") #Comment if you want to predict from methylome data
-#data_test <- readRDS(file = "public_data_met.rds") #Uncomment if you want to predict from methylome data
+mixes_data <- readRDS(file = "mixes_data.rds")
+
+mix_rna <- mixes_data$mix_rna
+mix_met <- mixes_data$mix_met
+
+
+reference_data <- readRDS(file = "reference_data.rds")
+ref_rna <- as.matrix(reference_data$ref_bulkRNA)
+# ref_sc_rna <- as.matrix(reference_data$ref_scRNA)
+ref_met <- as.matrix(reference_data$ref_met)
+
+
 
 # # Write a function to predict cell-type heterogeneity proportion matrix
 #
 # In the provided example, we use a naive method to generate the baseline prediction.
 
-
-#' The prediction function
+#' The function to estimate the A matrix
 #'
-#' @param D_matrix a matrix from which to estimate the proportion matrix A_matrix
-#' @param k the number of cell types to estimate
-#' @return The proportion A_matrix and the cell-type specific profiles T_matrix
+#' @param mix_rna the list of bulk matrix associated to the transcriptome data set
+#' @param mix_met the list of bulk matrix associated to the methylation data set
+#' 
+#' @param ref_rna the reference matrix associated to the transcriptome data set
+#' @param ref_met the reference matrix associated to the methylation data set
+#' 
+#' @return the estimated A matrix
 #' @examples
-#' program(D_matrix = data_test, k = 3)
-
-
-program <- 
-
-    ##
-    ## YOUR CODE BEGINS HERE
-    ## 
-    function(D_matrix,  k = 5){
-        if ( !{ "NMF" %in% installed.packages( ) } ) {
-            install.packages(pkgs = "NMF", repos = "https://cloud.r-project.org")
-        }
-        
-
-        ## we compute the estimation of A for the data set :
-        A_matrix <- NULL
-        if ( !is.null(x = D_matrix) ) {
-          
-            ## /!\ temporary hack : we keep only the 10 000 first lines in order to save time for the baseline
-            if ( nrow(x = D_matrix) > 1e4 ) {
-                D_matrix[seq_len(length.out = 1e4), ]
-            }
-            ## /!\ END of temporary hack 
-            
-            #use NMF as deconvolution algorithm
-            res   <- NMF::nmf(x = D_matrix, rank = k, method = "lee") 
-            
-            #transform the matrix res into a proportion matrix
-            A_matrix <- apply(
-                X      = res@fit@H
-              , MARGIN = 2
-              , FUN    = function( x ) {
-                  x / sum( x )
-              }
-            )
-            
-            # estimate the cell-type specific profiles
-            T_matrix = NMF::basis(res)
-            
-            remove(list = "res")
-        }
-
+#' 
+program <- function(mix_rna = NULL, mix_met = NULL, 
+                    ref_rna = NULL, ref_met = NULL) {
+  ##
+  ## YOUR CODE BEGINS HERE
+  ##
+  
+  if ( !( "nnls" %in% installed.packages() ) ) {
+      install.packages(pkgs = "nnls", repos = "https://cloud.r-project.org")
+  }
+  require(nnls)
+  
+  ## we compute the estimation of the proportions for the transcription data set :
+  if ( !( is.null(x = mix_rna) ) ) {
     
-    return( list(A_matrix = A_matrix, T_matrix = T_matrix) )
+    res_rna <- apply( # apply nnls for all sample (i.e. column of mix_rna)
+      X = mix_rna,
+      MARGIN = 2,
+      FUN = nnls,
+      A = ref_rna
+    )
+    
+    prop_rna <- sapply( # apply to recover estimate of each bulk
+      res_rna, 
+      function(res_bulk_i){
+        tmp_prop <- res_bulk_i$x # <- res_bulk_i$X if error
+        tmp_prop <- tmp_prop / sum(tmp_prop) # Sum To One
+        return(tmp_prop)
+      }
+    ) 
+    
+    rownames(prop_rna) <- colnames(ref_rna)
+    
+  }
+  
+  ## we compute the estimation of A for the methylation data set :
+  if ( !( is.null(mix_met) ) ) {
+    
+    res_met <- apply( # apply nnls for all sample (i.e. column of mix_met)
+      X = mix_met,
+      MARGIN = 2,
+      FUN = nnls,
+      A = ref_met
+    )
+    
+    prop_met <- sapply( # apply to recover estimate of each bulk
+      res_met, 
+      function(res_bulk_i){
+        tmp_prop <- res_bulk_i$x # <- res_bulk_i$X if error
+        tmp_prop <- tmp_prop / sum(tmp_prop) # Sum To One
+        return(tmp_prop)
+      }
+    ) 
+    
+    rownames(prop_met) <- colnames(ref_met)
+    
+  }
+  
+  
+  
+  ## we compute the mean of all the estimated A matrices as the final A matrix :
+  
+  
+  
+  if ( !is.null(x = mix_met) ) {
+    if ( !is.null(x = mix_rna) ) {
+      
+      stopifnot( identical(x = dim(prop_rna), y = dim(prop_met)) ) # stop if not same number of cell type or samples
+      
+      ## we have an estimation of prop based on the the methylation and transcriptome data sets
+      prop <- (prop_rna + prop_met) / 2
+        
+    } else {
+      
+      ## we have an estimation of prop based on the the methylation data set only
+      prop <- prop_met
+        
+    }
+  } else {
+    
+    ## we have an estimation of prop based on the the transcriptome data set only
+    prop <- prop_rna
+      
+  }
+  
+  if (any(colSums(prop) != 1)) { # Sum To One 
+    prop <- sapply(
+      1:ncol(prop), 
+      function(col_i) { prop[,col_i] / sum(prop[,col_i]) }
+    )
+  }
+
+
+  return(prop)
+  
+  ##
+  ## YOUR CODE ENDS HERE
+  ##
 }
-    ##
-    ## YOUR CODE ENDS HERE
-    ## 
 
 
 ##############################################################
@@ -136,9 +205,9 @@ program <-
 ##############################################################
 
 # we use the previously defined function 'program' to estimate A :
-prediction <- program(
-  D_matrix = data_test
-  # k = input_k_value
+pred_prop <- program(
+  mix_rna = mix_rna, mix_met = mix_met,
+  ref_rna = ref_rna, ref_met = ref_met
 )
 
 ###############################
@@ -166,9 +235,10 @@ dump(
   , file = paste0("submissions", .Platform$file.sep, "program.R")
 )
 
+date_suffix = format(x = Sys.time( ), format = "%Y_%m_%d_%H_%M_%S")
 
 # we create the associated zip file :
-zip_program <- paste0("submissions", .Platform$file.sep, "program_", format(x = Sys.time( ), format = "%Y_%m_%d_%S"), ".zip")
+zip_program <- paste0("submissions", .Platform$file.sep, "program_", date_suffix, ".zip")
 zip::zip(zipfile= zip_program
                 , files= paste0("submissions", .Platform$file.sep, "program.R")
                 , mode = "cherry-pick"
@@ -185,16 +255,20 @@ if ( !dir.exists(paths = "submissions") ) {
     dir.create(path = "submissions")
 }
 
+prediction_name = "prediction.rds"
+
 ## we save the estimated A matrix as a rds file named 'results.rds' :
 saveRDS(
-object = prediction$A_matrix
-, file   = paste0("submissions", .Platform$file.sep, "results_1.rds")) 
+object = pred_prop
+, file   = paste0("submissions", .Platform$file.sep, prediction_name)) 
+
+# write_rds(pred_prop, file = "prediction_hugo.rds")
 
 ## we create the associated zip file :
-zip_results <- paste0("submissions", .Platform$file.sep, "results_", format(x = Sys.time( ), format = "%Y_%m_%d_%S"), ".zip")
+zip_results <- paste0("submissions", .Platform$file.sep, "results_", date_suffix, ".zip")
 zip::zipr(
          zipfile = zip_results
-       , files   = paste0("submissions", .Platform$file.sep, c("results_1.rds") )
+       , files   = paste0("submissions", .Platform$file.sep, c(prediction_name) )
      )
 print(x = zip_results)
 

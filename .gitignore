@@ -7,12 +7,16 @@
 starting_kit/submissions/
 starting_kit/submissions/*
 
+
+data_old/
+data_old/*
+starting_kit_old
+
 test_output/
 test_output/*
 
 data/*
 data/
-
 # starting_kit/*
 
 docker/codabench_legacy/
@@ -24,7 +28,7 @@ logs_light_doc_V1
 .vscode
 .vscode/*
 
-# modules
+modules
 ingestion_program/modules
 
 scoring_program.zip
@@ -33,4 +37,17 @@ starting_kit.zip
 input_data.zip
 ground_truth.zip
 
+
 logs
+
+
+*.rds
+
+ground_truth/
+ground_truth/*
+
+input_data/
+input_data/*
+
+
+backup*
