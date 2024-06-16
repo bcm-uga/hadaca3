@@ -32,7 +32,7 @@ pages:
   file: sponsors.md  
 tasks:
 - index: 0
-  name: LIGHT Cell type proportion estimation from transcriptome data
+  name: LIGHT Cell type proportion estimation from transcriptome 
   description: LIGHT COMETH data challenge
   reference_data: ground_truth.zip  #rename to ground_truth! 
   input_data: input_data.zip
