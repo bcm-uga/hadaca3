@@ -1,11 +1,11 @@
 
 type Rscript >/dev/null 2>&1 || { echo >&2 "Rscript requiered but it's not installed.  Aborting."; exit 1; }
 
-echo "Building Docker"
-cd docker/codabench_hadaca3_light
-sudo docker build -t hombergn/hadaca3_light .  >> logs
-cd -
-echo "Docker created"
+# echo "Building Docker"
+# cd docker/codabench_hadaca3_light
+# sudo docker build -t hombergn/hadaca3_light .  >> logs
+# cd -
+# echo "Docker created"
 
 echo "Generate data"
 sh generate_data.sh $1
@@ -22,7 +22,7 @@ echo "Preparing data"
 sh prepare2score_locally.sh
 echo 'data migrated'
 
-echo "Running ingestion Program"
+echo "Running ingestion Program, super user (sudo) is needed to run docker."
 sudo docker run --rm  -v $PWD/ingestion_program:/app/program  -v $PWD/test_output/res:/app/output  -v $PWD/starting_kit/submissions:/app/ingested_program  -w /app/program  -v $PWD/input_data:/app/input_data hombergn/hadaca3_light Rscript /app/program/ingestion.R /app/program /app/input_data /app/output /app/ingested_program >> logs
 echo "Ingestion progam done"
 

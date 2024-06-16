@@ -4,7 +4,7 @@ docker_image: hombergn/hadaca3_light
 queue: null
 description: HADACA3
 registration_auto_approve: true
-enable_detailed_results: false
+enable_detailed_results: true
 image: HADACA3_com.png
 terms: terms.md
 make_programs_available: true
