@@ -222,6 +222,52 @@ profiling <- readRDS(file = paste0(input, .Platform$file.sep, "res", .Platform$f
 ##############################################
 
 
+validate_pred <- function(pred, nb_samples = ncol(Aref), nb_cells=nrow(Aref) , col_names=rownames(Aref) ){
+
+  error_status = 0   # 0 means no errors, 1 means "Fatal errors" and 2 means "Warning"
+  error_informations = ''
+
+  ## Ensure that all sum ofcells proportion approximately equal 1
+  if (!all(sapply(colSums(pred), function(x) isTRUE(all.equal(x, 1) )))) {
+    msg = "The prediction matrix does not respect the laws of proportions: the sum of each columns should be equal to 1\n"
+    error_informations = paste(error_informations,msg)
+    error_status = 2
+  }
+
+  ##Ensure that the prediction have the correct names ! 
+  if(! setequal(rownames(pred),col_names) ){
+    msg = paste0(    "The row names in the prediction matrix should match: ", toString(col_names),"\n")
+    error_informations = paste(error_informations,msg)
+    error_status = 2
+  }
+
+  ## Ensure that the prediction return the correct number of samples and  number of cells. 
+  if (nrow(pred) != nb_cells  | ncol(pred) != nb_samples)  {
+    msg= paste0('The prediction matrix has the dimention: ',toString(dim(pred))," whereas the dimention: ",toString(c(nb_cells,nb_samples))," is expected\n"   )
+    error_informations = paste(error_informations,msg)
+    error_status = 1
+  }
+
+  if(error_status == 1){
+    # The error is blocking and should therefor stop the execution. 
+    stop(error_informations)
+  }
+  if(error_status == 2){
+    print("Warning: ")
+    warning(error_informations)
+  }  
+}
+
+
+
+Aref = as.matrix(Aref)
+Aest = as.matrix(Aest)
+
+
+##Ensure some properties of the Prediction are ok. 
+validate_pred( Aest )
+
+
 #compute scores
     # scores_full <- sapply(
     # X   = seq_len(length.out = nb_dataset  )
@@ -231,7 +277,7 @@ profiling <- readRDS(file = paste0(input, .Platform$file.sep, "res", .Platform$f
     # }
     # )
 
-    scores_full = scoring_function(Aref = as.matrix(Aref),  Aest = as.matrix(Aest))
+    scores_full = scoring_function(Aref = Aref,  Aest = Aest)
     # if (nb_dataset > 1) {scores = as.numeric(scores_full[1,])}
     # if (nb_dataset == 1) {scores = as.numeric(scores_full[1])}
     scores = as.numeric(scores_full)
