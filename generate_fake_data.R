@@ -19,8 +19,8 @@ if (length(args) >=1) {
 ##Parameters
 Seed = 42 
 
-DEBUG = FALSE
-# DEBUG = TRUE
+# DEBUG = FALSE
+DEBUG = TRUE
 
 #Number of cells types  /!\ change also cell_name_list
 k = 5 
@@ -101,6 +101,11 @@ create_ref_matrix <- function(k,nb_met_sondes, rna_mean,rna_sd,rna_min,rna_max){
     colnames(T_met) = cell_name_list
     colnames(T_rna) = cell_name_list
 
+    if (DEBUG){
+        print(head(T_met))
+        print(head(T_rna))
+        }
+
     return(list(T_met=T_met,T_rna=T_rna))
 }
 Ref_m = create_ref_matrix(k,nb_met_sondes, rna_mean,rna_sd,rna_min,rna_max)
@@ -108,18 +113,13 @@ Ref_m = create_ref_matrix(k,nb_met_sondes, rna_mean,rna_sd,rna_min,rna_max)
 # T_rna = res$T_rna
 
 
-if (DEBUG){
-    print(head(T_met))
-    print(head(T_rna))
-    }
-
 
 
 #######################################################
 ### Generate the Bulk matrix D with dim: nb_genes*nb_probes
 #######################################################
 
-if (DEBUG){print(cat("dim T:",dim(T_met),"\ndim A:",dim(A)))} 
+# if (DEBUG){print(cat("dim T:",dim(T_met),"\ndim A:",dim(A)))} 
 
 # function to add noise on D matrix
 add_noise = function(data, mean = 0, sd = 0.05, val_min = 0, val_max = 1){
