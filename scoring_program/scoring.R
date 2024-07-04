@@ -243,7 +243,7 @@ validate_pred <- function(pred, nb_samples = ncol(Aref), nb_cells=nrow(Aref) , c
 
   ## Ensure that the prediction return the correct number of samples and  number of cells. 
   if (nrow(pred) != nb_cells  | ncol(pred) != nb_samples)  {
-    msg= paste0('The prediction matrix has the dimention: ',toString(dim(pred))," whereas the dimention: ",toString(c(nb_cells,nb_samples))," is expected\n"   )
+    msg= paste0('The prediction matrix has the dimension: ',toString(dim(pred))," whereas the dimension: ",toString(c(nb_cells,nb_samples))," is expected\n"   )
     error_informations = paste(error_informations,msg)
     error_status = 1
   }

@@ -1,14 +1,30 @@
 
-print('debut du script')
+print('Begining of fake data generation')
+
+# Get the command line arguments
+args <- commandArgs(trailingOnly = TRUE)
+
+# Print the arguments
+print("arguments are:")
+print(args)
+
+if (length(args) >=1) {
+    nb_datasets = as.numeric(args[1])
+    print(paste0("The number of datasets to generate is ",toString(nb_datasets)))
+} else {
+    nb_datasets = 1
+    print("no argument is given, we therefor create only one dataset. ")
+}
 
 ##Parameters
 Seed = 42 
 
-# DEBUG = FALSE
-DEBUG = TRUE
+DEBUG = FALSE
+# DEBUG = TRUE
 
 #Number of cells types  /!\ change also cell_name_list
 k = 5 
+cell_name_list =  c("endo" ,   "fibro"  , "immune" , "classic" ,"basal" )
 #Number of Probes
 nb_probes = 30
 #number of observations
@@ -33,7 +49,6 @@ name_D_met= "mix_met"
 name_D_rna= "mix_rna"
 
 
-cell_name_list =  c("endo" ,   "fibro"  , "immune" , "classic" ,"basal" )
 
 # cancer_type
 # cancer_type = "paad"
@@ -44,7 +59,7 @@ if (exists("Seed")){
 } 
 
 #######################################################
-### Generate proportion matrix A with dim: k*nb_probes
+### Generate proportion (ground_truth) matrix A with dim: k*nb_probes
 #######################################################
 
 #function to generate proporition for one probe: 
@@ -56,14 +71,13 @@ proportion_4_1_probe <-
     return(m/sum(m))  
 }
 
-# A =  matrix(rep(proportion_4_1_probe(k), each=nb_probes), nrow=nb_probes)
-
 create_ground_truth = function(nb_probes,k,min=0,max=1){
-    return(replicate(nb_probes,proportion_4_1_probe(k,min,max)))
+    A = replicate(nb_probes,proportion_4_1_probe(k,min,max))
+    rownames(A) = cell_name_list
+    return(A)
 }
 
 A = create_ground_truth(nb_probes,k)
-rownames(A) = cell_name_list
 
 if (DEBUG){print(A)}
 
@@ -80,11 +94,19 @@ rtnorm <- function(n, mean = 0.5, sd = 0.3, min = 0, max = 1) {
     qnorm(u, mean, sd)
 }
 
-T_met = replicate(k,rtnorm(nb_met_sondes ) )
-T_rna = replicate(k,rtnorm(nb_genes, mean = rna_mean, sd= rna_sd, min = rna_min, max=rna_max ) )
 
-colnames(T_met) = cell_name_list
-colnames(T_rna) = cell_name_list
+create_ref_matrix <- function(k,nb_met_sondes, rna_mean,rna_sd,rna_min,rna_max){
+    T_met = replicate(k,rtnorm(nb_met_sondes ) )
+    T_rna = replicate(k,rtnorm(nb_genes, mean = rna_mean, sd= rna_sd, min = rna_min, max=rna_max ) )
+    colnames(T_met) = cell_name_list
+    colnames(T_rna) = cell_name_list
+
+    return(list(T_met=T_met,T_rna=T_rna))
+}
+Ref_m = create_ref_matrix(k,nb_met_sondes, rna_mean,rna_sd,rna_min,rna_max)
+# T_met = res$T_met
+# T_rna = res$T_rna
+
 
 if (DEBUG){
     print(head(T_met))
@@ -99,15 +121,6 @@ if (DEBUG){
 
 if (DEBUG){print(cat("dim T:",dim(T_met),"\ndim A:",dim(A)))} 
 
-D_met = T_met%*%A
-D_rna = T_rna%*%A
-
-if (DEBUG){
-    print(cat(head(D_met),"\ndim D_met:",dim(D_met)))
-    print(cat(head(D_rna),"\ndim D_rna:",dim(D_rna)))
-    } 
-
-
 # function to add noise on D matrix
 add_noise = function(data, mean = 0, sd = 0.05, val_min = 0, val_max = 1){
   noise = matrix(rnorm(prod(dim(data)), mean = mean, sd = sd), nrow = nrow(data))
@@ -117,37 +130,47 @@ add_noise = function(data, mean = 0, sd = 0.05, val_min = 0, val_max = 1){
   return(datam)
 }
 
-D_met = add_noise(D_met)
-D_rna = add_noise(D_rna)
-
-if (DEBUG){
-    print("\nD_rna with noise:\n") 
-    print(head(D_rna))
-    print("\nD_met with noise:\n") 
-    print(head(D_met))
+create_bulk <- function(Ref_m,A){
+    D_met = Ref_m$T_met%*%A
+    D_rna = Ref_m$T_rna%*%A
+    if (DEBUG){
+        print(cat(head(D_met),"\ndim D_met:",dim(D_met)))
+        print(cat(head(D_rna),"\ndim D_rna:",dim(D_rna)))
     } 
+    D_met = add_noise(D_met)
+    D_rna = add_noise(D_rna)
+    if (DEBUG){
+        print("\nD_rna with noise:\n") 
+        print(head(D_rna))
+        print("\nD_met with noise:\n") 
+        print(head(D_met))
+    } 
+    return(list(D_met=D_met,D_rna=D_rna))
+}
+
+Bulk_m  =create_bulk(Ref_m,A)
+
 
 ### Write the results into rds files.  
-
 dir.create("data/", showWarnings = FALSE)
+write_to_disk <- function(Ref_m, Bulk_m,A){
+    D= list()
+    D[[name_D_rna]]= Bulk_m$D_rna
+    D[[name_D_met]]= Bulk_m$D_met
 
-D= list()
-D[[name_D_rna]]= D_rna
-D[[name_D_met]]= D_met
+    T = list()
+    T[[name_T_met]]= Ref_m$T_met
+    T[[name_T_rna]]= Ref_m$T_rna
 
-T = list()
-T[[name_T_met]]= T_met
-T[[name_T_rna]]= T_rna
+    saveRDS(D, file = paste0("data/", name_D,".rds"))
+    saveRDS(T, file = paste0("data/", name_T,".rds"))
+    saveRDS(A, file = paste0("data/",name_A,".rds"))
 
-
-
-saveRDS(D, file = paste0("data/", name_D,".rds"))
-saveRDS(T, file = paste0("data/", name_T,".rds"))
-saveRDS(A, file = paste0("data/",name_A,".rds"))
+}
 
 print('fin du script')
 
-### Read data 
+### re Read data 
 
 if (DEBUG){
     print(readRDS(file = paste0("data/", name_D,".rds")) )
