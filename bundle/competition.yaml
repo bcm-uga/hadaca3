@@ -8,7 +8,7 @@ enable_detailed_results: true
 image: HADACA3_com.png
 terms: terms.md
 make_programs_available: true
-make_input_data_available: false
+make_input_data_available: true
 pages:
 - title: Overview
   file: overview.md
@@ -32,10 +32,17 @@ pages:
   file: sponsors.md  
 tasks:
 - index: 0
-  name: LIGHT Cell type proportion estimation from transcriptome 
+  name: LIGHT Cell type proportion estimation from transcriptome data1
   description: LIGHT COMETH data challenge
   reference_data: ground_truth.zip  #rename to ground_truth! 
-  input_data: input_data.zip
+  input_data: input_data_1.zip
+  scoring_program: scoring_program.zip
+  ingestion_program: ingestion_program.zip
+- index: 1
+  name: LIGHT Cell type proportion estimation from transcriptome data2
+  description: LIGHT COMETH data challenge
+  reference_data: ground_truth.zip  #rename to ground_truth! 
+  input_data: input_data_2.zip
   scoring_program: scoring_program.zip
   ingestion_program: ingestion_program.zip
 solutions: []
@@ -53,6 +60,7 @@ phases:
   starting_kit: starting_kit.zip
   tasks:
   - 0
+  - 1 
   solutions: []
 leaderboards:
 - index: 0

@@ -14,6 +14,7 @@ echo "data Generated"
 
 echo "Create submission program"
 cd starting_kit/
+rm -rf submissions
 Rscript submission_script.R >> logs
 cd - 
 echo "Done"

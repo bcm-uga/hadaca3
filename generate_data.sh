@@ -7,16 +7,21 @@ echo cean data first
 sh clean.sh
 echo cleaning done. 
 
+number_dataset=4
+
 mkdir input_data
+for i in $(seq 1 $number_dataset); do mkdir input_data/input_data_$i ;  done ; 
+# for i in {1..$number_dataset}; do mkdir input_data_$i ;  done ; 
 mkdir ground_truth
 
 #Test if argument exist
+
 if [ $# -lt 1 ]
 then
 echo "Creating fake data because there is no argument"
 
 mkdir data
-Rscript generate_fake_data.R >> logs
+Rscript generate_fake_data.R 4 >> logs
 
 # Should we put the data migration inside the bundle generator script ? 
 
@@ -41,10 +46,18 @@ fi
 echo "$path_data"
 # echo "$path_data"mixes_data.rds starting_kit/mixes_data.rds
 
-cp "$path_data"mixes_data.rds starting_kit/mixes_data.rds
-cp "$path_data"reference_data.rds starting_kit/reference_data.rds
+cp "$path_data"ground_truth/ground_truth.rds ground_truth/ground_truth.rds
 
-cp "$path_data"mixes_data.rds input_data/mixes_data.rds
-cp "$path_data"reference_data.rds input_data/reference_data.rds
 
-cp "$path_data"ground_truth.rds ground_truth/ground_truth.rds
+# for i in {1..$number_dataset}; 
+for i in  $(seq 1 $number_dataset);
+do
+    echo "Number $i"
+    cp "$path_data""$i"/mixes_data_"$i".rds input_data/input_data_"$i"/mixes_data.rds
+    cp "$path_data""$i"/reference_data_"$i".rds input_data/input_data_"$i"/reference_data.rds
+done
+
+# cp "$path_data"mixes_data.rds starting_kit/mixes_data.rds
+# cp "$path_data"reference_data.rds starting_kit/reference_data.rds
+
+

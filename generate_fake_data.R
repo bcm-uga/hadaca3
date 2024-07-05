@@ -19,8 +19,8 @@ if (length(args) >=1) {
 ##Parameters
 Seed = 42 
 
-# DEBUG = FALSE
-DEBUG = TRUE
+DEBUG = FALSE
+# DEBUG = TRUE
 
 #Number of cells types  /!\ change also cell_name_list
 k = 5 
@@ -30,6 +30,9 @@ nb_probes = 30
 #number of observations
 nb_genes = 200
 nb_met_sondes = 300
+
+nb_genes = 20
+nb_met_sondes = 30
 
 #Rna expression 
 rna_min = 0 
@@ -77,10 +80,6 @@ create_ground_truth = function(nb_probes,k,min=0,max=1){
     return(A)
 }
 
-A = create_ground_truth(nb_probes,k)
-
-if (DEBUG){print(A)}
-
 
 #######################################################
 ### Generate reference matrix T with dim:  nb_genes*k
@@ -101,16 +100,15 @@ create_ref_matrix <- function(k,nb_met_sondes, rna_mean,rna_sd,rna_min,rna_max){
     colnames(T_met) = cell_name_list
     colnames(T_rna) = cell_name_list
 
-    if (DEBUG){
-        print(head(T_met))
-        print(head(T_rna))
-        }
+    # if (DEBUG){
+    #     print(head(T_met))
+    #     print(head(T_rna))
+    #     }
 
     return(list(T_met=T_met,T_rna=T_rna))
 }
-Ref_m = create_ref_matrix(k,nb_met_sondes, rna_mean,rna_sd,rna_min,rna_max)
-# T_met = res$T_met
-# T_rna = res$T_rna
+
+
 
 
 
@@ -130,30 +128,27 @@ add_noise = function(data, mean = 0, sd = 0.05, val_min = 0, val_max = 1){
   return(datam)
 }
 
-create_bulk <- function(Ref_m,A){
+create_bulk <- function(Ref_m,A,mean = 0, sd = 0.05, val_min = 0, val_max = 1){
     D_met = Ref_m$T_met%*%A
     D_rna = Ref_m$T_rna%*%A
-    if (DEBUG){
-        print(cat(head(D_met),"\ndim D_met:",dim(D_met)))
-        print(cat(head(D_rna),"\ndim D_rna:",dim(D_rna)))
-    } 
     D_met = add_noise(D_met)
-    D_rna = add_noise(D_rna)
-    if (DEBUG){
-        print("\nD_rna with noise:\n") 
-        print(head(D_rna))
-        print("\nD_met with noise:\n") 
-        print(head(D_met))
-    } 
+    print('RNA')
+    D_rna = add_noise(D_rna,sd = 30, val_min = 0, val_max = 100000)
+    # if (DEBUG){
+    #     print("\nD_met with noise:\n") 
+    #     print(head(D_met))
+    #     print("\nD_rna with noise:\n") 
+    #     print(head(D_rna))
+    # } 
     return(list(D_met=D_met,D_rna=D_rna))
 }
 
-Bulk_m  =create_bulk(Ref_m,A)
+# 
 
 
 ### Write the results into rds files.  
 dir.create("data/", showWarnings = FALSE)
-write_to_disk <- function(Ref_m, Bulk_m,A){
+write_to_disk <- function(Ref_m, Bulk_m,dataset_name){
     D= list()
     D[[name_D_rna]]= Bulk_m$D_rna
     D[[name_D_met]]= Bulk_m$D_met
@@ -162,18 +157,61 @@ write_to_disk <- function(Ref_m, Bulk_m,A){
     T[[name_T_met]]= Ref_m$T_met
     T[[name_T_rna]]= Ref_m$T_rna
 
-    saveRDS(D, file = paste0("data/", name_D,".rds"))
-    saveRDS(T, file = paste0("data/", name_T,".rds"))
-    saveRDS(A, file = paste0("data/",name_A,".rds"))
 
+    dir_name = paste0("data/",dataset_name,'/')
+
+    dir.create(dir_name, showWarnings = FALSE)
+
+    saveRDS(D, file = paste0(dir_name, name_D,"_",dataset_name,".rds"))
+    saveRDS(T, file = paste0(dir_name, name_T,"_",dataset_name,".rds"))
+    # saveRDS(A, file = paste0(dir_name, name_A,"_",dataset_name,".rds"))
 }
+
+write_to_disk <- function(Ref_m, Bulk_m,dataset_name){
+    D= list()
+    D[[name_D_rna]]= Bulk_m$D_rna
+    D[[name_D_met]]= Bulk_m$D_met
+
+    T = list()
+    T[[name_T_met]]= Ref_m$T_met
+    T[[name_T_rna]]= Ref_m$T_rna
+
+
+    dir_name = paste0("data/",dataset_name,'/')
+
+    dir.create(dir_name, showWarnings = FALSE)
+
+    saveRDS(D, file = paste0(dir_name, name_D,"_",dataset_name,".rds"))
+    saveRDS(T, file = paste0(dir_name, name_T,"_",dataset_name,".rds"))
+    # saveRDS(A, file = paste0(dir_name, name_A,"_",dataset_name,".rds"))
+}
+
+
+## Generate the ground truth: 
+A = create_ground_truth(nb_probes,k)
+dir_name = paste0("data/ground_truth/")
+dir.create(dir_name, showWarnings = FALSE)
+saveRDS(A, file = paste0(dir_name, name_A,".rds"))
+
+for (dataset_name in 1:nb_datasets){
+
+    dataset_name = toString( dataset_name)
+    print(paste0("generating dataset:",dataset_name ))
+
+    Ref_m = create_ref_matrix(k,nb_met_sondes, rna_mean,rna_sd,rna_min,rna_max)
+    Bulk_m  =create_bulk(Ref_m,A)
+
+    write_to_disk(Ref_m,Bulk_m,dataset_name)
+
+    if (DEBUG){
+        ### re Read data 
+        dir_name = paste0("data/",dataset_name,'/')
+        print(head(readRDS(file = paste0(dir_name, name_D,"_",dataset_name,".rds")) ))
+        print(head(readRDS(file = paste0(dir_name, name_T,"_",dataset_name,".rds"))) )
+    }
+}
+
+# print(readRDS(file = paste0(dir_name,name_A,".rds" )) )
 
 print('fin du script')
 
-### re Read data 
-
-if (DEBUG){
-    print(readRDS(file = paste0("data/", name_D,".rds")) )
-    print(readRDS(file = paste0("data/", name_T,".rds")) )
-    print(readRDS(file = paste0("data/",name_A,".rds" )) )
-}

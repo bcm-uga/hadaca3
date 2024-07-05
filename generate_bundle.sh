@@ -15,8 +15,15 @@ cd starting_kit/ ; zip  -FS  -r  ../bundle/starting_kit.zip *  -x \*submissions\
 
 
 zip -FS -j -r  bundle/ground_truth.zip ground_truth/
-zip -FS -j -r  bundle/input_data.zip input_data/
 
+
+
+number_dataset=4
+for i in  $(seq 1 $number_dataset);
+do
+    zip -FS -j -r  bundle/input_data_"$i".zip input_data/input_data_"$i"
+done 
+# zip -FS -j -r  bundle/input_data.zip input_data/
 
 zip -FS -r -j bundle.zip bundle/
 
