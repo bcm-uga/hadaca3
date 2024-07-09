@@ -15,6 +15,7 @@ echo "data Generated"
 echo "Create submission program"
 cd starting_kit/
 rm -rf submissions
+cp ../input_data/input_data_1/* .
 Rscript submission_script.R >> logs
 cd - 
 echo "Done"
@@ -24,18 +25,17 @@ sh prepare2score_locally.sh
 echo 'data migrated'
 
 echo "Running ingestion Program, super user (sudo) is needed to run docker."
-sudo docker run --rm  -v $PWD/ingestion_program:/app/program  -v $PWD/test_output/res:/app/output  -v $PWD/starting_kit/submissions:/app/ingested_program  -w /app/program  -v $PWD/input_data:/app/input_data hombergn/hadaca3_light Rscript /app/program/ingestion.R /app/program /app/input_data /app/output /app/ingested_program >> logs
+sudo docker run --rm  -v $PWD/ingestion_program:/app/program  -v $PWD/test_output/res:/app/output  -v $PWD/starting_kit/submissions:/app/ingested_program  -w /app/program  -v $PWD/input_data/:/app/input_data/input_data hombergn/hadaca3_light Rscript /app/program/ingestion.R /app/program /app/input_data /app/output /app/ingested_program #>> logs
 echo "Ingestion progam done"
 
 
 echo "Running Scoring Program"
-# sudo docker run --rm  -v $PWD/ingestion_program:/app/program  -v $PWD/test_output/res:/app/output  -v $PWD/starting_kit/submissions:/app/ingested_program  -w /app/program  -v $PWD/input_data:/app/input_data hombergn/hadaca3_light Rscript /app/program/ingestion.R /app/program /app/input_data /app/output /app/ingested_program >> logs 
-sudo docker run --rm  -v $PWD/scoring_program:/app/program  -v $PWD/test_output:/app/output  -w /app/program  -v $PWD/test_output:/app/input  hombergn/hadaca3_light  Rscript /app/program/scoring.R /app/input /app/output /app/program >> logs
+sudo docker run --rm  -v $PWD/scoring_program:/app/program  -v $PWD/test_output:/app/output  -w /app/program  -v $PWD/test_output:/app/input  hombergn/hadaca3_light  Rscript /app/program/scoring.R /app/input /app/output /app/program #>> logs
 echo "Scoring program done"
 
 
-echo "Test if the output file accuracy.rds exist"
-filename='test_output/accuracy.rds'
+echo "Test if the output file scores.txt exist"
+filename='test_output/scores.txt'
 if [ -f $filename ]; then
     echo 'SUCESS! The result file exists.'
 else

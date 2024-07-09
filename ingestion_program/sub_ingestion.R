@@ -28,59 +28,73 @@ source(
   , local = .tempEnv
 )
 
+nb_datasets = 4
+
 ####################################
 ## read input data :
 #####################################
-mixes_data <- readRDS(file = paste0(input, .Platform$file.sep, "mixes_data.rds") )
-
-mix_rna <- mixes_data$mix_rna
-mix_met <- mixes_data$mix_met
-names(mixes_data)
-
-reference_data <- readRDS(file = paste0(input, .Platform$file.sep, "reference_data.rds")  )
-ref_rna <- as.matrix(reference_data$ref_bulkRNA)
-ref_met <- as.matrix(reference_data$ref_met)
-names(reference_data)
 
 
-# test_data <- readRDS(file = paste0(input, .Platform$file.sep, "mix.rds") )
-# test_data = list(test_data) #remove this if your input data is already a list!
-# print(paste0("length of test_data : ", length(test_data)))
-# print(paste0("type of test data : ", typeof(test_data)))
-# names(test_data)
-# D_matrix = test_data[[as.numeric(i)]]
-# print(paste0("dim of test_data[[idx]] : ",dim(D_matrix)))
-# input_k_value = readRDS(file = paste0(input, .Platform$file.sep, "input_k_value.rds") )
-# print(paste0(" input k value = ",input_k_value))
 
-# cancer_type = readRDS(file = paste0(input, .Platform$file.sep, "cancer_type.rds") )
-# print(paste0(" cancer type = ",cancer_type))
+# mixes_data <- readRDS(file = paste0(input, .Platform$file.sep, "mixes_data.rds") )
+
+# mix_rna <- mixes_data$mix_rna
+# mix_met <- mixes_data$mix_met
+# names(mixes_data)
+
+# reference_data <- readRDS(file = paste0(input, .Platform$file.sep, "reference_data.rds")  )
+# ref_rna <- as.matrix(reference_data$ref_bulkRNA)
+# ref_met <- as.matrix(reference_data$ref_met)
+# names(reference_data)
 
 
-## TEMP
-#D_met <- D_met[1:1e2, ]
-#D_matrix <- D_matrix[1:1e2, ]
 
 base::set.seed(seed = 1)
 
 
-#if (length(input_k_value) > 0) {
-  #  print(paste0("use_private_k = ",input_k_value))
-  #  prediction <-.tempEnv$program(D_matrix = D_matrix, k = input_k_value)
-#} else {
-    # print(paste0("use_default_k"))
-    # prediction <-.tempEnv$program(D_matrix = D_matrix)
-    prediction <-.tempEnv$program(  
-      mix_rna = mix_rna, mix_met = mix_met,
-      ref_rna = ref_rna, ref_met = ref_met)
-#}
+predi_list = list()
+for (dataset_name in 1:nb_datasets){
+  dir_name = dir_name = paste0(input,.Platform$file.sep,"input_data", .Platform$file.sep,"input_data_",toString( dataset_name),.Platform$file.sep)
+  print(paste0("generating prediction for dataset:",toString(dataset_name) ))
 
-print (paste0("Prediction has ", nrow(prediction), " rows and ", ncol(prediction), " columns"))
+
+
+  mixes_data <- readRDS(file = paste0(dir_name, "mixes_data.rds"))
+  mix_rna <- mixes_data$mix_rna
+  mix_met <- mixes_data$mix_met
+  names(mixes_data)
+
+  reference_data <- readRDS(file =  paste0(dir_name, "reference_data.rds"))
+  ref_rna <- as.matrix(reference_data$ref_bulkRNA)
+  # ref_sc_rna <- as.matrix(reference_data$ref_scRNA)
+  ref_met <- as.matrix(reference_data$ref_met)
+  names(reference_data)
+
+  # we use the previously defined function 'program' to estimate A :
+  pred_prop <- .tempEnv$program(
+    mix_rna = mix_rna, mix_met = mix_met,
+    ref_rna = ref_rna, ref_met = ref_met
+  )
+  print (paste0("Prediction has ", nrow(pred_prop), " rows and ", ncol(pred_prop), " columns"))
+
+  # predi_list[[dataset_name]]= Bulk_m$D_rna
+  
+  ### Validate the prediction 
+  # append(predi_list,pred_prop)
+  predi_list[[dataset_name]] = pred_prop
+
+}
+
+# prediction <-.tempEnv$program(  
+# mix_rna = mix_rna, mix_met = mix_met,
+# ref_rna = ref_rna, ref_met = ref_met)
+
+
+
 
 print(paste0("Save predictions in .rds format"))
-
 saveRDS(
-object = prediction
+object = predi_list
 , file   = output_results
 )
 

@@ -55,7 +55,11 @@ do
     echo "Number $i"
     cp "$path_data""$i"/mixes_data_"$i".rds input_data/input_data_"$i"/mixes_data.rds
     cp "$path_data""$i"/reference_data_"$i".rds input_data/input_data_"$i"/reference_data.rds
+    # cp "$path_data""$i"/mixes_data_"$i".rds input_data/input_data_"$i"/mixes_data_"$i".rds
+    # cp "$path_data""$i"/reference_data_"$i".rds input_data/input_data_"$i"/reference_data_"$i".rds
 done
+
+cp -r input_data/ starting_kit/
 
 # cp "$path_data"mixes_data.rds starting_kit/mixes_data.rds
 # cp "$path_data"reference_data.rds starting_kit/reference_data.rds

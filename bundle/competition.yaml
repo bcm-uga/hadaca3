@@ -35,16 +35,10 @@ tasks:
   name: LIGHT Cell type proportion estimation from transcriptome data1
   description: LIGHT COMETH data challenge
   reference_data: ground_truth.zip  #rename to ground_truth! 
-  input_data: input_data_1.zip
+  input_data: input_data.zip
   scoring_program: scoring_program.zip
   ingestion_program: ingestion_program.zip
-- index: 1
-  name: LIGHT Cell type proportion estimation from transcriptome data2
-  description: LIGHT COMETH data challenge
-  reference_data: ground_truth.zip  #rename to ground_truth! 
-  input_data: input_data_2.zip
-  scoring_program: scoring_program.zip
-  ingestion_program: ingestion_program.zip
+
 solutions: []
 phases:
 - index: 0
@@ -60,7 +54,6 @@ phases:
   starting_kit: starting_kit.zip
   tasks:
   - 0
-  - 1 
   solutions: []
 leaderboards:
 - index: 0
@@ -68,13 +61,38 @@ leaderboards:
   key: score
   hidden: false
   columns:
-  - title: Accuracy_mean
-    key: Accuracy_mean
+  - title: Average Accuracy
+    key: avg_accuracy
     index: 0
     sorting: desc
-    hidden: false
-  - title: Excecution Time
-    key: Time
+    computation: avg
+    computation_indexes:
+      - 1
+      - 2
+      - 3
+      - 4
+  - title: Accuracy_mean dataset 1
+    key: Accuracy_mean_1
     index: 1
+    sorting: desc
+    hidden: false  
+  - title: Accuracy_mean dataset 2
+    key: Accuracy_mean_2
+    index: 2
+    sorting: desc
+    hidden: false
+  - title: Accuracy_mean dataset 3
+    key: Accuracy_mean_3
+    index: 3
+    sorting: desc
+    hidden: false
+  - title: Accuracy_mean dataset 4
+    key: Accuracy_mean_4
+    index: 4
+    sorting: desc
+    hidden: false
+  - title: Excecution Time global
+    key: Time
+    index: 5
     sorting: desc
     hidden: false

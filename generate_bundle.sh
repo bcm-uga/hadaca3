@@ -18,12 +18,14 @@ zip -FS -j -r  bundle/ground_truth.zip ground_truth/
 
 
 
-number_dataset=4
-for i in  $(seq 1 $number_dataset);
-do
-    zip -FS -j -r  bundle/input_data_"$i".zip input_data/input_data_"$i"
-done 
-# zip -FS -j -r  bundle/input_data.zip input_data/
+# number_dataset=4
+# for i in  $(seq 1 $number_dataset);
+# do
+#     zip -FS -j -r  bundle/input_data_"$i".zip input_data/input_data_"$i"
+# done 
+# cd input_data/
+zip -FS -r  bundle/input_data.zip input_data/
+# zip -FS -r  ../bundle/input_data.zip . -i input_data/*
 
 zip -FS -r -j bundle.zip bundle/
 

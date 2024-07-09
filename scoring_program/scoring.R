@@ -3,6 +3,8 @@
 ## magali.richard@univ-grenoble-alpes.fr
 ##---------------------------------------------
 
+nb_datasets = 4
+
 for ( package in c( "combinat", "rmarkdown", "clue", "infotheo") ) {
     if ( !{ package %in% installed.packages( ) } ) {
         install.packages(pkgs = package, repos = "https://cloud.r-project.org")
@@ -211,7 +213,7 @@ Aref =  readRDS(file = paste0(input, .Platform$file.sep, "ref", .Platform$file.s
 #       readRDS(file = paste0(input, .Platform$file.sep, "res", .Platform$file.sep, "results_", i, ".rds") )
 #   }
 # )
-Aest = readRDS(file = paste0(input, .Platform$file.sep, "res", .Platform$file.sep, "prediction.rds") )
+
 
 
 ## load R profiling of the estimation of A :
@@ -260,83 +262,42 @@ validate_pred <- function(pred, nb_samples = ncol(Aref), nb_cells=nrow(Aref) , c
 
 
 
-Aref = as.matrix(Aref)
-Aest = as.matrix(Aest)
+
 
 
 ##Ensure some properties of the Prediction are ok. 
-validate_pred( Aest )
+
+Aest_l  = readRDS(file = paste0(input, .Platform$file.sep, "res", .Platform$file.sep, "prediction.rds") )
+
+Aref = as.matrix(Aref)
+
+for (dataset_name in 1:nb_datasets){
+
+  Aest = as.matrix(Aest_l[[dataset_name]])
+  validate_pred( Aest )
+
+  scores_full = scoring_function(Aref = Aref,  Aest = Aest)
+  # if (nb_dataset > 1) {scores = as.numeric(scores_full[1,])}
+  # if (nb_dataset == 1) {scores = as.numeric(scores_full[1])}
+  scores = as.numeric(scores_full)
+
+  saveRDS(scores, paste0(output,"/accuracy_",toString(dataset_name),".rds"))
+
+  stopifnot(exprs = all( !is.na(x = scores) ) )
+  print(x = paste0("Scores dataset ",toString(dataset_name), ": ", paste(scores, collapse = ", ") ) )
+
+  cat(paste0("Accuracy_mean_",toString(dataset_name), ": " , mean(x = scores ), "\n"), file = output_file, append = TRUE)
+  cat(paste0("Time_",toString(dataset_name), ": "     , sum( profiling$by.total$total.time ) / length(x = Aref), "\n"), file = output_file, append = TRUE )
+
+  print(x = list.files(path = output, all.files = TRUE, full.names = TRUE, recursive = TRUE) )
+
+}
 
 
-#compute scores
-    # scores_full <- sapply(
-    # X   = seq_len(length.out = nb_dataset  )
-    # , FUN = function( i ) {
-    #   print(i)
-    #     scoring_function(Aref = as.matrix(Aref[[ i ]]),  Aest = as.matrix(Aest[[ i ]] ))
-    # }
-    # )
-
-    scores_full = scoring_function(Aref = Aref,  Aest = Aest)
-    # if (nb_dataset > 1) {scores = as.numeric(scores_full[1,])}
-    # if (nb_dataset == 1) {scores = as.numeric(scores_full[1])}
-    scores = as.numeric(scores_full)
+print(x = "Output :")
+print(x = list.files(path = output , all.files = TRUE, full.names = TRUE, recursive = TRUE) )
+print(x = "")
 
 
-    #generate estimated pre-treated A matrix for visualisation purposes
-    # estimates = list()
-    # for (i in seq_len(length.out = length(x = Aest) ) ) {
-    #     print(x = paste0("A matrix ", i) )
-    #    estimates[[i]] = prepare_A(A_r = as.matrix(Aref[[ i ]]), A_est = as.matrix(Aest[[ i ]] ) )
-    # }
-    # remove(list = "i")
-    
-
-    #generate result table using aggregated score
-        # res <- data.frame(
-        # A         = seq_len(length.out = nb_dataset  )
-        # , scoring = rep(x = program,   times = nb_dataset)
-        # , accuracy     = scores
-        # )
-    
-        #saving and visualisation
-    
-        # saveRDS(res, paste0(output,"/res_df.rds"))
-        saveRDS(scores, paste0(output,"/accuracy.rds"))
-
-        stopifnot(exprs = all( !is.na(x = scores) ) )
-        print(x = paste0("Scores : ", paste(scores, collapse = ", ") ) )
-
-        # if (nb_dataset == 1){
-        #     print("Scores : No Accuracy_sd computed because there is only one solution to be tested")
-        #     cat(paste0("Accuracy_mean: " , mean(x = scores ), "\n"), file = output_file, append = FALSE)
-        #     cat(paste0("Accuracy_sd: "   , 0, "\n"), file = output_file, append = TRUE )
-        #     cat(paste0("Time: "     , sum( profiling$by.total$total.time ) / length(x = Aref), "\n"), file = output_file, append = TRUE )
-        # } 
-        # else {
-        #     print("Scores : Accuracy_mean, Accuracy_sd and Time computed")
-        #     cat(paste0("Accuracy_mean: " , mean(x = scores ), "\n"), file = output_file, append = FALSE)
-        #     cat(paste0("Accuracy_sd: "   , sd(  x = scores ), "\n"), file = output_file, append = TRUE )
-        #     cat(paste0("Time: "     , sum( profiling$by.total$total.time ) / length(x = Aref), "\n"), file = output_file, append = TRUE )
-        # }
-
-        cat(paste0("Accuracy_mean: " , mean(x = scores ), "\n"), file = output_file, append = FALSE)
-        cat(paste0("Time: "     , sum( profiling$by.total$total.time ) / length(x = Aref), "\n"), file = output_file, append = TRUE )
-
-        print(x = list.files(path = output, all.files = TRUE, full.names = TRUE, recursive = TRUE) )
-
-        rmarkdown::render(
-        input       = paste0(program, .Platform$file.sep, "detailed_results.Rmd")
-        , envir       = parent.frame( )
-        , output_dir  = output
-        # , output_file = "scores.html"
-        , output_file = "detailed_results.html"
-        
-        )
-
-        print(x = "Output :")
-        print(x = list.files(path = output , all.files = TRUE, full.names = TRUE, recursive = TRUE) )
-        print(x = "")
-    
         
 

@@ -11,6 +11,8 @@
 ### Package dependencies /!\ DO NOT CHANGE THIS PART ###
 ########################################################
 
+nb_datasets =4
+
 ##  to generate the zip files that contain the programs or the results to submit to the Codalab platform.
 
 if ( !exists(x = "params") ) {
@@ -69,19 +71,7 @@ if ( params$install_dependencies ) {
 ##################################################################################################
 ### Submission modes /!\ EDIT THE FOLLOWING CODE BY COMMENTING/UNCOMMENTING THE REQUIRED PARTS ###
 ##################################################################################################
-#New data 
 
-
-mixes_data <- readRDS(file = "mixes_data.rds")
-
-mix_rna <- mixes_data$mix_rna
-mix_met <- mixes_data$mix_met
-
-
-reference_data <- readRDS(file = "reference_data.rds")
-ref_rna <- as.matrix(reference_data$ref_bulkRNA)
-# ref_sc_rna <- as.matrix(reference_data$ref_scRNA)
-ref_met <- as.matrix(reference_data$ref_met)
 
 
 
@@ -200,15 +190,6 @@ program <- function(mix_rna = NULL, mix_met = NULL,
 }
 
 
-##############################################################
-### Generate a submission file /!\ DO NOT CHANGE THIS PART ###
-##############################################################
-
-# we use the previously defined function 'program' to estimate A :
-pred_prop <- program(
-  mix_rna = mix_rna, mix_met = mix_met,
-  ref_rna = ref_rna, ref_met = ref_met
-)
 
 ##############################################################
 ### Check the prediction /!\ DO NOT CHANGE THIS PART ###
@@ -251,9 +232,44 @@ validate_pred <- function(pred, nb_samples = ncol(mix_rna) , nb_cells= ncol(ref_
 }
 
 
-validate_pred(pred_prop)
+
+##############################################################
+### Generate a prediction file /!\ DO NOT CHANGE THIS PART ###
+##############################################################
 
 
+#New data 
+predi_list = list()
+for (dataset_name in 1:nb_datasets){
+
+  dir_name = dir_name = paste0("input_data/input_data_",toString( dataset_name),'/')
+  print(paste0("generating prediction for dataset:",toString(dataset_name) ))
+
+
+
+  mixes_data <- readRDS(file = paste0(dir_name, "mixes_data.rds"))
+  mix_rna <- mixes_data$mix_rna
+  mix_met <- mixes_data$mix_met
+
+  reference_data <- readRDS(file =  paste0(dir_name, "reference_data.rds"))
+  ref_rna <- as.matrix(reference_data$ref_bulkRNA)
+  # ref_sc_rna <- as.matrix(reference_data$ref_scRNA)
+  ref_met <- as.matrix(reference_data$ref_met)
+
+  # we use the previously defined function 'program' to estimate A :
+  pred_prop <- program(
+    mix_rna = mix_rna, mix_met = mix_met,
+    ref_rna = ref_rna, ref_met = ref_met
+  )
+
+  # predi_list[[dataset_name]]= Bulk_m$D_rna
+  
+  ### Validate the prediction 
+  validate_pred(pred_prop)
+  # append(predi_list,pred_prop)
+  predi_list[[dataset_name]] = pred_prop
+
+}
 
 
 ###############################
@@ -305,7 +321,7 @@ prediction_name = "prediction.rds"
 
 ## we save the estimated A matrix as a rds file named 'results.rds' :
 saveRDS(
-object = pred_prop
+object = predi_list
 , file   = paste0("submissions", .Platform$file.sep, prediction_name)) 
 
 # write_rds(pred_prop, file = "prediction_hugo.rds")
@@ -341,5 +357,4 @@ sessionInfo( )
 #   - Metadata are editable when you click on your submission
 #   - Leader board is updated in the `Results` tab.
 #
-
 
