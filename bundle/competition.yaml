@@ -38,13 +38,20 @@ tasks:
   input_data: input_data.zip
   scoring_program: scoring_program.zip
   ingestion_program: ingestion_program.zip
-
+- index: 1
+  name: FINAL Evaluation LIGHT Cell type proportion estimation from transcriptome data1
+  description: LIGHT COMETH data challenge
+  reference_data: ground_truth.zip  #rename to ground_truth! 
+  input_data: input_data_final.zip
+  scoring_program: scoring_program.zip
+  ingestion_program: ingestion_program.zip
 solutions: []
 phases:
 - index: 0
   name: Cell type proportion estimation from transcriptome and methylome data, using multimodal references.
-  description: gl
+  description: good luck 
   start: '2024-03-20'
+  end: '2024-07-11'
   # end: '2030-12-17'
   max_submissions_per_day: 5
   max_submissions: 100
@@ -54,7 +61,19 @@ phases:
   starting_kit: starting_kit.zip
   tasks:
   - 0
-  solutions: []
+- index: 1
+  name: FINAL PHASE Cell type proportion estimation from transcriptome and methylome data, using multimodal references.
+  description: good luck
+  # start: '2030-12-18'
+  start: '2024-07-12'
+  max_submissions_per_day: 5
+  max_submissions: 100
+  execution_time_limit: 60000
+  auto_migrate_to_this_phase: true
+  hide_output: false
+  # starting_kit: starting_kit.zip
+  tasks:
+  - 1
 
 # Fact sheets to add more information in the leaderboard
 fact_sheet: {

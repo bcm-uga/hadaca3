@@ -55,7 +55,6 @@ jobs:
       - name: Create submission program
         run: |
           cd starting_kit/
-          cp ../input_data/input_data_1/* .
           Rscript submission_script.R
           cd ..
 
@@ -69,7 +68,7 @@ jobs:
       - name: Running ingestion Program
         run: |
           # ls -rthl *
-          docker run --rm  -v $PWD/ingestion_program:/app/program  -v $PWD/test_output/res:/app/output  -v $PWD/starting_kit/submissions:/app/ingested_program  -w /app/program  -v $PWD/input_data/:/app/input_data/input_data hombergn/hadaca3_light Rscript /app/program/ingestion.R /app/program /app/input_data /app/output /app/ingested_program 
+          docker run --rm  -v $PWD/ingestion_program:/app/program  -v $PWD/test_output/res:/app/output  -v $PWD/starting_kit/submissions:/app/ingested_program  -w /app/program  -v $PWD/input_data/:/app/input_data/ hombergn/hadaca3_light Rscript /app/program/ingestion.R /app/program /app/input_data /app/output /app/ingested_program 
           # ls -rthl test_output/*
         
       - name: Running Scoring Program

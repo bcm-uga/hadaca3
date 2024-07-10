@@ -25,7 +25,7 @@ sh prepare2score_locally.sh
 echo 'data migrated'
 
 echo "Running ingestion Program, super user (sudo) is needed to run docker."
-sudo docker run --rm  -v $PWD/ingestion_program:/app/program  -v $PWD/test_output/res:/app/output  -v $PWD/starting_kit/submissions:/app/ingested_program  -w /app/program  -v $PWD/input_data/:/app/input_data/input_data hombergn/hadaca3_light Rscript /app/program/ingestion.R /app/program /app/input_data /app/output /app/ingested_program #>> logs
+sudo docker run --rm  -v $PWD/ingestion_program:/app/program  -v $PWD/test_output/res:/app/output  -v $PWD/starting_kit/submissions:/app/ingested_program  -w /app/program  -v $PWD/input_data/:/app/input_data/ hombergn/hadaca3_light Rscript /app/program/ingestion.R /app/program /app/input_data /app/output /app/ingested_program #>> logs
 echo "Ingestion progam done"
 
 

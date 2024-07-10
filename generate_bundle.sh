@@ -23,9 +23,16 @@ zip -FS -j -r  bundle/ground_truth.zip ground_truth/
 # do
 #     zip -FS -j -r  bundle/input_data_"$i".zip input_data/input_data_"$i"
 # done 
-# cd input_data/
-zip -FS -r  bundle/input_data.zip input_data/
-# zip -FS -r  ../bundle/input_data.zip . -i input_data/*
+
+cd input_data/
+zip -FS -r  ../bundle/input_data.zip *
+cd .. 
+
+# zip -FS -r bundle/input_data.zip input_data/
+
+cd input_data_final/
+zip -FS -r  ../bundle/input_data_final.zip *
+cd .. 
 
 zip -FS -r -j bundle.zip bundle/
 

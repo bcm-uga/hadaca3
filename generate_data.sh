@@ -9,8 +9,12 @@ echo cleaning done.
 
 number_dataset=4
 
+
+
 mkdir input_data
+mkdir input_data_final
 for i in $(seq 1 $number_dataset); do mkdir input_data/input_data_$i ;  done ; 
+for i in $(seq 1 $number_dataset); do mkdir input_data_final/input_data_$i ;  done ; 
 # for i in {1..$number_dataset}; do mkdir input_data_$i ;  done ; 
 mkdir ground_truth
 
@@ -21,7 +25,7 @@ then
 echo "Creating fake data because there is no argument"
 
 mkdir data
-Rscript generate_fake_data.R 4 >> logs
+Rscript generate_fake_data.R  $((number_dataset * 2)) 
 
 # Should we put the data migration inside the bundle generator script ? 
 
@@ -59,9 +63,15 @@ do
     # cp "$path_data""$i"/reference_data_"$i".rds input_data/input_data_"$i"/reference_data_"$i".rds
 done
 
-cp -r input_data/ starting_kit/
+for i in  $(seq $((number_dataset+1)) $((number_dataset * 2)));
+do
+    echo "Number $i"
+    num=$((i -number_dataset ))
+    cp "$path_data""$i"/mixes_data_"$i".rds input_data_final/input_data_"$num"/mixes_data.rds
+    cp "$path_data""$i"/reference_data_"$i".rds input_data_final/input_data_"$num"/reference_data.rds
+done
+
+cp -r input_data/* starting_kit/
 
 # cp "$path_data"mixes_data.rds starting_kit/mixes_data.rds
 # cp "$path_data"reference_data.rds starting_kit/reference_data.rds
-
-

@@ -242,7 +242,7 @@ validate_pred <- function(pred, nb_samples = ncol(mix_rna) , nb_cells= ncol(ref_
 predi_list = list()
 for (dataset_name in 1:nb_datasets){
 
-  dir_name = dir_name = paste0("input_data/input_data_",toString( dataset_name),'/')
+  dir_name = dir_name = paste0("input_data_",toString( dataset_name),'/')
   print(paste0("generating prediction for dataset:",toString(dataset_name) ))
 
 

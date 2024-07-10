@@ -54,7 +54,8 @@ base::set.seed(seed = 1)
 
 predi_list = list()
 for (dataset_name in 1:nb_datasets){
-  dir_name = dir_name = paste0(input,.Platform$file.sep,"input_data", .Platform$file.sep,"input_data_",toString( dataset_name),.Platform$file.sep)
+  # dir_name = dir_name = paste0(input,.Platform$file.sep,"input_data", .Platform$file.sep,"input_data_",toString( dataset_name),.Platform$file.sep)
+  dir_name = dir_name = paste0(input,.Platform$file.sep,"input_data_",toString( dataset_name),.Platform$file.sep)
   print(paste0("generating prediction for dataset:",toString(dataset_name) ))
 
 

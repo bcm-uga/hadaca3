@@ -49,6 +49,7 @@ ground_truth/*
 
 input_data/
 input_data/*
+input_data_final*
 
 
 backup*
