@@ -55,6 +55,18 @@ phases:
   tasks:
   - 0
   solutions: []
+
+# Fact sheets to add more information in the leaderboard
+fact_sheet: {
+    "method_name": {
+        "key": "method_name",
+        "type": "text",
+        "title": "Method name",
+        "selection": "",
+        "is_required": "false",
+        "is_on_leaderboard": "true"
+    }
+}
 leaderboards:
 - index: 0
   title: Scores

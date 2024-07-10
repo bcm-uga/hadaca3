@@ -287,12 +287,13 @@ for (dataset_name in 1:nb_datasets){
   print(x = paste0("Scores dataset ",toString(dataset_name), ": ", paste(scores, collapse = ", ") ) )
 
   cat(paste0("Accuracy_mean_",toString(dataset_name), ": " , mean(x = scores ), "\n"), file = output_file, append = TRUE)
-  cat(paste0("Time_",toString(dataset_name), ": "     , sum( profiling$by.total$total.time ) / length(x = Aref), "\n"), file = output_file, append = TRUE )
 
   print(x = list.files(path = output, all.files = TRUE, full.names = TRUE, recursive = TRUE) )
 
 }
 
+# cat(paste0("Time :", sum( profiling$by.total$total.time ) / length(x = Aref), "\n"), file = output_file, append = TRUE )
+cat(paste0("Time: ", profiling["elapsed"], "\n"), file = output_file, append = TRUE )
 
 print(x = "Output :")
 print(x = list.files(path = output , all.files = TRUE, full.names = TRUE, recursive = TRUE) )
