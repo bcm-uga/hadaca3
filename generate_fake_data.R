@@ -120,7 +120,7 @@ create_ref_matrix <- function(k,nb_met_sondes, rna_mean,rna_sd,rna_min,rna_max){
 # if (DEBUG){print(cat("dim T:",dim(T_met),"\ndim A:",dim(A)))} 
 
 # function to add noise on D matrix
-add_noise = function(data, mean = 0, sd = 0.05, val_min = 0, val_max = 1){
+add_noise = function(data, mean = 0, sd = 0.15, val_min = 0, val_max = 1){
   noise = matrix(rnorm(prod(dim(data)), mean = mean, sd = sd), nrow = nrow(data))
   datam = data + noise
   datam[datam < val_min] = data[datam < val_min]
@@ -133,7 +133,7 @@ create_bulk <- function(Ref_m,A,mean = 0, sd = 0.05, val_min = 0, val_max = 1){
     D_rna = Ref_m$T_rna%*%A
     D_met = add_noise(D_met)
     print('RNA')
-    D_rna = add_noise(D_rna,sd = 30, val_min = 0, val_max = 100000)
+    D_rna = add_noise(D_rna,sd = 1500, val_min = 0, val_max = 100000)
     # if (DEBUG){
     #     print("\nD_met with noise:\n") 
     #     print(head(D_met))
