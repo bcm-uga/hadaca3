@@ -51,7 +51,7 @@ phases:
   name: Cell type proportion estimation from transcriptome and methylome data, using multimodal references.
   description: good luck 
   start: '2024-03-20 '
-  end: '2024-07-16 14:00'
+  end: '2024-07-20 11:00'
   max_submissions_per_day: 5
   max_submissions: 100
   execution_time_limit: 600
@@ -63,8 +63,8 @@ phases:
 - index: 1
   name: FINAL PHASE Cell type proportion estimation from transcriptome and methylome data, using multimodal references.
   description: good luck
-  start: '2024-07-16 14:01'
-  end: '2024-10-16T00:10'
+  start: '2024-07-20 11:01'
+  end: '2024-10-20T00:10'
   max_submissions_per_day: 5
   max_submissions: 100
   execution_time_limit: 60000

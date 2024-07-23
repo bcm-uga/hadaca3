@@ -10,15 +10,13 @@ print(paste0("input data directory :", input))
 ## output file :
 output_results     <- trimws(x = args[2] )
 print(paste0("output file :", output_results))
-# ## output A :
-# output_A           <- trimws(x = args[4] )
-# print(paste0(" output A :", output_A))
-# ## output T :
-# output_T           <- trimws(x = args[5] )
-# print(paste0(" output T :", output_T))
 ## directory of the code submitted by the participants :
 submission_program <- trimws(x = args[3] )
 print(paste0(" directory of the code submitted by the participants :", submission_program))
+## directory of the code submitted by the participants :
+output_profiling_rds <- trimws(x = args[4] )
+print(paste0(" output_profiling file:", output_profiling_rds))
+
 
 ## read code submitted by the participants :
 .tempEnv <- new.env( )
@@ -51,6 +49,8 @@ nb_datasets = 4
 
 base::set.seed(seed = 1)
 
+total_time <- 0
+
 
 predi_list = list()
 for (dataset_name in 1:nb_datasets){
@@ -72,16 +72,17 @@ for (dataset_name in 1:nb_datasets){
   names(reference_data)
 
   # we use the previously defined function 'program' to estimate A :
+  start_time <- proc.time()
   pred_prop <- .tempEnv$program(
     mix_rna = mix_rna, mix_met = mix_met,
     ref_rna = ref_rna, ref_met = ref_met
   )
+  elapsed_time <- proc.time() - start_time
   print (paste0("Prediction has ", nrow(pred_prop), " rows and ", ncol(pred_prop), " columns"))
 
-  # predi_list[[dataset_name]]= Bulk_m$D_rna
-  
-  ### Validate the prediction 
-  # append(predi_list,pred_prop)
+
+  total_time <- total_time + elapsed_time["elapsed"]
+
   predi_list[[dataset_name]] = pred_prop
 
 }
@@ -91,6 +92,14 @@ for (dataset_name in 1:nb_datasets){
 # ref_rna = ref_rna, ref_met = ref_met)
 
 
+
+
+print(total_time)
+## save profiling
+saveRDS(
+    object = total_time
+  , file   = output_profiling_rds
+)
 
 
 print(paste0("Save predictions in .rds format"))

@@ -63,60 +63,49 @@ output_profiling_rds <- paste0(output, .Platform$file.sep, "Rprof.rds"         )
 #   , gc.profiling     = FALSE
 #   , line.profiling   = FALSE
 # )
-start_time <- proc.time()
+# start_time <- proc.time()
 
 
 # Rprof(output_profiling,interval = 0.02)
 
 
 #Check it is a result submission or a program submission
-file  = paste0(submission_program, .Platform$file.sep, "program.R")
-print(file)
+file_R  = paste0(submission_program, .Platform$file.sep, "program.R")
+file_py = paste0(submission_program, .Platform$file.sep, "program.py")
+output_results <- paste0(output, .Platform$file.sep, "prediction.rds")
 
-if (file.exists(file)) { 
+if (file.exists(file_R)) { 
    
-  print("execution of the program") 
-  
-  #Define the number of dataset
-  # test_data <- readRDS(file = paste0(input, .Platform$file.sep, "public_data_rna.rds") )
-  # test_data = list(test_data) #remove this if your input data is already a list!
-  # nb_dataset = length(test_data)
-  # print(x = paste0("Number of test dataset is :", nb_dataset) )
+  print("Executing a R program") 
 
-  # for ( i in seq_len(length.out = nb_dataset) ) {
-  #     print(x = paste0("Test : ", i) )
-  #     output_results <- paste0(output, .Platform$file.sep, "results_", i, ".rds")
-  #     output_A <- paste0(output, .Platform$file.sep, "results_A_", i, ".csv")
-  #     output_T <- paste0(output, .Platform$file.sep, "results_T_", i, ".csv")
-  #     print(x = "")
-    
-  #     system(command = paste("Rscript", paste0(ingestion_program, .Platform$file.sep, "sub_ingestion.R"), i, input, output_results,  output_A,  output_T, submission_program, sep = " ") )
-
-  # }
-  # remove(list = "i")
-
-  output_results <- paste0(output, .Platform$file.sep, "prediction.rds")
-  # system(command = paste("Rscript", paste0(ingestion_program, .Platform$file.sep, "sub_ingestion.R"), i, input, output_results,  output_A,  output_T, submission_program, sep = " ") )
   cmd = paste("Rscript", paste0(ingestion_program, .Platform$file.sep, "sub_ingestion.R"), input, output_results, submission_program, sep = " ") 
   print(cmd)
-  system(command = paste("Rscript", paste0(ingestion_program, .Platform$file.sep, "sub_ingestion.R"), input, output_results, submission_program, sep = " ") )
+  system(command = paste("Rscript", paste0(ingestion_program, .Platform$file.sep, "sub_ingestion.R"), input, output_results, submission_program,output_profiling_rds, sep = " ") )
 
-} else { 
+ }else if (file.exists(file_py)) {
+
+  print("Executing a python program")
+
+  cmd = paste("python", paste0(ingestion_program, .Platform$file.sep, "sub_ingestion.py"), input, output_results, submission_program, sep = " ") 
+  print(cmd)
+  system(command = paste("python", paste0(ingestion_program, .Platform$file.sep, "sub_ingestion.py"), input, output_results, submission_program,output_profiling_rds, sep = " ") )
+
+ } else { 
     print("no program to execute, go straight to scoring step") 
 }
 
 
 
 
-execution_time <-  proc.time() - start_time
+# execution_time <-  proc.time() - start_time
 
-print(execution_time)
+# print(execution_time)
 
-## save profiling
-saveRDS(
-    object = execution_time
-  , file   = output_profiling_rds
-)
+# ## save profiling
+# saveRDS(
+#     object = execution_time
+#   , file   = output_profiling_rds
+# )
 
 ## stop diverting R output to a text file
 ## sink(file = NULL)

@@ -293,12 +293,9 @@ for (dataset_name in 1:nb_datasets){
 }
 
 # cat(paste0("Time :", sum( profiling$by.total$total.time ) / length(x = Aref), "\n"), file = output_file, append = TRUE )
-cat(paste0("Time: ", profiling["elapsed"], "\n"), file = output_file, append = TRUE )
+# cat(paste0("Time: ", profiling["elapsed"], "\n"), file = output_file, append = TRUE )
+cat(paste0("Time: ", profiling, "\n"), file = output_file, append = TRUE )
 
 print(x = "Output :")
 print(x = list.files(path = output , all.files = TRUE, full.names = TRUE, recursive = TRUE) )
 print(x = "")
-
-
-        
-
