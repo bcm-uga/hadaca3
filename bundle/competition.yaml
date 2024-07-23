@@ -1,6 +1,7 @@
 version: '2'
 title: Multimodal data integration to quantify tumor heterogeneity in cancer research
-docker_image: hombergn/hadaca3_light
+# docker_image: hombergn/hadaca3_light
+docker_image: hombergn/hadaca3_pyr
 queue: null
 description: HADACA3
 registration_auto_approve: true

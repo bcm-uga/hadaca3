@@ -1,4 +1,8 @@
 
+
+
+
+
 type Rscript >/dev/null 2>&1 || { echo >&2 "Rscript requiered but it's not installed.  Aborting."; exit 1; }
 
 # echo "Building Docker"
@@ -6,6 +10,9 @@ type Rscript >/dev/null 2>&1 || { echo >&2 "Rscript requiered but it's not insta
 # sudo docker build -t hombergn/hadaca3_light .  >> logs
 # cd -
 # echo "Docker created"
+
+# docker_name=hombergn/hadaca3_light
+docker_name=hombergn/hadaca3_pyr
 
 echo "Generate data"
 sh generate_data.sh $1
@@ -15,8 +22,8 @@ echo "data Generated"
 echo "Create submission program"
 cd starting_kit/
 rm -rf submissions
-cp ../input_data/input_data_1/* .
 Rscript submission_script.R >> logs
+# python submission_script.py
 cd - 
 echo "Done"
 
@@ -25,12 +32,12 @@ sh prepare2score_locally.sh
 echo 'data migrated'
 
 echo "Running ingestion Program, super user (sudo) is needed to run docker."
-sudo docker run --rm  -v $PWD/ingestion_program:/app/program  -v $PWD/test_output/res:/app/output  -v $PWD/starting_kit/submissions:/app/ingested_program  -w /app/program  -v $PWD/input_data/:/app/input_data/ hombergn/hadaca3_light Rscript /app/program/ingestion.R /app/program /app/input_data /app/output /app/ingested_program #>> logs
+sudo docker run --rm  -v $PWD/ingestion_program:/app/program  -v $PWD/test_output/res:/app/output  -v $PWD/starting_kit/submissions:/app/ingested_program  -w /app/program  -v $PWD/input_data/:/app/input_data/ $docker_name Rscript /app/program/ingestion.R /app/program /app/input_data /app/output /app/ingested_program #>> logs
 echo "Ingestion progam done"
 
 
 echo "Running Scoring Program"
-sudo docker run --rm  -v $PWD/scoring_program:/app/program  -v $PWD/test_output:/app/output  -w /app/program  -v $PWD/test_output:/app/input  hombergn/hadaca3_light  Rscript /app/program/scoring.R /app/input /app/output /app/program #>> logs
+sudo docker run --rm  -v $PWD/scoring_program:/app/program  -v $PWD/test_output:/app/output  -w /app/program  -v $PWD/test_output:/app/input  $docker_name  Rscript /app/program/scoring.R /app/input /app/output /app/program #>> logs
 echo "Scoring program done"
 
 
