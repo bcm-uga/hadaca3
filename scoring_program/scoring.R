@@ -296,6 +296,14 @@ for (dataset_name in 1:nb_datasets){
 # cat(paste0("Time: ", profiling["elapsed"], "\n"), file = output_file, append = TRUE )
 cat(paste0("Time: ", profiling, "\n"), file = output_file, append = TRUE )
 
+rmarkdown::render(
+  input       = paste0(program, .Platform$file.sep, "detailed_results.Rmd")
+  , envir       = parent.frame( )
+  , output_dir  = output
+  # , output_file = "scores.html"
+  , output_file = "detailed_results.html"
+)
+
 print(x = "Output :")
 print(x = list.files(path = output , all.files = TRUE, full.names = TRUE, recursive = TRUE) )
 print(x = "")

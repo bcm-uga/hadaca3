@@ -8,6 +8,8 @@ output:
     toc_depth: 5
 ---
 
+
+
 ```{r label = "header", echo = FALSE, eval = TRUE}
 knitr::opts_chunk$set(collapse = TRUE, comment = "", echo = FALSE)
 
@@ -21,10 +23,12 @@ remove(list = "package")
 library(package = "ggplot2")
 ```
 
+
 ```{r}
 #read output from prediction
-prediction = readRDS("../input/res/prediction.rds")
-ground_truth = readRDS("../input/ref/ground_truth.rds")
+nb_datasets<- 4
+all_prediction <- readRDS("../input/res/prediction.rds")
+ground_truth <- readRDS("../input/ref/ground_truth.rds")
 
 ```
 ## Summary of the prediction
@@ -34,15 +38,18 @@ ground_truth = readRDS("../input/ref/ground_truth.rds")
 ### Heatmap of the absolute error
 
 ```{r}
-
-colors=viridis::viridis(5)
+colors = viridis::viridis(5)
 cols = colorRampPalette(colors)(50)
 
-dim(prediction)
 
 #image(as.matrix(pred), axes=FALSE, col = cols , ylab = colnames(pred), xlab = rownames(pred))
 
 
+for (dataset_name in 1:nb_datasets){
+
+    prediction <- all_prediction[[dataset_name]]
+    print(dim(prediction) )
+    print(paste0("generating prediction for dataset:",toString(dataset_name) ))
     
     Aerr <- data.frame(
         abserror = as.numeric(
@@ -100,7 +107,7 @@ dim(prediction)
     }
     print(x = p)
     
-
+}
 
 
 ```
