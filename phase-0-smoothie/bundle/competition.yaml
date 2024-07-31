@@ -74,11 +74,11 @@ leaderboards:
   columns:
   - title: Accuracy_mean
     key: Accuracy_mean
-    index: 1
+    index: 0
     sorting: desc
     hidden: false  
   - title: Excecution Time global
     key: Time
-    index: 2
+    index: 1
     sorting: desc
     hidden: false

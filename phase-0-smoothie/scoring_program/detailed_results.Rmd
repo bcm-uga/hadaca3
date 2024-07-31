@@ -1,113 +1,179 @@
 ---
-title: "Detailed Results"
+title: "Visualize Results"
+author: "Elise Amblard, Hugo Barbot, Florent Chuffart and Magali Richard"
 date: "`r Sys.Date()`"
-output:
-  html_document:
-    fig_caption: yes
-    toc: yes
-    toc_depth: 5
+output: 
+  rmarkdown::html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 3
+    number_sections: true
 ---
-
 
 
 ```{r label = "header", echo = FALSE, eval = TRUE}
 knitr::opts_chunk$set(collapse = TRUE, comment = "", echo = FALSE)
 
-for ( package in c("ggplot2","viridis") ) {
+for ( package in c("ggplot2","viridis",'magrittr','dplyr','tidyr') ) {
     if ( !{package %in% installed.packages( ) } ) {
         print(x = paste0("Installation of the package : ", package) )
-        install.pacakges(pckgs = package)
+          install.packages(
+              pkgs = package
+            , repos = "https://cloud.r-project.org"
+          )
     }
+    library(package, character.only = TRUE)
 }
 remove(list = "package")
-library(package = "ggplot2")
+BiocManager::install("ComplexHeatmap")
+
 ```
 
 
-```{r}
-#read output from prediction
-nb_datasets<- 4
-all_prediction <- readRDS("../input/res/prediction.rds")
-ground_truth <- readRDS("../input/ref/ground_truth.rds")
 
+```{r, include=(FALSE)}
+knitr::opts_chunk$set(collapse=TRUE, comment = "#>", fig.width=9, fig.height=6, eval=TRUE, echo=FALSE, results="hide")
+options(knitr.duplicate.label = "allow")
+```
+
+```{r params}
+
+if (!exists("groundtruth_file"))    {groundtruth_file = "../input/ref/groundtruth_smoothies_fruits.rds"} 
+if (!exists("prediction_file"))     {prediction_file =  "../input/res/prediction.rds"       }   
+
+```
+
+```{r read_output}
+# prediction = readRDS(prediction_file)
+# ground_truth = readRDS(groundtruth_file)
+prediction = readRDS(  "../input/ref/groundtruth_smoothies_fruits.rds")
+ground_truth = readRDS("../input/res/prediction.rds")
 ```
 ## Summary of the prediction
 
 ### Heatmap of prediction
 
-### Heatmap of the absolute error
+```{r Heatmap_pred}
+ComplexHeatmap::Heatmap(
+  t(prediction),
+  col = circlize::colorRamp2(seq(0, 1, length.out = 32), rev(heat.colors(32))),
+  cluster_rows = FALSE,
+  cluster_columns = FALSE,
+  heatmap_legend_param = list(title = "Proportion"),
+  column_names_rot = 45
+)
+```
 
-```{r}
-colors = viridis::viridis(5)
-cols = colorRampPalette(colors)(50)
+
+### Heatmap of the absolute bias/error
+
+```{r abs_bias}
+
+abs_bias = abs(prediction - ground_truth)
 
 
-#image(as.matrix(pred), axes=FALSE, col = cols , ylab = colnames(pred), xlab = rownames(pred))
+colors=viridis::viridis(5)
+
+ComplexHeatmap::Heatmap(
+  t(abs_bias),
+  col = colorRampPalette(colors)(50),
+  cluster_rows = FALSE,
+  cluster_columns = FALSE,
+  heatmap_legend_param = list(title = "Proportion"),
+  column_names_rot = 45
+)
 
 
-for (dataset_name in 1:nb_datasets){
+# abs_bias_per_cell_type = rowMeans(abs_bias)
+# sd_estim_per_cell_type = apply(proportion, 1, sd)
 
-    prediction <- all_prediction[[dataset_name]]
-    print(dim(prediction) )
-    print(paste0("generating prediction for dataset:",toString(dataset_name) ))
+# Comment FCh: please avoid magrittr, dplyr, tidyr do to a simple boxplot.
+library(magrittr)
+library(ggplot2)
+abs_bias %>% t() %>% as.data.frame() %>% 
+  tidyr::pivot_longer(
+    everything(),
+    names_to = "Cell_type",
+    values_to = "absolut_bias"
+  ) %>% 
+  dplyr::mutate(
+    Cell_type = factor(Cell_type, levels = rownames(abs_bias))
+  ) %>% 
+  ggplot() +
+  geom_boxplot(aes(x = Cell_type, y = absolut_bias)) +
+  labs(
+    x = "Cell types",
+    y = "Absolut bias",
+    title = "Absolut bias for all bulks per cell types for dataset1"
+  )
+
+
+
+
+# 
+# dim(prediction)
+# 
+# #image(as.matrix(pred), axes=FALSE, col = cols , ylab = colnames(pred), xlab = rownames(pred))
+# 
+# 
+#     
+#     Aerr <- data.frame(
+#         abserror = as.numeric(
+#             x = abs(x = prediction - ground_truth )
+#         )
+#       , type = rep(
+#             x     = seq_len(length.out = nrow(x = ground_truth ) )
+#           , times = ncol(x = ground_truth )
+#         )
+#       , patient = rep(
+#             x    = seq_len(length.out = ncol(x = ground_truth ) )
+#           , each = nrow(x = ground_truth ) )
+#     )
+#     
+#     p <- ggplot(
+#         data    = Aerr
+#       , mapping = aes(x = patient, y = type)
+#     ) + {
+#         geom_tile(
+#             mapping = aes(fill = `abserror`)
+#           , colour  = "white"
+#         )
+#     } + {
+#         theme_minimal(base_size = 16)
+#     } + {
+#         labs(
+#             y    = "Cell types"
+#           , fill = "Absolute error"
+#         )
+#     } + { 
+#         scale_x_discrete(expand = c(0, 0) )
+#     } + {
+#         scale_y_discrete(expand = c(0, 0) )
+#     } + {
+#         theme(
+#             axis.text.x = element_text(
+#                 angle = 70
+#               , vjust = 1
+#               , size  = 14
+#               , hjust = 1
+#             )
+#         )
+#     } + {
+#         coord_fixed( )
+#     } + {
+#         scale_fill_viridis_c(
+#             option    = "plasma"
+#           , direction = -1
+#         )
+#     } + {
+#         labs(
+#             title = paste0("Detail of the matrice ")
+#           , x     = "Samples"
+#         )
+#     }
+#     print(x = p)
     
-    Aerr <- data.frame(
-        abserror = as.numeric(
-            x = abs(x = prediction - ground_truth )
-        )
-      , type = rep(
-            x     = seq_len(length.out = nrow(x = ground_truth ) )
-          , times = ncol(x = ground_truth )
-        )
-      , patient = rep(
-            x    = seq_len(length.out = ncol(x = ground_truth ) )
-          , each = nrow(x = ground_truth ) )
-    )
-    
-    p <- ggplot(
-        data    = Aerr
-      , mapping = aes(x = patient, y = type)
-    ) + {
-        geom_tile(
-            mapping = aes(fill = `abserror`)
-          , colour  = "white"
-        )
-    } + {
-        theme_minimal(base_size = 16)
-    } + {
-        labs(
-            y    = "Cell types"
-          , fill = "Absolute error"
-        )
-    } + { 
-        scale_x_discrete(expand = c(0, 0) )
-    } + {
-        scale_y_discrete(expand = c(0, 0) )
-    } + {
-        theme(
-            axis.text.x = element_text(
-                angle = 70
-              , vjust = 1
-              , size  = 14
-              , hjust = 1
-            )
-        )
-    } + {
-        coord_fixed( )
-    } + {
-        scale_fill_viridis_c(
-            option    = "plasma"
-          , direction = -1
-        )
-    } + {
-        labs(
-            title = paste0("Detail of the matrice ")
-          , x     = "Samples"
-        )
-    }
-    print(x = p)
-    
-}
+
 
 
 ```
@@ -117,6 +183,18 @@ for (dataset_name in 1:nb_datasets){
 
 - scores      :
 ```{r scores}
+
+mse_scores = colMeans((prediction - ground_truth)^2)
+
+
+ggplot() +
+  geom_boxplot(aes(x = "dataset1",y = mse_scores), width = 0.5) +
+  labs(
+    x = element_blank(),
+    y = "MSE",
+    title = "MSE of beta estimed for all bulks of dataset1"
+  )
+  
 # print(x = scores)
 # 
 # print(x = "Summary :")

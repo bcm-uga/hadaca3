@@ -6,7 +6,7 @@ cp ground_truth/* test_output/ref/
 
 # cp -r starting_kit/modules starting_kit/submissions
 
-cp starting_kit/submissions/prediction.rds test_output/res/ 
+# cp starting_kit/submissions/prediction.rds test_output/res/ 
 
 
 echo "READY"
