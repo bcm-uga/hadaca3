@@ -105,6 +105,7 @@ sudo docker login -u  hombergn
 
 #upload on dockerhub
 sudo docker push hombergn/hadaca3_light:latest
+sudo docker push hombergn/hadaca3_pyr:latest
 
 #Single command to build and push. 
 sudo docker build -t hombergn/hadaca3_light .  && sudo docker push hombergn/hadaca3_light:latest

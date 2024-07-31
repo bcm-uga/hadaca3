@@ -26,8 +26,6 @@ source(
   , local = .tempEnv
 )
 
-nb_datasets = 4
-
 ####################################
 ## read input data :
 #####################################
@@ -52,45 +50,21 @@ base::set.seed(seed = 1)
 total_time <- 0
 
 
-predi_list = list()
-for (dataset_name in 1:nb_datasets){
-  dir_name = paste0(input,.Platform$file.sep,"input_data_",toString( dataset_name),.Platform$file.sep)
-  print(paste0("generating prediction for dataset:",toString(dataset_name) ))
+mixes_data = readRDS( paste0(input,.Platform$file.sep,"mixes_smoothies_fruits.rds") )
+reference_data = readRDS( paste0(input,.Platform$file.sep,"reference_fruits.rds"))
 
-
-
-  mixes_data <- readRDS(file = paste0(dir_name, "mixes_data.rds"))
-  mix_rna <- mixes_data$mix_rna
-  mix_met <- mixes_data$mix_met
-  names(mixes_data)
-
-  reference_data <- readRDS(file =  paste0(dir_name, "reference_data.rds"))
-  ref_rna <- as.matrix(reference_data$ref_bulkRNA)
-  # ref_sc_rna <- as.matrix(reference_data$ref_scRNA)
-  ref_met <- as.matrix(reference_data$ref_met)
-  names(reference_data)
 
   # we use the previously defined function 'program' to estimate A :
-  start_time <- proc.time()
-  pred_prop <- .tempEnv$program(
-    mix_rna = mix_rna, mix_met = mix_met,
-    ref_rna = ref_rna, ref_met = ref_met
-  )
-  elapsed_time <- proc.time() - start_time
-  print (paste0("Prediction has ", nrow(pred_prop), " rows and ", ncol(pred_prop), " columns"))
+start_time <- proc.time()
+pred_prop <- .tempEnv$program(
+  mix = mixes_data,
+  ref = reference_data
+)
+elapsed_time <- proc.time() - start_time
+print (paste0("Prediction has ", nrow(pred_prop), " rows and ", ncol(pred_prop), " columns"))
 
 
-  total_time <- total_time + elapsed_time["elapsed"]
-
-  predi_list[[dataset_name]] = pred_prop
-
-}
-
-# prediction <-.tempEnv$program(  
-# mix_rna = mix_rna, mix_met = mix_met,
-# ref_rna = ref_rna, ref_met = ref_met)
-
-
+total_time <- total_time + elapsed_time["elapsed"]
 
 
 print(total_time)
@@ -103,7 +77,7 @@ saveRDS(
 
 print(paste0("Save predictions in .rds format"))
 saveRDS(
-object = predi_list
+object = pred_prop
 , file   = output_results
 )
 

@@ -1,0 +1,211 @@
+---
+title: "Detailed Results"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    fig_caption: yes
+    toc: yes
+    toc_depth: 5
+---
+
+
+
+```{r label = "header", echo = FALSE, eval = TRUE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "", echo = FALSE)
+
+for ( package in c("ggplot2","viridis") ) {
+    if ( !{package %in% installed.packages( ) } ) {
+        print(x = paste0("Installation of the package : ", package) )
+        install.pacakges(pckgs = package)
+    }
+}
+remove(list = "package")
+library(package = "ggplot2")
+```
+
+
+```{r}
+#read output from prediction
+nb_datasets<- 4
+all_prediction <- readRDS("../input/res/prediction.rds")
+ground_truth <- readRDS("../input/ref/ground_truth.rds")
+
+```
+## Summary of the prediction
+
+### Heatmap of prediction
+
+### Heatmap of the absolute error
+
+```{r}
+colors = viridis::viridis(5)
+cols = colorRampPalette(colors)(50)
+
+
+#image(as.matrix(pred), axes=FALSE, col = cols , ylab = colnames(pred), xlab = rownames(pred))
+
+
+for (dataset_name in 1:nb_datasets){
+
+    prediction <- all_prediction[[dataset_name]]
+    print(dim(prediction) )
+    print(paste0("generating prediction for dataset:",toString(dataset_name) ))
+    
+    Aerr <- data.frame(
+        abserror = as.numeric(
+            x = abs(x = prediction - ground_truth )
+        )
+      , type = rep(
+            x     = seq_len(length.out = nrow(x = ground_truth ) )
+          , times = ncol(x = ground_truth )
+        )
+      , patient = rep(
+            x    = seq_len(length.out = ncol(x = ground_truth ) )
+          , each = nrow(x = ground_truth ) )
+    )
+    
+    p <- ggplot(
+        data    = Aerr
+      , mapping = aes(x = patient, y = type)
+    ) + {
+        geom_tile(
+            mapping = aes(fill = `abserror`)
+          , colour  = "white"
+        )
+    } + {
+        theme_minimal(base_size = 16)
+    } + {
+        labs(
+            y    = "Cell types"
+          , fill = "Absolute error"
+        )
+    } + { 
+        scale_x_discrete(expand = c(0, 0) )
+    } + {
+        scale_y_discrete(expand = c(0, 0) )
+    } + {
+        theme(
+            axis.text.x = element_text(
+                angle = 70
+              , vjust = 1
+              , size  = 14
+              , hjust = 1
+            )
+        )
+    } + {
+        coord_fixed( )
+    } + {
+        scale_fill_viridis_c(
+            option    = "plasma"
+          , direction = -1
+        )
+    } + {
+        labs(
+            title = paste0("Detail of the matrice ")
+          , x     = "Samples"
+        )
+    }
+    print(x = p)
+    
+}
+
+
+```
+
+## Summary of scores
+
+
+- scores      :
+```{r scores}
+# print(x = scores)
+# 
+# print(x = "Summary :")
+# print(x = summary(object = scores) )
+# 
+# print(x = "Standard deviation :")
+# print(x = sd(x = scores) )
+# 
+# 
+# resMAE <- data.frame(
+#     A         = seq_len(length.out = length(x = Aref) )
+#   , A.MAE     = scores
+#   , methode   = rep(x = "Your method",   times = length(x = Aref) )
+#   , datatype  = rep(x = dataType, times = length(x = Aref) )
+#   , meth_type = rep(x = "Your method",   times = length(x = Aref) )
+# )
+# 
+# allMAE <- as.data.frame(x = rbind(referenceMAE, resMAE) )
+# 
+# ggplot(
+#     data    = allMAE
+#   , mapping = aes(
+#         x      = methode
+#       , y      = A.MAE
+#       , fill   = meth_type
+#       , colour = datatype
+#     )
+# ) + {
+#     geom_boxplot(
+#         notch = FALSE
+#     )
+# } + {
+#     ## stat_summary(
+#     ##     fun.y = mean
+#     ##   , geom  = "point"
+#     ##   , shape = 23
+#     ##   , size  = 3
+#     ## )
+# } + {
+#     geom_dotplot(
+#         binaxis  = 'y'
+#       , stackdir = 'center'
+#       , dotsize  = 0.25
+#     )
+# } + {
+#     scale_x_discrete(
+#         limits = levels(x = allMAE$method)[
+#             order(
+#                 sapply(
+#                     X   = levels(x = allMAE$method)
+#                   , FUN = function( m ) {
+#                       mean(x = allMAE[allMAE$method == m, "A.MAE"] )
+#                   }
+#                 )
+#               , decreasing = TRUE
+#             )
+#         ]
+#     )
+# } + {
+#     ylim(0, 0.15)
+# } + {
+#     theme_minimal(base_size = 16)
+# } + {
+#     theme(
+#         axis.text.x  = element_text(
+#             angle = 70
+#           , vjust = 1
+#           , hjust = 1
+#           , size  = 14
+#         )
+#     )
+# } + {
+#     scale_fill_manual(
+#         breaks = c("Reference", "Your method")
+#       , values = c("white",     "#cc0000"    )
+#     )
+# } + {
+#     scale_colour_manual(
+#         breaks = c("both",    "met",    "rna",     as.character(x = resMAE$datatype[ 1 ] ) )
+#       , values = c("#23A900", "#4886FE", "#FED248", switch(EXPR = dataType, "both" = "#23A900", "met" = "#4886FE", "rna" = "#FED248") )
+#     )
+# } + {
+#     labs(
+#         title  = ""
+#       , x      = "Methods"
+#       , y      = "MAE"
+#       , colour = "Data type"
+#       , fill   = "Method type"
+#     )
+# }
+```
+

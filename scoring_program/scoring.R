@@ -261,10 +261,6 @@ validate_pred <- function(pred, nb_samples = ncol(Aref), nb_cells=nrow(Aref) , c
 }
 
 
-
-
-
-
 ##Ensure some properties of the Prediction are ok. 
 
 Aest_l  = readRDS(file = paste0(input, .Platform$file.sep, "res", .Platform$file.sep, "prediction.rds") )
