@@ -70,6 +70,19 @@ Rscript scoring_program/scoring.R  \
     test_output \
     test_output \
     scoring_program
+
+
+cd test_output
+mkdir -p input/ref
+mkdir -p input/res
+cd input
+cp ../ref/groundtruth_smoothies_fruits.rds ref/
+cp ../res/prediction.rds res/
+
+
+Rscript -e 'rmarkdown::render("../../scoring_program/detailed_results.Rmd")'
+  
+
 ```
 
 ## Build bundle and deploy on codabench
@@ -88,10 +101,12 @@ Select upload and select **bundle.zip** created earlier.
 
 ### Build docker images
 
-```
-cd docker/codabench_hadaca3_light
+The docker named hadaca3_pyr also has impleted python as well.
 
-sudo docker build -t hombergn/hadaca3_light .
+```
+cd docker/codabench_hadaca3_pyr
+
+sudo docker build -t hombergn/hadaca3_pyr .
 
 #see existing images 
 sudo docker images 

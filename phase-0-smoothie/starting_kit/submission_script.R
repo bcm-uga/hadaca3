@@ -87,8 +87,10 @@ if ( params$install_dependencies ) {
 #' 
 program = function(mix=NULL, ref=NULL, ...) {
 
+  requiered_packages = c("zip","nnls") 
+
     installed_packages <- installed.packages( )
-    for (package in c("zip","nnls") ) {
+    for (package in requiered_packages ) {
         if ( !{ package %in% installed_packages } ) {
             print(x = paste("Installation of ", package, sep = "") )
             install.packages(
@@ -113,7 +115,6 @@ program = function(mix=NULL, ref=NULL, ...) {
     return(tmp_prop)
   }, A=ref[idx_feat,])  
   rownames(prop) = colnames(ref)
-  
   return(prop)
   
   ##
@@ -127,7 +128,7 @@ program = function(mix=NULL, ref=NULL, ...) {
 ### Check the prediction /!\ DO NOT CHANGE THIS PART ###
 ##############################################################
 
-validate_pred <- function(pred, nb_samples = ncol(mix_rna) , nb_cells= ncol(ref_rna),col_names = colnames(ref_met) ){
+validate_pred <- function(pred, nb_samples , nb_cells,col_names ){
 
   error_status = 0   # 0 means no errors, 1 means "Fatal errors" and 2 means "Warning"
   error_informations = ''
@@ -174,12 +175,15 @@ validate_pred <- function(pred, nb_samples = ncol(mix_rna) , nb_cells= ncol(ref_
 mixes_data = readRDS("mixes_smoothies_fruits.rds")
 reference_data = readRDS("reference_fruits.rds")
 
+
+
 # we use the previously defined function 'program' to estimate A :
 pred_prop <- program(
   mix = mixes_data ,
   ref = reference_data
 )
 
+# validate_pred <- function(pred, nb_samples = ncol(mixes_data) , nb_cells= ncol(reference_data),col_names = colnames(reference_data) ){
 
 
 ###############################

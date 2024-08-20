@@ -86,13 +86,6 @@ for (dataset_name in 1:nb_datasets){
 
 }
 
-# prediction <-.tempEnv$program(  
-# mix_rna = mix_rna, mix_met = mix_met,
-# ref_rna = ref_rna, ref_met = ref_met)
-
-
-
-
 print(total_time)
 ## save profiling
 saveRDS(

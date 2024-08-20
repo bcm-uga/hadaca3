@@ -41,7 +41,7 @@ for package in required_packages:
     try:
         globals()[package] = importlib.import_module(package)
     except ImportError:
-        # print('impossible to import, installing packages',package)
+        print('impossible to import, installing packages',package)
         install(package)
         globals()[package] = importlib.import_module(package)
 

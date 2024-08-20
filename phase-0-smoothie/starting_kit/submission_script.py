@@ -1,12 +1,41 @@
 import os
 import subprocess
 import sys
+import importlib
+
+########################################################
+### Package dependencies /!\ DO NOT CHANGE THIS PART ###
+########################################################
+
+def install(package):
+    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+
+# List of required packages
+required_packages = [
+    "numpy",
+    "pandas",
+    # "scipy",  # Installed also inside the program because it not included inside the docker.
+    "rpy2",
+    "zipfile",
+    "inspect"
+]
+
+# we could remove the installation steps, the packages should already be inside in the docker
+# Install each package if not already installed
+for package in required_packages:
+    try:
+        globals()[package] = importlib.import_module(package)
+    except ImportError:
+        print('impossible to import, installing packages',package)
+        install(package)
+        globals()[package] = importlib.import_module(package)
+
+
 import zipfile
 import numpy as np
 import pandas as pd
 # from scipy.optimize import nnls
 import inspect 
-import importlib
 
 # import rpy2.robjects as ro
 from rpy2.robjects import pandas2ri
@@ -18,32 +47,6 @@ readRDS = ro.r['readRDS']
 saveRDS= ro.r["saveRDS"]
 
 
-########################################################
-### Package dependencies /!\ DO NOT CHANGE THIS PART ###
-########################################################
-
-nb_datasets = 4
-def install(package):
-    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
-
-# List of required packages
-required_packages = [
-    "numpy",
-    "pandas",
-    "scipy",
-    "rpy2",
-    "zipfile",
-    "inspect"
-]
-
-# Install each package if not already installed
-for package in required_packages:
-    try:
-        globals()[package] = importlib.import_module(package)
-    except ImportError:
-        # print('impossible to import, installing packages',package)
-        install(package)
-        globals()[package] = importlib.import_module(package)
 
 ####################################################
 ### Submission modes /!\ DO NOT CHANGE THIS PART ###
@@ -67,7 +70,7 @@ for package in required_packages:
 # Write a function to predict cell-type heterogeneity proportion matrix
 # In the provided example, we use a naive method to generate the baseline prediction.
 
-def program(mix_rna=None, mix_met=None, ref_rna=None, ref_met=None):
+def program(mix=None, ref=None):
     """
     The function to estimate the A matrix
     
@@ -106,29 +109,10 @@ def program(mix_rna=None, mix_met=None, ref_rna=None, ref_met=None):
         props = np.array([res_i / sum(res_i) for res_i in res])
         return props.T
 
-    if mix_rna is not None:
-        prop_rna = estimate_proportions(mix_rna, ref_rna)
-    else:
-        prop_rna = None
+    prop = estimate_proportions(mix, ref)
 
-    if mix_met is not None:
-        prop_met = estimate_proportions(mix_met, ref_met)
-    else:
-        prop_met = None
-
-
-    if prop_rna is not None and prop_met is not None:
-        assert prop_rna.shape == prop_met.shape, "Dimensions of RNA and Methylation data do not match"
-        prop = (prop_rna + prop_met) / 2
-    elif prop_rna is not None:
-        prop = prop_rna
-    elif prop_met is not None:
-        prop = prop_met
-    else:
-        raise ValueError("At least one of mix_rna or mix_met must be provided")
-
-    if not np.allclose(np.sum(prop, axis=0), 1):
-        prop = prop / np.sum(prop, axis=0)
+    # if not np.allclose(np.sum(prop, axis=0), 1):
+    #     prop = prop / np.sum(prop, axis=0)
 
     return prop
 
@@ -175,57 +159,34 @@ def validate_pred(pred, nb_samples=None, nb_cells=None, col_names=None):
 ### Generate a prediction file /!\ DO NOT CHANGE THIS PART ###
 ##############################################################
 
-r_code_get_colnames_nested = '''
-get_colnames_nested <- function(reference_data) {
-    return (colnames(reference_data$ref_bulkRNA))
+r_code_get_colnames = '''
+get_colnames <- function(ref_names="reference_fruits.rds") {
+    reference_data = readRDS(ref_names)
+    return (colnames(reference_data))
 }
 '''
-ro.r(r_code_get_colnames_nested)
+ro.r(r_code_get_colnames)
 
-predi_list = []
-for dataset_name in range(1, nb_datasets + 1):
-    dir_name = f"input_data_{dataset_name}/"
-    print(f"generating prediction for dataset: {dataset_name}")
+mixes_data = readRDS(os.path.join( "mixes_smoothies_fruits.rds"))
+# print(mixes_data)
+# print(type(mixes_data))
+# print(colnames(mixes_data))
+# mixes_data= np.array(mixes_data.rx('mix_rna'))
+# mixes_data = mixes_data[0]
+reference_data = readRDS(os.path.join( "reference_fruits.rds"))  
+# reference_data = np.array(reference_data.rx('ref_bulkRNA'))
+# reference_data = reference_data[0]
 
-    mixes_data = readRDS(os.path.join(dir_name, "mixes_data.rds"))
-    # mixes_data = pandas2ri.rpy2py(mixes_data)
-    # print(type(mixes_data))
-    # print((mixes_data.rx2("mix_rna"))[0].names)
-    # nested_list = mixes_data.rx2("mix_rna")
-    # print(nested_names = nested_list.names)
+pred_prop = program(
+    mix=mixes_data, ref=reference_data
+)
 
-    mix_rna= np.array(mixes_data.rx('mix_rna'))
-    mix_rna = mix_rna[0]
-    # print(mix_rna)
+get_colnames = ro.r['get_colnames']
+colnames_result = get_colnames("reference_fruits.rds")
+pred_prop_df = pd.DataFrame(pred_prop, index=colnames_result)
 
-    # print(type(mix_rna[0]))
-    # print(pd.DataFrame({'mix_rna':mix_rna.flatten()} ))
-
-    # mix_met = mixes_data.get('mix_met')
-    mix_met = np.array(mixes_data.rx('mix_met'))
-    mix_met = mix_met[0]
-    # print(mix_met)
-
-    reference_data = readRDS(os.path.join(dir_name, "reference_data.rds"))
-    # reference_data = pandas2ri.rpy2py(reference_data)
-    ref_rna = np.array(reference_data.rx('ref_bulkRNA'))
-    ref_met = np.array(reference_data.rx('ref_met'))
-    ref_rna = ref_rna[0]
-    ref_met = ref_met[0]
-
-    get_colnames_nested = ro.r['get_colnames_nested']
-    colnames_result = get_colnames_nested(reference_data)
-
-    pred_prop = program(
-        mix_rna=mix_rna, mix_met=mix_met,
-        ref_rna=ref_rna, ref_met=ref_met
-    )
+# validate_pred(pred_prop, nb_samples=mix_rna.shape[1] if mix_rna is not None else mix_met.shape[1], nb_cells=ref_rna.shape[1], col_names=reference_data['ref_met'].columns)
     
-    pred_prop_df = pd.DataFrame(pred_prop, index=colnames_result)
-
-    # validate_pred(pred_prop, nb_samples=mix_rna.shape[1] if mix_rna is not None else mix_met.shape[1], nb_cells=ref_rna.shape[1], col_names=reference_data['ref_met'].columns)
-
-    predi_list.append(pred_prop_df)
 
 ############################### 
 ### Code submission mode
@@ -257,7 +218,7 @@ if not os.path.exists("submissions"):
 
 prediction_name = "prediction.rds"
 
-saveRDS(predi_list, os.path.join("submissions", prediction_name))
+saveRDS(pred_prop_df, os.path.join("submissions", prediction_name))
 
 
 
