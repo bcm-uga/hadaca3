@@ -41,7 +41,6 @@ ground_truth.zip
 
 logs
 
-
 *.rds
 
 ground_truth/
@@ -51,7 +50,11 @@ input_data/
 input_data/*
 input_data_final*
 
-
 backup*
 
 src_test*
+
+
+phase-0-smoothie/starting_kit/submissions/*
+phase-0-smoothie/starting_kit/submissions
+
