@@ -12,6 +12,8 @@ The unziped starting_kit directory contains now:
 		 
 		source("submission_script.R")
 
+Or call `Rscript submission_script.R` from a terminal. 
+
 [3] The code of the  `submission_script.R`  generates the files:
 - `zip_program`  -> *for code submission, script format*
 -` zip_results`  -> *for result submission, table format*
@@ -27,6 +29,17 @@ Edit the code inside the following chunk (i.e. the `program` function):
 		## YOUR CODE ENDS HERE
 		## 
 
+
+As an alternative for python user, we created  `submission_script.py` which is the python equivalent of `submission_script.R` and should work the same ways. 
+Instead run the script in a python shell or using `python submission_script.py`. 
+
+### Conda environment 
+To reduces setup complexitie for both R and python users, (particularly essential for Python users),  there is a conda environnement recepe available : 
+[https://github.com/bcm-uga/hadaca3/blob/main/docker/codabench_hadaca3_pyr/environment/environment-r.yml](https://github.com/bcm-uga/hadaca3/blob/main/docker/codabench_hadaca3_pyr/environment/environment-r.yml)
+
+
+To activate this envrionnement :
+`conda env create -f environment-r.yml && conda activate h3`
 
 
 ## How to submit your results ?

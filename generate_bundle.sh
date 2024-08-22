@@ -15,24 +15,21 @@ cd starting_kit/ ; zip  -FS  -r  ../bundle/starting_kit.zip *  -x \*submissions\
 
 
 zip -FS -j -r  bundle/ground_truth.zip ground_truth/
+zip -FS -j -r  bundle/ground_truth_final.zip ground_truth_final/
 
 
 
-# number_dataset=4
-# for i in  $(seq 1 $number_dataset);
-# do
-#     zip -FS -j -r  bundle/input_data_"$i".zip input_data/input_data_"$i"
-# done 
 
-cd input_data/
-zip -FS -r  ../bundle/input_data.zip *
-cd .. 
+# cd input_data/
+# zip -FS -r  ../bundle/input_data.zip *
+# cd .. 
 
-# zip -FS -r bundle/input_data.zip input_data/
+# cd input_data_final/
+# zip -FS -r  ../bundle/input_data_final.zip *
+# cd .. 
 
-cd input_data_final/
-zip -FS -r  ../bundle/input_data_final.zip *
-cd .. 
+zip -FS -r -j bundle/input_data.zip input_data/
+zip -FS -r -j bundle/input_data_final.zip input_data_final/
 
 zip -FS -r -j bundle.zip bundle/
 

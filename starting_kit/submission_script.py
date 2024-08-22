@@ -22,7 +22,7 @@ saveRDS= ro.r["saveRDS"]
 ### Package dependencies /!\ DO NOT CHANGE THIS PART ###
 ########################################################
 
-nb_datasets = 4
+nb_datasets = 2
 def install(package):
     subprocess.check_call([sys.executable, "-m", "pip", "install", package])
 
@@ -184,30 +184,19 @@ ro.r(r_code_get_colnames_nested)
 
 predi_list = []
 for dataset_name in range(1, nb_datasets + 1):
-    dir_name = f"input_data_{dataset_name}/"
-    print(f"generating prediction for dataset: {dataset_name}")
 
-    mixes_data = readRDS(os.path.join(dir_name, "mixes_data.rds"))
-    # mixes_data = pandas2ri.rpy2py(mixes_data)
-    # print(type(mixes_data))
-    # print((mixes_data.rx2("mix_rna"))[0].names)
-    # nested_list = mixes_data.rx2("mix_rna")
-    # print(nested_names = nested_list.names)
+    dir_name = "data"+os.sep
+    mixes_data = readRDS(os.path.join(dir_name, f"mixes_data_{dataset_name}.rds"))
+    print(f"generating prediction for dataset: {dataset_name}")
 
     mix_rna= np.array(mixes_data.rx('mix_rna'))
     mix_rna = mix_rna[0]
-    # print(mix_rna)
 
-    # print(type(mix_rna[0]))
-    # print(pd.DataFrame({'mix_rna':mix_rna.flatten()} ))
-
-    # mix_met = mixes_data.get('mix_met')
     mix_met = np.array(mixes_data.rx('mix_met'))
     mix_met = mix_met[0]
-    # print(mix_met)
 
-    reference_data = readRDS(os.path.join(dir_name, "reference_data.rds"))
-    # reference_data = pandas2ri.rpy2py(reference_data)
+    reference_data = readRDS(os.path.join(dir_name, "reference_pdac.rds"))
+
     ref_rna = np.array(reference_data.rx('ref_bulkRNA'))
     ref_met = np.array(reference_data.rx('ref_met'))
     ref_rna = ref_rna[0]

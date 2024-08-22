@@ -26,7 +26,7 @@ source(
   , local = .tempEnv
 )
 
-nb_datasets = 4
+nb_datasets = 2
 
 ####################################
 ## read input data :
@@ -54,17 +54,16 @@ total_time <- 0
 
 predi_list = list()
 for (dataset_name in 1:nb_datasets){
-  dir_name = paste0(input,.Platform$file.sep,"input_data_",toString( dataset_name),.Platform$file.sep)
+  dir_name = paste0(input,.Platform$file.sep)
   print(paste0("generating prediction for dataset:",toString(dataset_name) ))
 
 
-
-  mixes_data <- readRDS(file = paste0(dir_name, "mixes_data.rds"))
+  mixes_data <- readRDS(file = paste0(dir_name,"mixes_data_",toString(dataset_name)  ,".rds"))
   mix_rna <- mixes_data$mix_rna
   mix_met <- mixes_data$mix_met
   names(mixes_data)
 
-  reference_data <- readRDS(file =  paste0(dir_name, "reference_data.rds"))
+  reference_data <- readRDS(file =  paste0(dir_name, "reference_pdac.rds"))
   ref_rna <- as.matrix(reference_data$ref_bulkRNA)
   # ref_sc_rna <- as.matrix(reference_data$ref_scRNA)
   ref_met <- as.matrix(reference_data$ref_met)

@@ -26,9 +26,9 @@ library(package = "ggplot2")
 
 ```{r}
 #read output from prediction
-nb_datasets<- 4
-all_prediction <- readRDS("../input/res/prediction.rds")
-ground_truth <- readRDS("../input/ref/ground_truth.rds")
+nb_datasets<- 2
+
+all_prediction <- readRDS(paste0(input,.Platform$file.sep,"res",.Platform$file.sep,"prediction.rds"))
 
 ```
 ## Summary of the prediction
@@ -51,6 +51,10 @@ for (dataset_name in 1:nb_datasets){
     print(dim(prediction) )
     print(paste0("generating prediction for dataset:",toString(dataset_name) ))
     
+    
+    ground_truth_file = paste0(input, .Platform$file.sep, "ref", .Platform$file.sep, "ground_truth_",toString(dataset_name),".rds")
+    
+    ground_truth =  readRDS(file = ground_truth_file )
     Aerr <- data.frame(
         abserror = as.numeric(
             x = abs(x = prediction - ground_truth )

@@ -75,27 +75,26 @@ ro.r(r_code_get_colnames_nested)
 
 
 # This should be place elsewhere. 
-nb_datasets = 4
+nb_datasets = 2
 
 predi_list = []
 total_time = 0 
 
 
 for dataset_name in range(1, nb_datasets + 1):
-    # dir_name = f"input_data_{dataset_name}/"
-    # dir_name = dir_name = paste0(input,.Platform$file.sep,"input_data_",toString( dataset_name),.Platform$file.sep)
-    dir_name = os.path.join(input_dir, f"input_data_{dataset_name}")
-    print(f"generating prediction for dataset: {dataset_name}")
-    
 
-    mixes_data = readRDS(os.path.join(dir_name, "mixes_data.rds"))
+    # dir_name =  os.path.join(input_dir, "data") 
+    dir_name = input_dir
+    print(f"generating prediction for dataset: {dataset_name}")
+    mixes_data = readRDS(os.path.join(dir_name, f"mixes_data_{dataset_name}.rds"))
+
 
     mix_rna= np.array(mixes_data.rx('mix_rna'))
     mix_rna = mix_rna[0]
     mix_met = np.array(mixes_data.rx('mix_met'))
     mix_met = mix_met[0]
 
-    reference_data = readRDS(os.path.join(dir_name, "reference_data.rds"))
+    reference_data = readRDS(os.path.join(dir_name, "reference_pdac.rds"))
     # reference_data = pandas2ri.rpy2py(reference_data)
     ref_rna = np.array(reference_data.rx('ref_bulkRNA'))
     ref_met = np.array(reference_data.rx('ref_met'))

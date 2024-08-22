@@ -3,7 +3,7 @@
 ## magali.richard@univ-grenoble-alpes.fr
 ##---------------------------------------------
 
-nb_datasets = 4
+nb_datasets = 2
 
 for ( package in c( "combinat", "rmarkdown", "clue", "infotheo") ) {
     if ( !{ package %in% installed.packages( ) } ) {
@@ -126,23 +126,23 @@ eval_MAE = function (A_r , Aest_p){
 #########################
 # Scoring function 
 
-scoring_function <- function(Aref, Aest) {
+scoring_function <- function(Atruth, Aest) {
   #  pretreatment of estimated A
-#   Aest_p = prepare_A(A_r = Aref, A_est = Aest)
-  Aest_p = Aest[rownames(Aref),]
+#   Aest_p = prepare_A(A_r = Atruth, A_est = Aest)
+  Aest_p = Aest[rownames(Atruth),]
   
   #  scoring
-  mae = eval_MAE(Aref, Aest_p)
-  cr = correlation_row(Aref, Aest_p)
-  cc = correlation_col(Aref, Aest_p)
+  mae = eval_MAE(Atruth, Aest_p)
+  cr = correlation_row(Atruth, Aest_p)
+  cc = correlation_col(Atruth, Aest_p)
   #  scoring agregation (using a derivative of the maxmin approach)
   rd_mae = c()
   set.seed(1)
-  random_col = c(1, rep(0,(nrow(Aref)-1)))
-  random_base = matrix(rep(random_col, ncol(Aref)), nrow(Aref), ncol(Aref))
+  random_col = c(1, rep(0,(nrow(Atruth)-1)))
+  random_base = matrix(rep(random_col, ncol(Atruth)), nrow(Atruth), ncol(Atruth))
   for (j in 1:1000){
-      rd= random_base[sample(nrow(Aref)),]
-      rd_mae[j] =eval_MAE(Aref,rd)
+      rd= random_base[sample(nrow(Atruth)),]
+      rd_mae[j] =eval_MAE(Atruth,rd)
   }
   max_mae = max(rd_mae)
   min_mae = 0
@@ -198,12 +198,7 @@ output_file <- paste0(output, .Platform$file.sep, "scores.txt")
     print("execution of the info_mut scoring program")
     
 
-## Load reference data
-Aref =  readRDS(file = paste0(input, .Platform$file.sep, "ref", .Platform$file.sep, "ground_truth.rds") )
-# Aref =  readRDS(file = paste0(input, .Platform$file.sep, "ref", .Platform$file.sep, "test_solution.rds") )
-# Aref = list(Aref) #remove this if you ref is already a list
-# nb_dataset = length(Aref)
-# print(x = paste0("Number of test dataset is :", nb_dataset) )
+
 
 
 ## load submited results from participant program :
@@ -224,7 +219,7 @@ profiling <- readRDS(file = paste0(input, .Platform$file.sep, "res", .Platform$f
 ##############################################
 
 
-validate_pred <- function(pred, nb_samples = ncol(Aref), nb_cells=nrow(Aref) , col_names=rownames(Aref) ){
+validate_pred <- function(pred, nb_samples , nb_cells , col_names ){
 
   error_status = 0   # 0 means no errors, 1 means "Fatal errors" and 2 means "Warning"
   error_informations = ''
@@ -265,14 +260,17 @@ validate_pred <- function(pred, nb_samples = ncol(Aref), nb_cells=nrow(Aref) , c
 
 Aest_l  = readRDS(file = paste0(input, .Platform$file.sep, "res", .Platform$file.sep, "prediction.rds") )
 
-Aref = as.matrix(Aref)
 
 for (dataset_name in 1:nb_datasets){
 
   Aest = as.matrix(Aest_l[[dataset_name]])
-  validate_pred( Aest )
 
-  scores_full = scoring_function(Aref = Aref,  Aest = Aest)
+  ## Load ground_thuth data
+  Atruth =  readRDS(file = paste0(input, .Platform$file.sep, "ref", .Platform$file.sep, "ground_truth_",toString(dataset_name),".rds") )
+  Atruth = as.matrix(Atruth)
+  validate_pred( Aest,nb_samples = ncol(Atruth), nb_cells=nrow(Atruth) , col_names=rownames(Atruth) )
+
+  scores_full = scoring_function(Atruth = Atruth,  Aest = Aest)
   # if (nb_dataset > 1) {scores = as.numeric(scores_full[1,])}
   # if (nb_dataset == 1) {scores = as.numeric(scores_full[1])}
   scores = as.numeric(scores_full)
@@ -291,6 +289,7 @@ for (dataset_name in 1:nb_datasets){
 # cat(paste0("Time :", sum( profiling$by.total$total.time ) / length(x = Aref), "\n"), file = output_file, append = TRUE )
 # cat(paste0("Time: ", profiling["elapsed"], "\n"), file = output_file, append = TRUE )
 cat(paste0("Time: ", profiling, "\n"), file = output_file, append = TRUE )
+print( paste0("Time: ", profiling, "\n") )
 
 rmarkdown::render(
   input       = paste0(program, .Platform$file.sep, "detailed_results.Rmd")

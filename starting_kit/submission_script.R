@@ -5,13 +5,11 @@
 # magali.richard@univ-grenoble-alpes.fr
 # ---
 
-#to get list of function before sourcing new functions
-# before <- ls()
 ########################################################
 ### Package dependencies /!\ DO NOT CHANGE THIS PART ###
 ########################################################
 
-nb_datasets =4
+nb_datasets = 2
 
 ##  to generate the zip files that contain the programs or the results to submit to the Codalab platform.
 
@@ -242,16 +240,14 @@ validate_pred <- function(pred, nb_samples = ncol(mix_rna) , nb_cells= ncol(ref_
 predi_list = list()
 for (dataset_name in 1:nb_datasets){
 
-  dir_name = dir_name = paste0("input_data_",toString( dataset_name),'/')
+  dir_name = paste0("data",.Platform$file.sep)
   print(paste0("generating prediction for dataset:",toString(dataset_name) ))
 
-
-
-  mixes_data <- readRDS(file = paste0(dir_name, "mixes_data.rds"))
+  mixes_data <- readRDS(file = paste0(dir_name, "mixes_data_",toString(dataset_name)  ,".rds"))
   mix_rna <- mixes_data$mix_rna
   mix_met <- mixes_data$mix_met
 
-  reference_data <- readRDS(file =  paste0(dir_name, "reference_data.rds"))
+  reference_data <- readRDS(file =  paste0(dir_name, "reference_pdac.rds"))
   ref_rna <- as.matrix(reference_data$ref_bulkRNA)
   # ref_sc_rna <- as.matrix(reference_data$ref_scRNA)
   ref_met <- as.matrix(reference_data$ref_met)

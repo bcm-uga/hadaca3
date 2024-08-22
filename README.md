@@ -178,3 +178,26 @@ Run the following command to test scoring program using dockers.
 sudo docker run --rm  -v $PWD/scoring_program:/app/program  -v $PWD/test_output:/app/output  -w /app/program  -v $PWD/test_output:/app/input  hombergn/hadaca3_light  Rscript /app/program/scoring.R /app/input /app/output /app/program
 
 ```
+
+
+## Conda Environment 
+To reduces setup complexitie for both R and python users, (particularly essential for Python users),  there is a conda environnement recepe available
+
+To activate this envrionnement :
+```
+cd docker/codabench_hadaca3_pyr/environment/
+conda env create -f environment-r.yml && conda activate h3
+cd - 
+```
+
+
+# Todo: 
+
+* Improve handling of severals datasets with a global variable: now there is variable called `nb_datasets` in a lots of files: 
+ - `sub_ingestion.(py/R)`
+ - `submission_script.(py/R)`
+ - `detailed_results.Rmd`
+ - `scoring.R`
+
+The variable `nb_datasets` stand for the number of datasets per phase in the phase 2 and 3. 
+for instance if `nb_datasets=4`, there are 4 datasets in phase 2 and 4 others datasets in phase 3.  
