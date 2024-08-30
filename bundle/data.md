@@ -1,14 +1,14 @@
 ## Data source
 
-Public data :  
+Public data:  
 
-- single-cell RNA-seq reference : BioProject PRJCA001063 (DIOI: 10.1038/s41422-019-0195-y)
+- single-cell RNA-seq reference: BioProject PRJCA001063 (DIOI: 10.1038/s41422-019-0195-y)
   
 Private data :  
 
-- bulk RNA-seq reference : COMETH-lot1
-- MethEPIC reference : COMETH-lot1
-- in vitro mixtures : COMETH-lot1
+- bulk RNA-seq reference: COMETH-lot1
+- MethEPIC reference: COMETH-lot1
+- in vitro mixtures: COMETH-lot1
 - in vivo mixtures: COMETH-lot2
   
 ## Data generation
@@ -27,11 +27,11 @@ In the following example, simulated mixtures were obtained using a convolution o
 
 ## Data description
 
-### Phase 0 : 
+### Phase 0: 
 
 Phase 0 is open before the challenge begins, allowing participants to become familiar with the platform and the concept of deconvolution. For more information, please visit here the [smoothie challenge](https://www.codabench.org/competitions/3569/?secret_key=d52c599a-c568-481d-aa7f-1e83936325e4).
 
-### Phase 1 : 
+### Phase 1: 
 
 During phase 1, an in vitro simulated mixture will be provided for deconvolution. The corresponding file name is `mixes_data.rds` 
 Two types of mixed omics data are available to estimate the proportions of cell types in these mixtures: 
@@ -80,17 +80,17 @@ The corresponding file name is `reference_data.rds`. `reference_data.rds` is a l
            2036    2178    8874    3946    3112 
 ```
   
-### Phase 2 : 
+### Phase 2: 
 
 Phase 2 is similar to Phase 1 but includes several types of mixtures to be deconvoluted (**in silico**, **in vitro**, and **in vivo**). The same references as in Phase 1 can be used for deconvolution. The mixtures to be deconvoluted are provided to the participants.
 
-### Phase 3 : 
+### Phase 3: 
 
 Phase 3 is similar to Phase 2 (same type of mixtures datasets), except that the mixtures are not available to the participants to prevent overfitting. Participants are invited to submit their best method developed in Phase 2 for Phase 3.
 
 ## Data Download
 
-To download the dataset for this project, follow these steps :
+To download the dataset for this project, follow these steps:
 
  - Go on the challenge page,
  - Go the *Get started* menu,
