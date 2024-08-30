@@ -22,7 +22,8 @@ The unziped starting_kit directory contains now:
 
 Edit the `submission_script.R` to replace the baseline method by the method of your choice. 
 
-Edit the code inside the following chunk (i.e. the `program` function):     
+Edit the code inside the following chunk (i.e. the `program` function):  
+
 		## 
 		## YOUR CODE BEGINS HERE 
 		##
@@ -57,6 +58,7 @@ The unzipped starting_kit directory contains now:
 Edit the `submission_script.py` to replace the baseline method by the method of your choice. 
 
 Edit the code inside the following chunk (i.e. the `program` function):
+
 		## 
 		## YOUR CODE BEGINS HERE 
 		##
