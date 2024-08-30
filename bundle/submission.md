@@ -141,5 +141,5 @@ If you wish to test each step independently or run the Python script locally, re
 
 ### Including an external file to be used in the submission script
 
-t is possible to include an external file, provided that it is sourced in the submission_script and correctly included in the zip file that will be submitted on the Codabench platform.
+It is possible to include an external file, provided that it is sourced in the submission_script and correctly included in the zip file that will be submitted on the Codabench platform.
 
