@@ -138,3 +138,8 @@ Please note that this script will use the `submission_script.R` from the `hadaca
 The script `automated_docker_test.sh` first executes the R submission script locally, then re-executes it within the Docker container (ingestion phase), followed by running the scoring program.
 
 If you wish to test each step independently or run the Python script locally, refer to the `README.md` in the `hadaca3` GitHub repository.
+
+### Including an external file to be used in the submission script
+
+t is possible to include an external file, provided that it is sourced in the submission_script and correctly included in the zip file that will be submitted on the Codabench platform.
+
