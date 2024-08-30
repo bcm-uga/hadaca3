@@ -6,8 +6,8 @@
 
 [3] Make a first submission using the baseline method (follow the guidelines in the *Submission* tab)
 
-[4] Check you score (more information on the scoring and ranking pipelines can be found on the *Evaluation and scoring* tab).
+[4] Check you scores (more information on the scoring and ranking pipelines can be found on the *Evaluation and scoring* tab).
 
-[5] Improve you method by editing the `submission_script.R` contained in the `starting_kit` and resubmit your program to enhance your score.
+[5] Improve you method by editing the `submission_script.R` contained in the `starting_kit` and resubmit your program to enhance your scores.
 
 
