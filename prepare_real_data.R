@@ -21,30 +21,36 @@ path_data="~/projects/hadaca3_private/"
 
 source(paste0(path_data,"datasets.R"))
 print(datasets)
-while (length(datasets) < nb_datasets*2 ){
-    datasets <- c(datasets,datasets)
-}
+
+
+# while (length(datasets) < nb_datasets*2 ){
+#     datasets <- c(datasets,datasets)
+# }
 
 dir.create("data/", showWarnings = FALSE)
 
 i = 1
-for(dataset in datasets){
-    mix_dataset_name = paste0('mixes_',dataset,'_pdac.rds')
-    ground_truth_name = paste0('groundtruth_',dataset,'_pdac.rds')
-    
-    dir_name = paste0("data/",i,"/")
-    dir.create(dir_name, showWarnings = FALSE)
 
-    file.copy(from = paste0(path_data, mix_dataset_name),   # Copy files
-          to = paste0("data/", paste0(i,"/mixes_data_",i,".rds")))
+### Phase 1 or 2 TODO improve this code
+phase =1
+for (phase in 1:2){
+    for(dataset in datasets){
+        mix_dataset_name = paste0('mixes_',dataset,phase,'_pdac.rds')
+        ground_truth_name = paste0('groundtruth_',dataset,phase,'_pdac.rds')
+        print(mix_dataset_name)
+        dir_name = paste0("data/",i,"/")
+        dir.create(dir_name, showWarnings = FALSE)
 
-    file.copy(from = paste0(path_data, ground_truth_name),   # Copy files
-          to = paste0("data/", paste0(i,"/ground_truth_",i,".rds")))
+        file.copy(from = paste0(path_data, mix_dataset_name),   # Copy files
+            to = paste0("data/", paste0(i,"/mixes_data_",i,".rds")))
 
-    # paste0("reference_data_","$i",".rds")
-    i = i +1 
+        file.copy(from = paste0(path_data, ground_truth_name),   # Copy files
+            to = paste0("data/", paste0(i,"/ground_truth_",i,".rds")))
+
+        # paste0("reference_data_","$i",".rds")
+        i = i +1 
+    }
 }
-
 
 
 ## copy the reference. 

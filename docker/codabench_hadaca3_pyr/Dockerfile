@@ -16,6 +16,7 @@ ENV PATH /opt/conda/bin:$PATH
 
 
 RUN Rscript  -e 'BiocManager::install("ComplexHeatmap")'
+RUN Rscript  -e 'BiocManager::install("Biobase")'
 
 ENTRYPOINT ["micromamba", "run", "-n", "h3"]
 

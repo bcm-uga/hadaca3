@@ -3,7 +3,7 @@
 ## magali.richard@univ-grenoble-alpes.fr
 ##---------------------------------------------
 
-nb_datasets = 2
+nb_datasets = 4
 
 for ( package in c( "combinat", "rmarkdown", "clue", "infotheo") ) {
     if ( !{ package %in% installed.packages( ) } ) {
@@ -14,153 +14,136 @@ remove(list = "package")
 
 ##############################################
 ### SCORING
-
 #########################
-# homogenization function to find the best match between real and estimated A matrix
+# Align cell types to find the best match between real and estimated A matrices
 
-homgeneized_cor_mat =function(A_r, A_est) {
-    cmat=cor(t(A_r),t(A_est))
-    pvec <- c(clue::solve_LSAP((1+cmat)^2,maximum = TRUE))
-    return(A_est[pvec,])
-}
+homogeneized_cor_mat = function(A_real, A_pred) {
 
-
-#########################
-# Estimated A pre-treatment
-
-#not usefull because reference based algorithm
-prepare_A <- function(A_r, A_est) {
-    N <- ncol(x = A_r)
-    K <- nrow(x = A_r)
-    stopifnot(K > 1)
+  if (any(apply(A_pred, 1, sd) == 0)) {
+    A_pred[which(apply(A_pred, 1, sd) == 0),] = abs(jitter(A_pred[which(apply(A_pred, 1, sd) == 0),], factor = 0.01))
     
-    stopifnot( ncol(x = A_est) == N )
-    stopifnot( !anyNA(x = A_est))
-    
-    ### STEP 1 : matching the number of estimated component to real number of cell types K
-    
-        ## if not supplying enough types (make sure that {nrow(A_est) >= K})
-        if ( nrow(x = A_est) < K ) {
-               #set positive random values closed to 0 for missing rows
-               set.seed(1)
-               random_data = abs(jitter(matrix(data = 0, nrow = K - nrow(x = A_est), ncol = N), factor = 0.01))
-               A_est <- rbind(A_est, random_data )
-                print("Add rows of 0 to match the exact number of K")
-           }
-           
-         ## if supplying too manycell types
-         
-         ### strategy 1: keep the most abundant cell types
-         if ( nrow(x = A_est) > K ) {
-                     A_est <- A_est[order(rowSums(A_est), decreasing = TRUE)[1:K],]
-                     print("Number of cell type exceded K, only the K most contributing cell types were kept for scoring.")
-                 }
-                 
-        ### strategy 2: clustering of similar cell types to match K components -> SLIM
-        
-    ### STEP 2 : reordering estimated components to find the best match -> SLIM
-    
-    homgeneized_cor_mat =function(A_r, A_est) {
-     cmat=cor(t(A_r),t(A_est))
-    #cmat[cmat<0]=0 
-    #cmat= (1+1e-14+(0.5*(log(1+cmat)-log(1-cmat))))/2
-     pvec <- c(clue::solve_LSAP((1+cmat)^2,maximum = TRUE)) 
-        #print(pvec)
-     return(A_est[pvec,])
- 
-    }
-     
-    A_est_best_cor = as.matrix(homgeneized_cor_mat(A_r, A_est))
-    
-    return(A_est_best_cor)
-}
-
-#########################
-# Coputation of column correlation score
-
-correlation_col = function (A_r , Aest_p){
-    res = c()
-    for(i in 1:ncol(A_r)){
-       if (sd(Aest_p[, i]) > 0 & sd(A_r[, i]) > 0) {
-        res[i] =cor(A_r[, i], Aest_p[, i], method = "pearson")
-        }
-    }
-
-    res = res[!is.na(res)]
-       print(paste0(length(res), " cols are kept for correlation analysis"))
-    res[which(res<0)] = 0
-    COR = sum(res)/length(res)
-
-    return(COR)
-}
-
-#########################
-# Coputation of row correlation score
-
-correlation_row = function (A_r , Aest_p){
-    res = c()
-    for(i in 1:nrow(A_r)){
-       if (sd(Aest_p[i, ]) > 0 & sd(A_r[i, ]) > 0) {
-        res[i] =cor(A_r[i, ], Aest_p[i, ], method = "pearson")
-        }
-    }
-   
-    res = res[!is.na(res)]
-    print(paste0(length(res), " rows are kept for correlation analysis"))
-    res[which(res<0)] = 0
-    COR = sum(res)/length(res)
-
-    return(COR)
-}
-
-#########################
-# Computation of Mean absolute error score
-
-eval_MAE = function (A_r , Aest_p){
-  MAE <- function(M1, M2) {
-      return(mean(x = abs(x = M1 - M2) ))
+    A_pred = sapply(1:ncol(A_pred), 
+                   function(col_i) { A_pred[,col_i] / sum(A_pred[,col_i]) }) # Sum To One 
   }
-  return(MAE(A_r,Aest_p) )
+  
+  cmat = cor(t(A_real),t(A_pred))
+  pvec <- c(clue::solve_LSAP((1+cmat)^2,maximum = TRUE))
+  return(A_pred[pvec,])
+}
+
+#########################
+# Correct A_pred if we predicted too few/many cell types and align the latter
+
+prepare_A <- function(A_real, A_pred) {
+  N <- ncol(A_real)
+  K <- nrow(A_real)
+    
+  stopifnot(K > 1)
+  stopifnot(ncol(A_pred) == N)
+  stopifnot(!anyNA(A_pred))
+    
+  # STEP 1 : matching the number of estimated components to the real number of cell types K
+    
+  ## if estimating too few cell types
+  if (nrow(A_pred) < K) {
+    #set random positive values closed to 0 for missing rows
+    set.seed(1)
+    random_data = abs(jitter(matrix(data = 0, nrow = K - nrow(A_pred), ncol = N), factor = 0.01))
+    A_pred <- rbind(A_pred, random_data)
+    print("Add rows of 0s to match K")
+  }
+           
+  ## if estimating too many cell types
+  
+  ### strategy 1: keep the most abundant cell types
+  if (nrow(A_pred) > K) {
+    A_pred <- A_pred[order(rowSums(A_pred), decreasing = TRUE)[1:K],]
+    print("Number of estimated cell types exceeds K, only the K most abundant cell types are kept for scoring.")
+  }
+  
+  ### strategy 2: clustering of similar cell types to match K components -> SLIM
+        
+  # STEP 2 : align estimated components to find the best match -> SLIM
+  A_pred_best_cor = as.matrix(homogeneized_cor_mat(A_real, A_pred))
+  
+  return(A_pred_best_cor)
+}
+
+#########################
+# Computation of Pearson correlation on rows, columns and whole matrix
+
+pearson_cor <-  function(real, prediction) {
+  return(cor(c(as.matrix(real)), c(prediction), method="pearson"))
+}
+
+eval_pearson = function(A_real, A_pred) {
+  cor_matrix = pearson_cor(real=A_real, prediction=A_pred)
+  cor_row = sapply(seq(nrow(A_pred)), function(i)
+    pearson_cor(real=A_real[i, ], prediction=A_pred[i, ]))
+  cor_col = sapply(seq(ncol(A_pred)), function(i)
+    pearson_cor(real=A_real[, i], prediction=A_pred[, i]))
+  return(structure(c(cor_matrix, mean(cor_row, na.rm=T), mean(cor_col, na.rm=T)),
+                   names=c("cor_matrix", "cor_row", "cor_col")))
+}
+
+eval_pearson_per_samples = function(A_real, A_pred) {
+  cor_col = sapply(seq(ncol(A_pred)), function(i)
+    pearson_cor(real=A_real[, i], prediction=A_pred[, i]))
+  return(cor_col)
+}
+
+#########################
+# Computation of RMSE
+
+eval_RMSE = function(A_real, A_pred) {
+  return(sqrt(mean((A_real - A_pred)^2)))
+}
+
+eval_RMSE_per_samples = function(A_real, A_pred) {
+  return(sqrt(colMeans((A_real - A_pred)^2)))
+}
+
+#########################
+# Computation of Mean Absolute Error
+
+eval_MAE = function(A_real, A_pred){
+  return(mean(abs(A_real - A_pred)))
+}
+
+eval_MAE_per_samples = function(A_real, A_pred){
+  return(colMeans(abs(A_real - A_pred)))
 }
 
 #########################
 # Scoring function 
 
-scoring_function <- function(Atruth, Aest) {
-  #  pretreatment of estimated A
-#   Aest_p = prepare_A(A_r = Atruth, A_est = Aest)
-  Aest_p = Aest[rownames(Atruth),]
+baseline_scoring_function <- function(A_real, A_pred, time) {
   
-  #  scoring
-  mae = eval_MAE(Atruth, Aest_p)
-  cr = correlation_row(Atruth, Aest_p)
-  cc = correlation_col(Atruth, Aest_p)
-  #  scoring agregation (using a derivative of the maxmin approach)
-  rd_mae = c()
-  set.seed(1)
-  random_col = c(1, rep(0,(nrow(Atruth)-1)))
-  random_base = matrix(rep(random_col, ncol(Atruth)), nrow(Atruth), ncol(Atruth))
-  for (j in 1:1000){
-      rd= random_base[sample(nrow(Atruth)),]
-      rd_mae[j] =eval_MAE(Atruth,rd)
-  }
-  max_mae = max(rd_mae)
-  min_mae = 0
-  max_cor = 1
-  min_cor = 0
-  mae_maxmin = (mae - min_mae) / (max_mae-min_mae)
-  cr_maxmin = (cr - min_cor) / (max_cor-min_cor)
-  cc_maxmin = (cc - min_cor) / (max_cor-min_cor)
-  score_combine = ( cr_maxmin + cc_maxmin + (1- mae_maxmin) )/3
-    return( list(score_combine =  score_combine,
-                mae = mae,
-                cr = cr,
-                cc = cc,
-                mae_maxmin = mae_maxmin,
-                cr_maxmin = cr_maxmin,
-                cc_maxmin = cc_maxmin))
-}
+  # pre-treatment of estimated A
+  A_pred_tt = prepare_A(A_real = A_real, A_pred = A_pred)
+  
+  # scoring
+  rmse = eval_RMSE(A_real=A_real, A_pred=A_pred_tt)
+  mae = eval_MAE(A_real=A_real, A_pred=A_pred_tt)
+  pearson = eval_pearson(A_real=A_real, A_pred=A_pred_tt)
 
+  baseline_estimation = data.frame("rmse"=rmse,
+                                   "mae"=mae,
+                                   "pearson_mat"=pearson["cor_matrix"],
+                                   "pearson_row"=pearson["cor_row"],
+                                   "pearson_col"=pearson["cor_col"],
+                                   "time"=time)
+  
+  # scoring per samples
+  rmse = eval_RMSE_per_samples(A_real=A_real, A_pred=A_pred_tt)
+  mae = eval_MAE_per_samples(A_real=A_real, A_pred=A_pred_tt)
+  pearson = eval_pearson_per_samples(A_real=A_real, A_pred=A_pred_tt)
+  
+  return(list(baseline_estimation = baseline_estimation,
+              rmse_samples = rmse,
+              mae_samples = mae,
+              pearson_samples = pearson))
+}
    
 ##############################################
 ### SESSION
@@ -211,8 +194,6 @@ output_file <- paste0(output, .Platform$file.sep, "scores.txt")
 
 
 
-## load R profiling of the estimation of A :
-profiling <- readRDS(file = paste0(input, .Platform$file.sep, "res", .Platform$file.sep, "Rprof.rds") )
 
 
 
@@ -256,11 +237,15 @@ validate_pred <- function(pred, nb_samples , nb_cells , col_names ){
 }
 
 
-##Ensure some properties of the Prediction are ok. 
 
+## load R profiling of the estimation of A :
+profiling <- readRDS(file = paste0(input, .Platform$file.sep, "res", .Platform$file.sep, "Rprof.rds") )
+
+
+##Ensure some properties of the Prediction are ok. 
 Aest_l  = readRDS(file = paste0(input, .Platform$file.sep, "res", .Platform$file.sep, "prediction.rds") )
 
-
+l_res = list()
 for (dataset_name in 1:nb_datasets){
 
   Aest = as.matrix(Aest_l[[dataset_name]])
@@ -270,26 +255,29 @@ for (dataset_name in 1:nb_datasets){
   Atruth = as.matrix(Atruth)
   validate_pred( Aest,nb_samples = ncol(Atruth), nb_cells=nrow(Atruth) , col_names=rownames(Atruth) )
 
-  scores_full = scoring_function(Atruth = Atruth,  Aest = Aest)
-  # if (nb_dataset > 1) {scores = as.numeric(scores_full[1,])}
-  # if (nb_dataset == 1) {scores = as.numeric(scores_full[1])}
-  scores = as.numeric(scores_full)
+  timing=profiling[dataset_name]
 
-  saveRDS(scores, paste0(output,"/accuracy_",toString(dataset_name),".rds"))
+  baseline_scores = baseline_scoring_function(A_real=Atruth, A_pred=Aest, time=timing)
+  # rownames(baseline_scores$baseline_estimation) = baseline
 
-  stopifnot(exprs = all( !is.na(x = scores) ) )
-  print(x = paste0("Scores dataset ",toString(dataset_name), ": ", paste(scores, collapse = ", ") ) )
+  saveRDS(baseline_scores, paste0(output,"/scores_",toString(dataset_name),".rds"))
 
-  cat(paste0("Accuracy_mean_",toString(dataset_name), ": " , mean(x = scores ), "\n"), file = output_file, append = TRUE)
+  stopifnot(exprs = all( !is.na(x = baseline_scores) ) )
+  # print(x = paste0("Scores dataset ",toString(dataset_name), ": ", paste(baseline_scores, collapse = ", ") ) )
+
+  score_mean = mean(x = as.numeric(baseline_scores$baseline_estimation) )
+  cat(paste0("Accuracy_mean_",toString(dataset_name), ": " , score_mean, "\n"), file = output_file, append = TRUE)
+
+  l_res[[dataset_name]] = score_mean
 
   print(x = list.files(path = output, all.files = TRUE, full.names = TRUE, recursive = TRUE) )
 
 }
 
-# cat(paste0("Time :", sum( profiling$by.total$total.time ) / length(x = Aref), "\n"), file = output_file, append = TRUE )
-# cat(paste0("Time: ", profiling["elapsed"], "\n"), file = output_file, append = TRUE )
-cat(paste0("Time: ", profiling, "\n"), file = output_file, append = TRUE )
-print( paste0("Time: ", profiling, "\n") )
+cat(paste0("median_performance : " , median(unlist(l_res)), "\n"), file = output_file, append = TRUE)
+
+cat(paste0("Time: ", sum(unlist(profiling)), "\n"), file = output_file, append = TRUE )
+print( paste0("Time: ", toString(unlist(profiling)), " ", sum(unlist(profiling)), "\n") )
 
 rmarkdown::render(
   input       = paste0(program, .Platform$file.sep, "detailed_results.Rmd")

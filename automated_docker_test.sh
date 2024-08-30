@@ -50,6 +50,7 @@ else
     exit 1
 fi
 
+sudo chown $USER test_output/detailed_results.html
 
 # echo "Cleaning"
 # sh clean.sh 1>> logs 2>> logs

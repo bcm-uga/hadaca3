@@ -22,7 +22,7 @@ saveRDS= ro.r["saveRDS"]
 ### Package dependencies /!\ DO NOT CHANGE THIS PART ###
 ########################################################
 
-nb_datasets = 2
+nb_datasets = 4
 def install(package):
     subprocess.check_call([sys.executable, "-m", "pip", "install", package])
 

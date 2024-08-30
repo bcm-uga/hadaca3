@@ -26,7 +26,7 @@ source(
   , local = .tempEnv
 )
 
-nb_datasets = 2
+nb_datasets = 4
 
 ####################################
 ## read input data :
@@ -49,10 +49,11 @@ nb_datasets = 2
 
 base::set.seed(seed = 1)
 
-total_time <- 0
-
-
+# total_time <- 0
+l_time = list()
 predi_list = list()
+# l_time= c()
+
 for (dataset_name in 1:nb_datasets){
   dir_name = paste0(input,.Platform$file.sep)
   print(paste0("generating prediction for dataset:",toString(dataset_name) ))
@@ -78,17 +79,22 @@ for (dataset_name in 1:nb_datasets){
   elapsed_time <- proc.time() - start_time
   print (paste0("Prediction has ", nrow(pred_prop), " rows and ", ncol(pred_prop), " columns"))
 
-
-  total_time <- total_time + elapsed_time["elapsed"]
+  l_time[[dataset_name]] = as.numeric(elapsed_time["elapsed"])
+  # l_time[[dataset_name]] = elapsed_time["elapsed"]
+  # total_time <- total_time + elapsed_time["elapsed"]
 
   predi_list[[dataset_name]] = pred_prop
 
 }
 
-print(total_time)
+# print(str(l_time))
+# print(sum(unlist(l_time)))
+# # print(typeof(l_time))
+# print(l_time)
+# print(sum(l_time))
 ## save profiling
 saveRDS(
-    object = total_time
+    object = l_time
   , file   = output_profiling_rds
 )
 

@@ -9,7 +9,7 @@
 ### Package dependencies /!\ DO NOT CHANGE THIS PART ###
 ########################################################
 
-nb_datasets = 2
+nb_datasets = 4
 
 ##  to generate the zip files that contain the programs or the results to submit to the Codalab platform.
 
@@ -93,12 +93,46 @@ program <- function(mix_rna = NULL, mix_met = NULL,
   ##
   ## YOUR CODE BEGINS HERE
   ##
-  
-  if ( !( "nnls" %in% installed.packages() ) ) {
-      install.packages(pkgs = "nnls", repos = "https://cloud.r-project.org")
+
+  requiered_packages = c("nnls") 
+
+  installed_packages <- installed.packages( )
+  for (package in requiered_packages ) {
+      if ( !{ package %in% installed_packages } ) {
+          print(x = paste("Installation of ", package, sep = "") )
+          install.packages(
+              pkgs = package
+            , repos = "https://cloud.r-project.org"
+          )
+      } else {
+          print(x = paste(package, " is installed.", sep = "") )
+      }
+      library(package, character.only = TRUE)
   }
-  require(nnls)
+  remove(list = c("installed_packages", "package") )
   
+
+# required_packages <- c("nnls")
+
+# installed_packages <- rownames(installed.packages())
+
+# for (package in required_packages) {
+#     if (!(package %in% installed_packages)) {
+#         if (package %in% BiocManager::available()) {
+#             print(paste("Installing", package, "from Bioconductor"))
+#             BiocManager::install(package)
+#         } else {
+#             print(paste("Installing", package, "from CRAN"))
+#             install.packages(package, repos = "https://cloud.r-project.org")
+#         }
+#     } else {
+#         print(paste(package, "is already installed."))
+#     }
+#     library(package, character.only = TRUE)
+# }
+# # Clean up
+# rm(list = c("installed_packages", "package", "required_packages"))
+ 
   ## we compute the estimation of the proportions for the transcription data set :
   if ( !( is.null(x = mix_rna) ) ) {
     
@@ -148,9 +182,6 @@ program <- function(mix_rna = NULL, mix_met = NULL,
   
   
   ## we compute the mean of all the estimated A matrices as the final A matrix :
-  
-  
-  
   if ( !is.null(x = mix_met) ) {
     if ( !is.null(x = mix_rna) ) {
       

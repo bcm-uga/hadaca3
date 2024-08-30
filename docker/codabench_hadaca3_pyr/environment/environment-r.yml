@@ -143,10 +143,12 @@ dependencies:
   - r-munsell=0.5.0=r43h6115d3f_0
   - r-nlme=3.1_163=r43h640688f_0
   - r-nmf=0.21.0=r43h884c59f_0
+  - r-nnls=1.5=r43h640688f_0
   - r-pillar=1.9.0=r43h6115d3f_0
   - r-pkgconfig=2.0.3=r43h6115d3f_0
   - r-pkgmaker=0.32.10=r43h6115d3f_0
   - r-plyr=1.8.9=r43h884c59f_0
+  - r-prettydoc=0.4.1=r43h142f84f_0
   - r-purrr=1.0.2=r43h76d94ec_0
   - r-r6=2.5.1=r43h6115d3f_0
   - r-rappdirs=0.3.3=r43h76d94ec_0

@@ -7,7 +7,7 @@ echo cean data first
 sh clean.sh
 echo cleaning done. 
 
-nb_datasets=2
+nb_datasets=4
 
 
 

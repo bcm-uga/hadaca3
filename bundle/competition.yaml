@@ -8,8 +8,8 @@ registration_auto_approve: true
 enable_detailed_results: true
 image: HADACA3_com.png
 terms: terms.md
-make_programs_available: true
-make_input_data_available: true
+make_programs_available: false
+make_input_data_available: false
 pages:
 - title: Overview
   file: overview.md
@@ -52,20 +52,20 @@ phases:
   name: Cell type proportion estimation from transcriptome and methylome data, using multimodal references.
   description: good luck 
   start: '2024-03-20 '
-  end: '2024-07-20 11:00'
+  end: '2024-12-20 11:00'
   max_submissions_per_day: 5
   max_submissions: 100
-  execution_time_limit: 600
+  execution_time_limit: 60000
   auto_migrate_to_this_phase: false
   hide_output: false
-  starting_kit: starting_kit.zip
+  starting_kit: starting_kit_phase2-3.zip
   tasks:
   - 0
 - index: 1
   name: FINAL PHASE Cell type proportion estimation from transcriptome and methylome data, using multimodal references.
   description: good luck
-  start: '2024-07-20 11:01'
-  end: '2024-10-20T00:10'
+  start: '2024-12-20 11:01'
+  # end: '2024-10-20T00:10'
   max_submissions_per_day: 5
   max_submissions: 100
   execution_time_limit: 60000
@@ -77,10 +77,34 @@ phases:
 
 # Fact sheets to add more information in the leaderboard
 fact_sheet: {
+    "Language": {
+        "key": "Language",
+        "type": "select",
+        "title": "Language",
+        "selection": ["R", "Python"],
+        "is_required": "true",
+        "is_on_leaderboard": "true"
+    },
+    "refererence": {
+        "key": "refererence",
+        "type": "select",
+        "title": "type of refererences used",
+        "selection": ["meth/rna/scrna", "meth/scrna", "meth/rna", "rna/scrna","rna/meth", "meth","rna","scrna"],
+        "is_required": "true",
+        "is_on_leaderboard": "true"
+    },
     "method_name": {
         "key": "method_name",
         "type": "text",
-        "title": "Method name",
+        "title": "Method name (single word)",
+        "selection": "",
+        "is_required": "true",
+        "is_on_leaderboard": "true"
+    },
+        "description": {
+        "key": "description",
+        "type": "text",
+        "title": "description",
         "selection": "",
         "is_required": "false",
         "is_on_leaderboard": "true"
@@ -91,39 +115,40 @@ leaderboards:
   title: Scores
   key: score
   hidden: false
+  submission_rule: "Add_And_Delete_Multiple"
   columns:
-  - title: Average Accuracy
-    key: avg_accuracy
+  - title: median overall performance
+    key: median_performance
     index: 0
     sorting: desc
-    computation: avg
-    computation_indexes:
-      - 1
-      - 2
-      # - 3
-      # - 4
-  - title: Accuracy_mean dataset 1
+    # computation: avg
+    # computation_indexes:
+    #   - 1
+    #   - 2
+    #   - 3
+    #   - 4
+  - title: overall performance dataset 1
     key: Accuracy_mean_1
     index: 1
     sorting: desc
     hidden: false  
-  - title: Accuracy_mean dataset 2
+  - title: overall performance dataset 2
     key: Accuracy_mean_2
     index: 2
     sorting: desc
     hidden: false
-  # - title: Accuracy_mean dataset 3
-  #   key: Accuracy_mean_3
-  #   index: 3
-  #   sorting: desc
-  #   hidden: false
-  # - title: Accuracy_mean dataset 4
-  #   key: Accuracy_mean_4
-  #   index: 4
-  #   sorting: desc
-  #   hidden: false
+  - title: overall performance dataset 3
+    key: Accuracy_mean_3
+    index: 3
+    sorting: desc
+    hidden: false
+  - title: overall performance dataset 4
+    key: Accuracy_mean_4
+    index: 4
+    sorting: desc
+    hidden: false
   - title: Excecution Time global
     key: Time
-    index: 3
+    index: 5
     sorting: desc
     hidden: false

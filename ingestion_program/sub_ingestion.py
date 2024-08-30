@@ -75,11 +75,12 @@ ro.r(r_code_get_colnames_nested)
 
 
 # This should be place elsewhere. 
-nb_datasets = 2
+nb_datasets = 4
 
 predi_list = []
 total_time = 0 
 
+l_time = []
 
 for dataset_name in range(1, nb_datasets + 1):
 
@@ -106,11 +107,14 @@ for dataset_name in range(1, nb_datasets + 1):
 
     #Program is in memory 
     start_time = time.perf_counter()
+
     pred_prop = program(
         mix_rna=mix_rna, mix_met=mix_met,
         ref_rna=ref_rna, ref_met=ref_met
     )
-    total_time += time.perf_counter() - start_time
+    prog_time = time.perf_counter() - start_time
+    l_time.append(prog_time)
+    total_time += prog_time
     
     pred_prop_df = pd.DataFrame(pred_prop, index=colnames_result)
 
@@ -119,12 +123,13 @@ for dataset_name in range(1, nb_datasets + 1):
     predi_list.append(pred_prop_df)
 
 print(total_time)
-
+l_time.append(total_time)
 # prediction_name = "prediction.rds"
 # saveRDS(predi_list, os.path.join(output_results, prediction_name))
 saveRDS(predi_list, os.path.join(output_results))
 
 
-saveRDS(total_time, os.path.join(output_profiling_rds))
+# saveRDS(total_time, os.path.join(output_profiling_rds))
+saveRDS(l_time, os.path.join(output_profiling_rds))
 
 
