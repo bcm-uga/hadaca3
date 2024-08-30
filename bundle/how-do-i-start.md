@@ -2,7 +2,7 @@
 
 [1] Go to the challenge webpage on Codabench platform, navigate to the *Get started* menu, and select the *Files* tab. Download the `starting_kit` corresponding to the phase you are participating in.
 
-[2] Get familiar with the dataset description (*Data* tab) and the baseline methods suggested by the organizer (*Baseline* tab).
+[2] Get familiar with the dataset description (*Data* tab) and the baseline methods suggested by the organizers (*Baseline* tab).
 
 [3] Make a first submission using the baseline method (follow the guidelines in the *Submission* tab)
 
