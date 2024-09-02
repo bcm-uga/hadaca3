@@ -54,14 +54,14 @@ The corresponding file name is `data/mixes_data_1.rds`. It is a list of matching
 
 ```
        # read mixes data
-       mixes = readRDS("mixes_data.rds")
+       mixes = readRDS("data/mixes_data_1.rds")
        dim(mixes$mix_rna)
-       [1] 18749    30
+       [1] 21104    30
        dim(mixes$mix_met)
        [1] 824678     30
 ```  
 
-Reference matrices are also provided; they include pure lineage references in bulk RNA-seq and METHepic, as well as single-cell RNA-seq references. The corresponding file name is `reference_data.rds`
+Reference matrices are also provided; they include pure lineage references in bulk RNA-seq and METHepic, as well as single-cell RNA-seq references. The corresponding file name is `reference_pdac.rds`
 
   
 The corresponding file name is `reference_pdac.rds`. It is a list of 2 bulk references : RNA and Met and 1 single cell count data and associated metadata.
