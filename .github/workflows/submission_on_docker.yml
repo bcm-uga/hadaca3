@@ -7,6 +7,11 @@ on:
       branches: [ "main","multi_phase_tasks" ]
 
 
+
+
+env:
+  docker_name: hombergn/hadaca3_pyr
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -30,20 +35,6 @@ jobs:
         run: |
           chmod +x generate_data.sh
           sh generate_data.sh
-          # mkdir input_data
-          # mkdir ground_truth
-          # mkdir data
-          # # ls -rthl *
-          # Rscript generate_fake_data.R
-          # # ls -rthl *
-          # cp data/mixes_data.rds starting_kit/mixes_data.rds
-          # cp data/reference_data.rds starting_kit/reference_data.rds
-
-          # cp data/mixes_data.rds input_data/mixes_data.rds
-          # cp data/reference_data.rds input_data/reference_data.rds
-
-          # cp data/ground_truth.rds ground_truth/ground_truth.rds
-          # # ls -rthl *
          
 
       # - name: Build the Docker image
@@ -52,7 +43,7 @@ jobs:
       #     docker build -t hombergn/hadaca3_light .
       #     cd -
       
-      - name: Create submission program
+      - name: Create submission program R
         run: |
           cd starting_kit/
           Rscript submission_script.R
@@ -68,12 +59,12 @@ jobs:
       - name: Running ingestion Program
         run: |
           # ls -rthl *
-          docker run --rm  -v $PWD/ingestion_program:/app/program  -v $PWD/test_output/res:/app/output  -v $PWD/starting_kit/submissions:/app/ingested_program  -w /app/program  -v $PWD/input_data/:/app/input_data/ hombergn/hadaca3_light Rscript /app/program/ingestion.R /app/program /app/input_data /app/output /app/ingested_program 
+          docker run --rm  -v $PWD/ingestion_program:/app/program  -v $PWD/test_output/res:/app/output  -v $PWD/starting_kit/submissions:/app/ingested_program  -w /app/program  -v $PWD/input_data/:/app/input_data/ $docker_name Rscript /app/program/ingestion.R /app/program /app/input_data /app/output /app/ingested_program 
           # ls -rthl test_output/*
         
       - name: Running Scoring Program
         run: |
-          docker run --rm  -v $PWD/scoring_program:/app/program  -v $PWD/test_output:/app/output  -w /app/program  -v $PWD/test_output:/app/input  hombergn/hadaca3_light  Rscript /app/program/scoring.R /app/input /app/output /app/program
+          docker run --rm  -v $PWD/scoring_program:/app/program  -v $PWD/test_output:/app/output  -w /app/program  -v $PWD/test_output:/app/input  $docker_name  Rscript /app/program/scoring.R /app/input /app/output /app/program
           # ls -rthl test_output/*
         
 

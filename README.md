@@ -153,13 +153,13 @@ The following block is only there to show all arguments in a digestible way.
 #    -v $PWD/starting_kit/submissions:/app/ingested_program  \
 #    -w /app/program \ 
 #    -v $PWD/input_data:/app/input_data \
-#    hombergn/hadaca3_light \
+#    hombergn/hadaca3_pyr \
 #    Rscript /app/program/ingestion.R /app/program /app/input_data /app/output /app/ingested_program
 ```
 
 Run the follwing command to test the ingestion program using the docker.  
 ```
-sudo docker run --rm  -v $PWD/ingestion_program:/app/program  -v $PWD/test_output/res:/app/output  -v $PWD/starting_kit/submissions:/app/ingested_program  -w /app/program  -v $PWD/input_data:/app/input_data hombergn/hadaca3_light Rscript /app/program/ingestion.R /app/program /app/input_data /app/output /app/ingested_program
+sudo docker run --rm  -v $PWD/ingestion_program:/app/program  -v $PWD/test_output/res:/app/output  -v $PWD/starting_kit/submissions:/app/ingested_program  -w /app/program  -v $PWD/input_data:/app/input_data hombergn/hadaca3_pyr Rscript /app/program/ingestion.R /app/program /app/input_data /app/output /app/ingested_program
 ```
 
 This block is only there to show all arguments in a digestible way. 
@@ -169,13 +169,13 @@ This block is only there to show all arguments in a digestible way.
 #    -v $PWD/test_output:/app/output \
 #    -w /app/program 
 #    -v $PWD/test_output:/app/input \
-#    hombergn/hadaca3_light \
+#    hombergn/hadaca3_pyr \
 #    Rscript /app/program/scoring.R /app/input /app/output /app/program
 ```
 
 Run the following command to test scoring program using dockers.
  ```   
-sudo docker run --rm  -v $PWD/scoring_program:/app/program  -v $PWD/test_output:/app/output  -w /app/program  -v $PWD/test_output:/app/input  hombergn/hadaca3_light  Rscript /app/program/scoring.R /app/input /app/output /app/program
+sudo docker run --rm  -v $PWD/scoring_program:/app/program  -v $PWD/test_output:/app/output  -w /app/program  -v $PWD/test_output:/app/input  hombergn/hadaca3_pyr  Rscript /app/program/scoring.R /app/input /app/output /app/program
 
 ```
 

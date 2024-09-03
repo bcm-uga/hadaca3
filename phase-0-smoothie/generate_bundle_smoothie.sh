@@ -23,7 +23,7 @@ echo 'data generated'
 echo "create bunlde.zip"
 zip -FS -j -r  bundle/scoring_program.zip scoring_program/
 zip -FS -j -r  bundle/ingestion_program.zip ingestion_program/
-cd starting_kit/ ; zip  -FS  -r  ../bundle/starting_kit.zip *  -x \*submissions\* ; cd .. ; 
+cd starting_kit/ ; zip  -FS  -r  ../bundle/starting_kit_smoothie.zip *  -x \*submissions\* ; cd .. ; 
 
 
 zip -FS -j -r  bundle/ground_truth.zip ground_truth/

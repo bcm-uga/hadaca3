@@ -16,10 +16,10 @@ output:
 
 
 
-```{r label = "header", echo = FALSE, eval = TRUE}
+```{r label = "header", echo = FALSE, eval = TRUE,include=FALSE}
 # knitr::opts_chunk$set(collapse = TRUE, comment = "", echo = FALSE)
 
-  requiered_packages = c("fmsb","circlize",'knitr') #,"httpuv") #"catools") 
+  requiered_packages = c("fmsb","circlize") #,"httpuv") #"catools") 
 
   installed_packages <- installed.packages( )
   for (package in requiered_packages ) {
@@ -66,7 +66,7 @@ for (dataset_name in 1:nb_datasets){
 
 }
 
-profiling <- readRDS(file = paste0(output, .Platform$file.sep, "res", .Platform$file.sep, "Rprof.rds") )
+profiling <- readRDS(file = paste0(input, .Platform$file.sep, "res", .Platform$file.sep, "Rprof.rds") )
 
 
 ```
@@ -112,7 +112,7 @@ for (dataset_name in 1:nb_datasets){
   abs_bias = abs(prediction - ground_truth)
 
 
-  print(boxplot(
+  boxplot(
     t(abs_bias),
     bty = "n",
     col = "tan2",
@@ -120,7 +120,7 @@ for (dataset_name in 1:nb_datasets){
     ylab = "Absolute bias",
     main =  paste("Absolute bias among each cell type",dataset_name) 
     )
-  )
+  
 
 
 }
@@ -134,33 +134,29 @@ Boxplot of absolute bias between estimated proportion and ground truth proportio
 - Global scores:
 
 
-```{r scores_global_table}
+```{r scores_global_table,results='asis',message = FALSE,warning=FALSE}
 
 for (dataset_name in 1:nb_datasets){
 
   score = all_scores[[dataset_name]]
-
-  print(paste("dataset", dataset_name))
-  print(knitr::kable(score$baseline_estimation))
-  print(paste("Time", profiling[[dataset_name]],"\n\n"))
+  
+  print(knitr::kable(score$baseline_estimation,caption = paste('Result table of the dataset',dataset_name)))
 
 }
 ```
 
 
-```{r scores_global_radarchart}
+```{r scores_global_radarchart,message = FALSE}
 
 for (dataset_name in 1:nb_datasets){
 
   score = all_scores[[dataset_name]]
 
-  # print(knitr::kable(score$baseline_estimation))
-
   # We don't take the global score for the radar chart since it's a proxy of the area
   df_radarplot = as.data.frame(rbind(
-    c(0,0,1,1,1,0), # the max value for each var
-    c(0.5,0.5,0,0,0,10), # the min value for each var
-    score$baseline_estimation
+    c(0,0,1,1,1), # the max value for each var
+    c(0.5,0.5,0,0,0), # the min value for each var
+    score$baseline_estimation[, -ncol(score$baseline_estimation)]
   ))
   # fmsb::radarchart(df_radarplot)
   fmsb::radarchart(df_radarplot, axistype=2 , 
@@ -176,6 +172,7 @@ for (dataset_name in 1:nb_datasets){
       #custom labels
       vlcex=0.8
       )
+  
 
 # Comment HB: the visualization by a radar/spider plot is intrinsecly linked to the aggregate score for defining the scope (min and max) for each variable.
 
@@ -184,7 +181,7 @@ for (dataset_name in 1:nb_datasets){
 
 
 - Scores per samples:
-```{r scores_samples}
+```{r scores_samples,message = FALSE}
 for (dataset_name in 1:nb_datasets){
 
   score = all_scores[[dataset_name]]
@@ -192,7 +189,7 @@ for (dataset_name in 1:nb_datasets){
 
 df_score_samples = cbind(score$rmse_samples, score$mae_samples, 1-score$pearson_samples)
 colnames(df_score_samples) = c("RMSE", "MAE", "1-Pearson")
-print(boxplot(
+invisible(boxplot(
   df_score_samples,
   bty = "n",
   col = "tan2",

@@ -255,8 +255,9 @@ for (dataset_name in 1:nb_datasets){
   Atruth = as.matrix(Atruth)
   validate_pred( Aest,nb_samples = ncol(Atruth), nb_cells=nrow(Atruth) , col_names=rownames(Atruth) )
 
-  timing=profiling[dataset_name]
+  timing=profiling[[dataset_name]]
 
+  # baseline_scores = baseline_scoring_function(A_real=Atruth, A_pred=Aest, time=as.numeric(timing))
   baseline_scores = baseline_scoring_function(A_real=Atruth, A_pred=Aest, time=timing)
   # rownames(baseline_scores$baseline_estimation) = baseline
 
@@ -265,7 +266,7 @@ for (dataset_name in 1:nb_datasets){
   stopifnot(exprs = all( !is.na(x = baseline_scores) ) )
   # print(x = paste0("Scores dataset ",toString(dataset_name), ": ", paste(baseline_scores, collapse = ", ") ) )
 
-  score_mean = mean(x = as.numeric(baseline_scores$baseline_estimation) )
+  score_mean = mean(x = as.numeric(baseline_scores$baseline_estimation[, -ncol(baseline_scores$baseline_estimation)]) )
   cat(paste0("Accuracy_mean_",toString(dataset_name), ": " , score_mean, "\n"), file = output_file, append = TRUE)
 
   l_res[[dataset_name]] = score_mean

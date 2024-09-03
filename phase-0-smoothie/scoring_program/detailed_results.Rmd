@@ -3,60 +3,94 @@ title: "Visualize Results"
 author: "Elise Amblard, Hugo Barbot, Florent Chuffart and Magali Richard"
 date: "`r Sys.Date()`"
 output: 
-  rmarkdown::html_document:
+  prettydoc::html_pretty:
+    self_contained: true
+    theme: cayman
+    highlight: github
     toc: true
-    toc_float: true
+    # toc_float: true
     toc_depth: 3
     number_sections: true
+    keep_tex: yes
 ---
-
-
-```{r label = "header", echo = FALSE, eval = TRUE}
-knitr::opts_chunk$set(collapse = TRUE, comment = "", echo = FALSE)
-
-for ( package in c("ggplot2","viridis",'magrittr','dplyr','tidyr') ) {
-    if ( !{package %in% installed.packages( ) } ) {
-        print(x = paste0("Installation of the package : ", package) )
-          install.packages(
-              pkgs = package
-            , repos = "https://cloud.r-project.org"
-          )
-    }
-    library(package, character.only = TRUE)
-}
-remove(list = "package")
-BiocManager::install("ComplexHeatmap")
-
-```
-
 
 
 ```{r, include=(FALSE)}
 knitr::opts_chunk$set(collapse=TRUE, comment = "#>", fig.width=9, fig.height=6, eval=TRUE, echo=FALSE, results="hide")
+options(knitr.duplicate.label = "allow")
+
+  requiered_packages = c("fmsb")#,"circlize",'knitr') #,"httpuv") #"catools") 
+
+  installed_packages <- installed.packages( )
+  for (package in requiered_packages ) {
+      if ( !{ package %in% installed_packages } ) {
+          print(x = paste("Installation of ", package, sep = "") )
+          install.packages(
+              pkgs = package
+            , repos = "https://cloud.r-project.org"
+          )
+      } else {
+          print(x = paste(package, " is installed.", sep = "") )
+      }
+      library(package, character.only = TRUE)
+  }
+  remove(list = c("installed_packages", "package") )
+  
+
+knitr::opts_chunk$set(collapse=TRUE, comment = "#>", fig.width=9, fig.height=6, eval=TRUE, echo=FALSE)#, results="hide")
 options(knitr.duplicate.label = "allow")
 ```
 
 ```{r params}
 
 if (!exists("groundtruth_file"))    {groundtruth_file = "../input/ref/groundtruth_smoothies_fruits.rds"} 
-if (!exists("prediction_file"))     {prediction_file =  "../input/res/prediction.rds"       }   
+if (!exists("prediction_file"))     {prediction_file =  "../input/res/prediction.rds"       }  
+if (!exists("score_file"))          {score_file = "../input/res/scores.rds"       }    
 
 ```
 
 ```{r read_output}
+
+# prediction = readRDS(  "../input/ref/groundtruth_smoothies_fruits.rds")
+# ground_truth = readRDS("../input/res/prediction.rds")
+
+
+prediction <- readRDS(paste0(input,.Platform$file.sep,"res",.Platform$file.sep,"prediction.rds"))
+ground_truth_file = paste0(input, .Platform$file.sep, "ref", .Platform$file.sep, "groundtruth_smoothies_fruits.rds")
+ground_truth =  readRDS(file = ground_truth_file )
+
+score_file = paste0(output, .Platform$file.sep, "scores.rds")
+score =  readRDS(file = score_file )
+
+
+# profiling <- readRDS(file = paste0(input, .Platform$file.sep, "res", .Platform$file.sep, "Rprof.rds") )
+
+
+
 # prediction = readRDS(prediction_file)
 # ground_truth = readRDS(groundtruth_file)
-prediction = readRDS(  "../input/ref/groundtruth_smoothies_fruits.rds")
-ground_truth = readRDS("../input/res/prediction.rds")
+# score = readRDS(score_file)
+
+# greg_tmp = gregexpr("_", prediction_file)
+baseline_used = "user baseline"
+dataset_used = "smoothie"
 ```
+
+# Summaries 
 ## Summary of the prediction
 
 ### Heatmap of prediction
 
 ```{r Heatmap_pred}
+if (is.null(colnames(prediction))) {
+  colnames(prediction) = paste0("Sample", format(1:ncol(prediction), digits = ceiling(log10(ncol(prediction)))) )
+}
+
 ComplexHeatmap::Heatmap(
   t(prediction),
   col = circlize::colorRamp2(seq(0, 1, length.out = 32), rev(heat.colors(32))),
+  column_title = paste("Estimated proportion by", baseline_used, "on dataset", 
+                       if (dataset_used == "smoothie") {"smoothies"} else {which(dataset_used == datasets)}),
   cluster_rows = FALSE,
   cluster_columns = FALSE,
   heatmap_legend_param = list(title = "Proportion"),
@@ -65,225 +99,129 @@ ComplexHeatmap::Heatmap(
 ```
 
 
-### Heatmap of the absolute bias/error
+### Boxplot of the absolute bias/error
 
 ```{r abs_bias}
 
 abs_bias = abs(prediction - ground_truth)
 
+# colors=viridis::viridis(5)
+# 
+# ComplexHeatmap::Heatmap(
+#   t(abs_bias),
+#   col = colorRampPalette(colors)(50),
+#   cluster_rows = FALSE,
+#   cluster_columns = FALSE,
+#   heatmap_legend_param = list(title = "Proportion"),
+#   column_names_rot = 45
+# )
 
-colors=viridis::viridis(5)
 
-ComplexHeatmap::Heatmap(
+boxplot(
   t(abs_bias),
-  col = colorRampPalette(colors)(50),
-  cluster_rows = FALSE,
-  cluster_columns = FALSE,
-  heatmap_legend_param = list(title = "Proportion"),
-  column_names_rot = 45
+  bty = "n",
+  col = "tan2",
+  xlab = "Cell types",
+  ylab = "Absolute bias",
+  main = paste("Absolute bias among each cell type by", baseline_used, "on dataset", 
+                       if (dataset_used == "smoothie") {"smoothies"} else {which(dataset_used == datasets)})
 )
+
 
 
 # abs_bias_per_cell_type = rowMeans(abs_bias)
 # sd_estim_per_cell_type = apply(proportion, 1, sd)
 
 # Comment FCh: please avoid magrittr, dplyr, tidyr do to a simple boxplot.
-library(magrittr)
-library(ggplot2)
-abs_bias %>% t() %>% as.data.frame() %>% 
-  tidyr::pivot_longer(
-    everything(),
-    names_to = "Cell_type",
-    values_to = "absolut_bias"
-  ) %>% 
-  dplyr::mutate(
-    Cell_type = factor(Cell_type, levels = rownames(abs_bias))
-  ) %>% 
-  ggplot() +
-  geom_boxplot(aes(x = Cell_type, y = absolut_bias)) +
-  labs(
-    x = "Cell types",
-    y = "Absolut bias",
-    title = "Absolut bias for all bulks per cell types for dataset1"
-  )
+# Comment HBa: I personnaly prefer the look of ggplot2
 
-
-
-
-# 
-# dim(prediction)
-# 
-# #image(as.matrix(pred), axes=FALSE, col = cols , ylab = colnames(pred), xlab = rownames(pred))
-# 
-# 
-#     
-#     Aerr <- data.frame(
-#         abserror = as.numeric(
-#             x = abs(x = prediction - ground_truth )
-#         )
-#       , type = rep(
-#             x     = seq_len(length.out = nrow(x = ground_truth ) )
-#           , times = ncol(x = ground_truth )
-#         )
-#       , patient = rep(
-#             x    = seq_len(length.out = ncol(x = ground_truth ) )
-#           , each = nrow(x = ground_truth ) )
-#     )
-#     
-#     p <- ggplot(
-#         data    = Aerr
-#       , mapping = aes(x = patient, y = type)
-#     ) + {
-#         geom_tile(
-#             mapping = aes(fill = `abserror`)
-#           , colour  = "white"
-#         )
-#     } + {
-#         theme_minimal(base_size = 16)
-#     } + {
-#         labs(
-#             y    = "Cell types"
-#           , fill = "Absolute error"
-#         )
-#     } + { 
-#         scale_x_discrete(expand = c(0, 0) )
-#     } + {
-#         scale_y_discrete(expand = c(0, 0) )
-#     } + {
-#         theme(
-#             axis.text.x = element_text(
-#                 angle = 70
-#               , vjust = 1
-#               , size  = 14
-#               , hjust = 1
-#             )
-#         )
-#     } + {
-#         coord_fixed( )
-#     } + {
-#         scale_fill_viridis_c(
-#             option    = "plasma"
-#           , direction = -1
-#         )
-#     } + {
-#         labs(
-#             title = paste0("Detail of the matrice ")
-#           , x     = "Samples"
-#         )
-#     }
-#     print(x = p)
-    
-
+# library(magrittr)
+# library(ggplot2)
+# abs_bias %>% t() %>% as.data.frame() %>% 
+#   tidyr::pivot_longer(
+#     everything(),
+#     names_to = "Cell_type",
+#     values_to = "absolut_bias"
+#   ) %>% 
+#   dplyr::mutate(
+#     Cell_type = factor(Cell_type, levels = rownames(abs_bias))
+#   ) %>% 
+#   ggplot() +
+#   geom_boxplot(aes(x = Cell_type, y = absolut_bias)) +
+#   labs(
+#     x = "Cell types",
+#     y = "Absolut bias",
+#     title = "Absolut bias for all bulks per cell types for dataset1"
+#   )
 
 
 ```
+
+Boxplot of absolute bias between estimated proportion and ground truth proportion $|\hat{\beta}_{prop} - \beta_{true\_prop}|$ for each cell type. 
 
 ## Summary of scores
 
 
-- scores      :
-```{r scores}
+- Global scores:
 
-mse_scores = colMeans((prediction - ground_truth)^2)
-
-
-ggplot() +
-  geom_boxplot(aes(x = "dataset1",y = mse_scores), width = 0.5) +
-  labs(
-    x = element_blank(),
-    y = "MSE",
-    title = "MSE of beta estimed for all bulks of dataset1"
-  )
-  
-# print(x = scores)
-# 
-# print(x = "Summary :")
-# print(x = summary(object = scores) )
-# 
-# print(x = "Standard deviation :")
-# print(x = sd(x = scores) )
-# 
-# 
-# resMAE <- data.frame(
-#     A         = seq_len(length.out = length(x = Aref) )
-#   , A.MAE     = scores
-#   , methode   = rep(x = "Your method",   times = length(x = Aref) )
-#   , datatype  = rep(x = dataType, times = length(x = Aref) )
-#   , meth_type = rep(x = "Your method",   times = length(x = Aref) )
-# )
-# 
-# allMAE <- as.data.frame(x = rbind(referenceMAE, resMAE) )
-# 
-# ggplot(
-#     data    = allMAE
-#   , mapping = aes(
-#         x      = methode
-#       , y      = A.MAE
-#       , fill   = meth_type
-#       , colour = datatype
-#     )
-# ) + {
-#     geom_boxplot(
-#         notch = FALSE
-#     )
-# } + {
-#     ## stat_summary(
-#     ##     fun.y = mean
-#     ##   , geom  = "point"
-#     ##   , shape = 23
-#     ##   , size  = 3
-#     ## )
-# } + {
-#     geom_dotplot(
-#         binaxis  = 'y'
-#       , stackdir = 'center'
-#       , dotsize  = 0.25
-#     )
-# } + {
-#     scale_x_discrete(
-#         limits = levels(x = allMAE$method)[
-#             order(
-#                 sapply(
-#                     X   = levels(x = allMAE$method)
-#                   , FUN = function( m ) {
-#                       mean(x = allMAE[allMAE$method == m, "A.MAE"] )
-#                   }
-#                 )
-#               , decreasing = TRUE
-#             )
-#         ]
-#     )
-# } + {
-#     ylim(0, 0.15)
-# } + {
-#     theme_minimal(base_size = 16)
-# } + {
-#     theme(
-#         axis.text.x  = element_text(
-#             angle = 70
-#           , vjust = 1
-#           , hjust = 1
-#           , size  = 14
-#         )
-#     )
-# } + {
-#     scale_fill_manual(
-#         breaks = c("Reference", "Your method")
-#       , values = c("white",     "#cc0000"    )
-#     )
-# } + {
-#     scale_colour_manual(
-#         breaks = c("both",    "met",    "rna",     as.character(x = resMAE$datatype[ 1 ] ) )
-#       , values = c("#23A900", "#4886FE", "#FED248", switch(EXPR = dataType, "both" = "#23A900", "met" = "#4886FE", "rna" = "#FED248") )
-#     )
-# } + {
-#     labs(
-#         title  = ""
-#       , x      = "Methods"
-#       , y      = "MAE"
-#       , colour = "Data type"
-#       , fill   = "Method type"
-#     )
-# }
+```{r scores_global_table,results='asis'}
+print(knitr::kable(score$baseline_estimation) )
 ```
+
+
+```{r scores_global_radarchart}
+
+
+
+# We don't take the global score for the radar chart since it's a proxy of the area
+df_radarplot = as.data.frame(rbind(
+  c(0,0,1,1,1), # the max value for each var
+  c(0.5,0.5,0,0,0), # the min value for each var
+  score$baseline_estimation[, -ncol(score$baseline_estimation)]
+))
+# fmsb::radarchart(df_radarplot)
+fmsb::radarchart(df_radarplot, axistype=2 , 
+                  # Performance
+    title = paste("Score of each metric for", baseline_used, "on dataset", 
+                       if (dataset_used == "smoothie") {"smoothies"} else {which(dataset_used == datasets)}),
+ 
+    #custom polygon
+    pcol=rgb(0.2,0.5,0.5,0.9), pfcol=rgb(0.2,0.5,0.5,0.5), plwd=4,
+ 
+    #custom the grid
+    cglcol="grey", cglty=1, axislabcol="grey50", cglwd=0.8,
+ 
+    #custom labels
+    vlcex=0.8
+    )
+
+# Comment HB: the visualization by a radar/spider plot is intrinsecly linked to the aggregate score for defining the scope (min and max) for each variable.
+```
+
+
+- Scores per samples:
+```{r scores_samples}
+
+df_score_samples = cbind(score$rmse_samples, score$mae_samples, 1-score$pearson_samples)
+colnames(df_score_samples) = c("RMSE", "MAE", "1-Pearson")
+boxplot(
+  df_score_samples,
+  bty = "n",
+  col = "tan2",
+  xlab = "",
+  ylab = "",
+  main = "Different scoring measures per sample"
+)
+```
+
+Boxplot of the Root Mean Square Error, the Mean Absolute Error and one minus the pearson's correlation value, calculated for each sample. 
+
+
+
+# Session Information
+
+```{r, results="verbatim"}
+sessionInfo()
+```
+
 
