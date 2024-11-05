@@ -1,3 +1,3 @@
-## How is the scoring metric computed?
+## How is the scoring done?
 
-The **score** (discriminating metric) is computed on the estimated proportion matrix. The metric is a combination of row-correlation, column-correlation and mean absolute error between the ground_truth and the estimate provided by the participants.
+Several **scores** (discriminating metrics) are computed on the estimated proportion matrix. These metrics are various ways of measuring the prediction error: mean absolute error, root mean square error and Pearson row- and column-correlations are computed by comparing the ground truth to the predictions estimated with the methods provided by the participants. They are combined into a single score to allow a straightforward comparisons of all the methods.
