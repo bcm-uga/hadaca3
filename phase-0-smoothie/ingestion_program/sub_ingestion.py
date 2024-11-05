@@ -4,6 +4,7 @@ import numpy as np
 import time 
 import pandas as pd
 import importlib
+import subprocess
 
 # from scipy.optimize import nnls
 

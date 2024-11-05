@@ -1,12 +1,62 @@
-###########
-# Authors
-# florent.chuffard@univ-grenoble-alpes.fr
-# slim.karkar@univ-grenoble-alpes.fr
-# magali.richard@univ-grenoble-alpes.fr
-# ---
+##################################################################################################
+### PLEASE only edit the program function between YOUR CODE BEGINS/ENDS HERE                   ###
+##################################################################################################
 
-#to get list of function before sourcing new functions
-# before <- ls()
+
+#' The function to estimate the A matrix
+#' In the provided example, we use basic non-negative least squares (package "nnls"), which consists of minimizing the error term $||Mix - Ref \times Prop||^2$ with only positive entries in the prop matrix.
+#'
+#' @param mix a matrix of bulks (columns) and features (rows)
+#' @param ref a matrix pure types (columns) and features (rows)
+#' @param ... other parameters that will be ignored
+#' 
+#' @return the estimated A matrix
+#' 
+program = function(mix=NULL, ref=NULL, ...) {
+
+  ##
+  ## YOUR CODE BEGINS HERE
+  ##
+
+  idx_feat = intersect(rownames(mix), rownames(ref))
+
+  prop = apply(mix[idx_feat,], 2, function(b, A) {
+    # Solve for the least squares solution using OLS
+    tmp_prop = lm(b ~ A - 1)$coefficients  # Using `-1` to remove the intercept
+    # tmp_prop = nnls:nnls(b=b,A=A)$x 
+    tmp_prop = tmp_prop / sum(tmp_prop)    # Sum To One
+    return(tmp_prop)
+  }, A=ref[idx_feat,])
+
+
+  rownames(prop) = colnames(ref)
+  return(prop)
+  
+  ##
+  ## YOUR CODE ENDS HERE nnls()
+  ##
+}
+
+
+##############################################################
+### Generate a prediction file /!\ DO NOT CHANGE THIS PART ###
+##############################################################
+
+
+
+mixes_data = readRDS("mixes_smoothies_fruits.rds")
+reference_data = readRDS("reference_fruits.rds")
+
+# we use the previously defined function 'program' to estimate A :
+pred_prop <- program(
+  mix = mixes_data ,
+  ref = reference_data
+)
+
+
+
+
+
 ########################################################
 ### Package dependencies /!\ DO NOT CHANGE THIS PART ###
 ########################################################
@@ -68,59 +118,6 @@ if ( params$install_dependencies ) {
 # require(tidyverse)
 
 
-##################################################################################################
-### Submission modes /!\ EDIT THE FOLLOWING CODE BY COMMENTING/UNCOMMENTING THE REQUIRED PARTS ###
-##################################################################################################
-
-
-
-
-#' The function to estimate the A matrix
-#' In the provided example, we use basic non-negative least squares (package "nnls"), which consists of minimizing the error term $||Mix - Ref \times Prop||^2$ with only positive entries in the prop matrix.
-#'
-#' @param mix a matrix of bulks (columns) and features (rows)
-#' @param ref a matrix pure types (columns) and features (rows)
-#' @param ... other parameters that will be ignored
-#' 
-#' @return the estimated A matrix
-#' @examples
-#' 
-program = function(mix=NULL, ref=NULL, ...) {
-
-  ##
-  ## YOUR CODE BEGINS HERE
-  ##
-  
-  requiered_packages = c("nnls") 
-
-  installed_packages <- installed.packages( )
-  for (package in requiered_packages ) {
-      if ( !{ package %in% installed_packages } ) {
-          print(x = paste("Installation of ", package, sep = "") )
-          install.packages(
-              pkgs = package
-            , repos = "https://cloud.r-project.org"
-          )
-      } else {
-          print(x = paste(package, " is installed.", sep = "") )
-      }
-      library(package, character.only = TRUE)
-  }
-  remove(list = c("installed_packages", "package") )
-
-  idx_feat = intersect(rownames(mix), rownames(ref))
-  prop = apply(mix[idx_feat,], 2, function(b, A) {
-    tmp_prop = nnls(b=b, A=A)$x 
-    tmp_prop = tmp_prop / sum(tmp_prop) # Sum To One
-    return(tmp_prop)
-  }, A=ref[idx_feat,])  
-  rownames(prop) = colnames(ref)
-  return(prop)
-  
-  ##
-  ## YOUR CODE ENDS HERE
-  ##
-}
 
 
 
@@ -165,23 +162,6 @@ validate_pred <- function(pred, nb_samples , nb_cells,col_names ){
 }
 
 
-
-##############################################################
-### Generate a prediction file /!\ DO NOT CHANGE THIS PART ###
-##############################################################
-
-
-
-mixes_data = readRDS("mixes_smoothies_fruits.rds")
-reference_data = readRDS("reference_fruits.rds")
-
-
-
-# we use the previously defined function 'program' to estimate A :
-pred_prop <- program(
-  mix = mixes_data ,
-  ref = reference_data
-)
 
 # validate_pred <- function(pred, nb_samples = ncol(mixes_data) , nb_cells= ncol(reference_data),col_names = colnames(reference_data) ){
 

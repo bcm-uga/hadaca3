@@ -49,7 +49,17 @@ cd starting_kit
 Rscript submission_script.R
 ```
 
-## Run Script locally:
+you can generate a submission on a docker : 
+```sudo docker run -it --rm --name my-running-script -v "$PWD":/usr/src/myapp -w /usr/src/myapp hombergn/hadaca3_pyr python submission_script.py ```
+
+or with : 
+
+```sudo docker run -v .:/hadaca3 -w /hadaca3  hombergn/hadaca3_pyr Rscript submission_script.R```
+
+
+
+
+## Run ingestion and scoring locally:
 
 /!\ This local test no longer works when using sourced files in program.R that call sub_programm in the folder modules.
 

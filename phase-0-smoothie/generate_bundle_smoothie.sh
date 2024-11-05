@@ -10,8 +10,8 @@ pwd
 #Should be a seperate script ? 
 mkdir input_data
 mkdir ground_truth
-cp "$path_data"groundtruth_smoothies_fruits.rds ground_truth/groundtruth_smoothies_fruits.rds
-cp "$path_data"mixes_smoothies_fruits.rds input_data/mixes_smoothies_fruits.rds
+cp "$path_data"groundtruth1_smoothies_fruits.rds ground_truth/groundtruth_smoothies_fruits.rds
+cp "$path_data"mixes1_smoothies_fruits.rds input_data/mixes_smoothies_fruits.rds
 cp "$path_data"reference_fruits.rds input_data/reference_fruits.rds
 
 cp -r input_data/* starting_kit/
