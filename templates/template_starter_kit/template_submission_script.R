@@ -2,39 +2,7 @@
 ### PLEASE only edit the program function between YOUR CODE BEGINS/ENDS HERE                   ###
 ##################################################################################################
 
-
-#' The function to estimate the A matrix
-#' In the provided example, we use basic non-negative least squares (package "nnls"), which consists of minimizing the error term $||Mix - Ref \times Prop||^2$ with only positive entries in the prop matrix.
-#'
-#' @param mix a matrix of bulks (columns) and features (rows)
-#' @param ref a matrix pure types (columns) and features (rows)
-#' @param ... other parameters that will be ignored
-#' 
-#' @return the estimated A matrix
-#' 
-program = function(mix=NULL, ref=NULL, ...) {
-
-  ##
-  ## YOUR CODE BEGINS HERE
-  ##
-  idx_feat = intersect(rownames(mix), rownames(ref))
-
-  prop = apply(mix[idx_feat,], 2, function(b, A) {
-    # Solve for the least squares solution using OLS
-    tmp_prop = lm(b ~ A - 1)$coefficients  # Using `-1` to remove the intercept
-    # tmp_prop = nnls::nnls(b=b,A=A)$x 
-    tmp_prop = tmp_prop / sum(tmp_prop)    # Sum To One
-    return(tmp_prop)
-  }, A=ref[idx_feat,])
-
-
-  rownames(prop) = colnames(ref)
-  return(prop)
-  
-  ##
-  ## YOUR CODE ENDS HERE
-  ##
-}
+### Write programs Here !
 
 
 ##############################################################
@@ -52,47 +20,6 @@ pred_prop <- program(
   ref = reference_data
 )
 
-
-
-########################################################
-### Package dependencies /!\ DO NOT CHANGE THIS PART ###
-########################################################
-
-
-##  to generate the zip files that contain the programs or the results to submit to the Codalab platform.
-
-
-# installed_packages <- installed.packages( )
-# for (package in c("zip") ) {
-#     if ( !{ package %in% installed_packages } ) {
-#         print(x = paste("Installation of ", package, sep = "") )
-#         install.packages(
-#             pkgs = package
-#           , repos = "https://cloud.r-project.org"
-#         )
-#     } else {
-#         print(x = paste(package, " is installed.", sep = "") )
-#     }
-#     library(package, character.only = TRUE)
-# }
-# remove(list = c("installed_packages", "package") )
-
-
-
-####################################################
-### Submission modes /!\ DO NOT CHANGE THIS PART ###
-####################################################
-
-# Participants can submit either
-# - a code program, that will be executed on the challenge platform to generate the result (prediction) that will be scored against the ground truth
-# - a result (prediction )file, that will be scored against the ground truth
-
-###############################
-### Code submission mode
-# Participants need make a zip file (no constrain on the namefile) that contains :
-#   - your code inside a *R* file named `program.R`. This file will be sourced and have to contain :
-#   - a function `program` with `data_test` and `input_k_value` as arguments 
-#   - any other files that you want to access from your function `program` : during the ingestion phase (when your code is evaluated), the working directory will be inside the directory obtained by unzipping your submission.
 
 
 ##############################################################
@@ -144,7 +71,7 @@ validate_pred <- function(pred, nb_samples = ncol(mixes_data) , nb_cells= ncol(r
 ### Code submission mode
 
 # we generate a zip file with the 'program' source code
-
+print()
 if ( !dir.exists(paths = "submissions") ) {
     dir.create(path = "submissions")
 }

@@ -53,9 +53,10 @@ input_data_final*
 backup*
 
 src_test*
+*tmp*
 
 
-phase-0-smoothie/starting_kit/submissions/*
-phase-0-smoothie/starting_kit/submissions
+phase-0-smoothie/starting_kit/*
+phase-0-smoothie/starting_kit/
 
 docker/codabench_hadaca3_pyr/environment/requierement.txt

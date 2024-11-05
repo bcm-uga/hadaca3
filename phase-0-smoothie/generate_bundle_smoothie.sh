@@ -10,10 +10,14 @@ pwd
 #Should be a seperate script ? 
 mkdir input_data
 mkdir ground_truth
+# mdkir starting_kit/
 cp "$path_data"groundtruth1_smoothies_fruits.rds ground_truth/groundtruth_smoothies_fruits.rds
 cp "$path_data"mixes1_smoothies_fruits.rds input_data/mixes_smoothies_fruits.rds
 cp "$path_data"reference_fruits.rds input_data/reference_fruits.rds
 
+
+
+rm -r starting_kit/*
 cp -r input_data/* starting_kit/
 # sh generate_data.sh $1
 # sh generate_data.sh real
@@ -23,6 +27,11 @@ echo 'data generated'
 echo "create bunlde.zip"
 zip -FS -j -r  bundle/scoring_program.zip scoring_program/
 zip -FS -j -r  bundle/ingestion_program.zip ingestion_program/
+
+#Phase_0 is useless for now 
+Rscript ~/projects/hadaca3/templates/generate_baselines.R Phase_0  
+cp ~/projects/hadaca3/templates/tmp/* starting_kit/
+rm -r ~/projects/hadaca3/templates/tmp/ 
 cd starting_kit/ ; zip  -FS  -r  ../bundle/starting_kit_smoothie.zip *  -x \*submissions\* ; cd .. ; 
 
 

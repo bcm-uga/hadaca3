@@ -13,6 +13,7 @@ The unziped starting_kit directory contains now:
  - From terminal run `Rscript submission_script.R` 
  - Launch an R console and execute the following command : `source("submission_script.R")`
  - Run the `submission_script.R` in RStudio/ Vscode
+ - From docker :`sudo docker run -v .:/hadaca3 -w /hadaca3  hombergn/hadaca3_pyr Rscript submission_script.R`
 
 
 [3] The code of the  `submission_script.R`  generates the files:
@@ -31,6 +32,8 @@ Edit the code inside the following chunk (i.e. the `program` function):
 		## YOUR CODE ENDS HERE
 		## 
 
+
+
 ## How to generate a prediction of the data (Python)?
 Please note that this challenge was primarily designed with R in mind, and as such, R functionality and compatibility have been tested more extensively than those in Python. When using Python, keep in mind that your scripts will need to interact with R data, which requires the rpy2 library. To facilitate this, a Conda environment has been provided. For more details, please refer to the "Conda Environment" chapter under "Troubleshooting".
 
@@ -47,6 +50,7 @@ The unzipped starting_kit directory contains now:
  - From terminal run `python submission_script.py` 
  - Launch an interactive python shell by executing : `python -i submission_script.py`
  - Run the `submission_script.py` in Spider/ Vscode
+ - From docker : `sudo docker run -v .:/hadaca3 -w /hadaca3  hombergn/hadaca3_pyr python submission_script.py`
 
 
 [3] The code of the  `submission_script.R`  generates the files:
@@ -112,7 +116,7 @@ If your submission fails on Codabench, don't panic—review the logs! You can ac
 3. Select the "Logs" tab.
 4. Browse the various types of logs available: `stdout`, `stderr`, `Ingestion stdout`, and `Ingestion stderr`, for both the ingestion and scoring steps.
 
-### Running Submissions Locally with Docker
+### Running Submissions ingestion and scoring locally with Docker
 
 To speed up the debugging process and avoid the full submission workflow, you can run your submission program locally using **FAKE** data. The fake data serves two purposes: first, it allows testing without relying on the actual scoring program (which requires the ground truth), and second, it speeds up computation.
 
@@ -141,5 +145,5 @@ If you wish to test each step independently or run the Python script locally, re
 
 ### Including an external file to be used in the submission script
 
-It is possible to include an external file, provided that it is sourced in the submission_script and correctly included in the zip file that will be submitted on the Codabench platform.
+It is possible to include an external file, that it is sourced in the submission_script and correctly included in the zip file will be submitted on the Codabench platform.
 

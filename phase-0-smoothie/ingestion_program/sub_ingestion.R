@@ -39,7 +39,23 @@ mixes_data = readRDS( paste0(input,.Platform$file.sep,"mixes_smoothies_fruits.rd
 reference_data = readRDS( paste0(input,.Platform$file.sep,"reference_fruits.rds"))
 
 
-  # we use the previously defined function 'program' to estimate A :
+install.packages = function (pkgs, repos="https://cloud.r-project.org", ...) {
+  installed_packages <- installed.packages( )
+  for (package in pkgs ) {
+    if ( !{ package %in% installed_packages } ) {
+     print(x = paste("Installation of ", package, sep = "") )
+      utils::install.packages(
+        pkgs = package,
+        repos = repos,
+        ...
+      )
+    } else {
+      print(x = paste(package, " is installed.", sep = "") )
+    }
+  }
+}
+
+# we use the previously defined function 'program' to estimate A :
 start_time <- proc.time()
 pred_prop <- .tempEnv$program(
   mix = mixes_data,

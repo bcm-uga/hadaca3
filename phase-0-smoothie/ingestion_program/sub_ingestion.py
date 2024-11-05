@@ -73,6 +73,19 @@ reference_data = readRDS(os.path.join(input_dir,"reference_fruits.rds"))
 # total_time = 0 
 start_time = time.perf_counter()
 
+
+
+def install_and_import_packages(required_packages):
+  for package in required_packages:
+      try:
+          globals()[package] = importlib.import_module(package)
+      except ImportError:
+          print('impossible to import, installing packages',package)
+          subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+          globals()[package] = importlib.import_module(package)
+
+
+
 pred_prop = program(
     mix=mixes_data, ref=reference_data
 )
