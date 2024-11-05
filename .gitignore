@@ -4,8 +4,8 @@
 # scoring_program.zip_unzipped/
 # scoring_program.zip_unzipped/*
 
-starting_kit/submissions/
-starting_kit/submissions/*
+*starting_kit/submissions/
+*starting_kit/submissions/*
 
 
 data_old/

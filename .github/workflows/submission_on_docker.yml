@@ -33,6 +33,7 @@ jobs:
           
       - name: Check Data Generation
         run: |
+          cd phase-1_2_3/
           chmod +x generate_data.sh
           sh generate_data.sh
          

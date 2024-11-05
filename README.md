@@ -67,7 +67,7 @@ or with :
 Once "submissions" folder created by the submission script inside starting kit, you can test locally the ingestion and scoring program.
 
 ```
-cd ~/projects/hadaca3
+cd ~/projects/hadaca3/phase-1_2_3
 sh prepare2score_locally.sh
 
 Rscript ingestion_program/ingestion.R \
@@ -99,7 +99,7 @@ Rscript -e 'rmarkdown::render("../../scoring_program/detailed_results.Rmd")'
 
 The bundle **bundle.zip** is created with the script generate_bundle.sh
 ```
-cd ~/projects/hadaca3
+cd ~/projects/hadaca3/phase-1_2_3
 sh generate_bundle.sh
 ```
 
@@ -114,7 +114,7 @@ Select upload and select **bundle.zip** created earlier.
 The docker named hadaca3_pyr also has impleted python as well.
 
 ```
-cd docker/codabench_hadaca3_pyr
+cd ~/projects/hadaca3/docker/codabench_hadaca3_pyr
 
 sudo docker build -t hombergn/hadaca3_pyr .
 
@@ -142,7 +142,7 @@ sudo docker build -t hombergn/hadaca3_light .  && sudo docker push hombergn/hada
 
 Run all the test automatically with the script `automated_docker_test.sh`:
 ```
-cd ~/projects/hadaca3
+cd ~/projects/hadaca3/phase-1_2_3
 sh automated_docker_test.sh
 ```
 
@@ -151,7 +151,7 @@ Or test each step manualy with the following commands :
 First prepare the docker submission with the script `prepare2score_locally.sh`
 
 ```
-cd ~/projects/hadaca3
+cd ~/projects/hadaca3/phase-1_2_3
 sh prepare2score_locally.sh
 ```
 
@@ -195,7 +195,7 @@ To reduces setup complexitie for both R and python users, (particularly essentia
 
 To activate this envrionnement :
 ```
-cd docker/codabench_hadaca3_pyr/environment/
+cd ~/projects/hadaca3/phase-1_2_3/docker/codabench_hadaca3_pyr/environment/
 conda env create -f environment-r.yml && conda activate h3
 cd - 
 ```
