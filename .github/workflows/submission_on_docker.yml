@@ -46,13 +46,14 @@ jobs:
       
       - name: Create submission program R
         run: |
-          cd starting_kit/
+          cd phase-1_2_3/starting_kit/
           Rscript submission_script.R
-          cd ..
+          
 
       - name: Prepare files by creating folder etc...
         shell: bash
         run: |
+          cd phase-1_2_3/
           chmod +x prepare2score_locally.sh
           sh prepare2score_locally.sh
           ls test_output/*
@@ -60,11 +61,13 @@ jobs:
       - name: Running ingestion Program
         run: |
           # ls -rthl *
+          cd phase-1_2_3/
           docker run --rm  -v $PWD/ingestion_program:/app/program  -v $PWD/test_output/res:/app/output  -v $PWD/starting_kit/submissions:/app/ingested_program  -w /app/program  -v $PWD/input_data/:/app/input_data/ $docker_name Rscript /app/program/ingestion.R /app/program /app/input_data /app/output /app/ingested_program 
           # ls -rthl test_output/*
         
       - name: Running Scoring Program
         run: |
+          cd phase-1_2_3/
           docker run --rm  -v $PWD/scoring_program:/app/program  -v $PWD/test_output:/app/output  -w /app/program  -v $PWD/test_output:/app/input  $docker_name  Rscript /app/program/scoring.R /app/input /app/output /app/program
           # ls -rthl test_output/*
         
