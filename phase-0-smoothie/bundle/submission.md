@@ -144,6 +144,4 @@ The script `automated_docker_test.sh` first executes the R submission script loc
 If you wish to test each step independently or run the Python script locally, refer to the `README.md` in the `hadaca3` GitHub repository.
 
 ### Including an external file to be used in the submission script
-
-It is possible to include an external file, that it is sourced in the submission_script and correctly included in the zip file will be submitted on the Codabench platform.
-
+It is possible to include an external file that is sourced in the submission script and correctly included in the zip file to be submitted on the Codabench platform.
