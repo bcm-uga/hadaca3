@@ -92,23 +92,14 @@ if (file.exists(file_R)) {
 
  } else { 
     print("no program to execute, go straight to scoring step") 
+    print(paste0(" output_profiling file:", output_profiling_rds))
+    total_time = 86400 #24 h in seconds! 
+    saveRDS(
+    object = total_time,
+    file   = output_profiling_rds
+    )
 }
 
-
-
-
-# execution_time <-  proc.time() - start_time
-
-# print(execution_time)
-
-# ## save profiling
-# saveRDS(
-#     object = execution_time
-#   , file   = output_profiling_rds
-# )
-
-## stop diverting R output to a text file
-## sink(file = NULL)
 
 print(x = "Output :")
 print(x = list.files(path = output , all.files = TRUE, full.names = TRUE, recursive = TRUE) )

@@ -94,10 +94,6 @@ def program(mix=None, ref=None):
             globals()[package] = importlib.import_module(package)
 
 
-    # def estimate_proportions(mix, ref):
-    #     props = np.array([res_i / sum(res_i) for res_i in res])
-    #     return props.T
-
     def estimate_proportions(mix, ref):
         # Solve the linear least-squares problem for each column in mix
         # res = [numpy.linalg.lstsq(ref, mix[:, i], rcond=None)[0] for i in range(mix.shape[1])]
@@ -131,14 +127,8 @@ get_colnames <- function(ref_names="reference_fruits.rds") {
 ro.r(r_code_get_colnames)
 
 mixes_data = readRDS(os.path.join( "mixes_smoothies_fruits.rds"))
-# print(mixes_data)
-# print(type(mixes_data))
-# print(colnames(mixes_data))
-# mixes_data= numpy.array(mixes_data.rx('mix_rna'))
-# mixes_data = mixes_data[0]
 reference_data = readRDS(os.path.join( "reference_fruits.rds"))  
-# reference_data = numpy.array(reference_data.rx('ref_bulkRNA'))
-# reference_data = reference_data[0]
+
 
 pred_prop = program(
     mix=mixes_data, ref=reference_data
@@ -231,5 +221,3 @@ with zipfile.ZipFile(zip_results, 'w') as zipf:
 
 print(zip_results)
 
-
-# <class 'rpy2.robjects.vectors.ListVector'>

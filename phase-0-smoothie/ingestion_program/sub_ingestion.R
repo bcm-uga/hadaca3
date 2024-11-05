@@ -31,24 +31,9 @@ source(
 #####################################
 
 
-
-# mixes_data <- readRDS(file = paste0(input, .Platform$file.sep, "mixes_data.rds") )
-
-# mix_rna <- mixes_data$mix_rna
-# mix_met <- mixes_data$mix_met
-# names(mixes_data)
-
-# reference_data <- readRDS(file = paste0(input, .Platform$file.sep, "reference_data.rds")  )
-# ref_rna <- as.matrix(reference_data$ref_bulkRNA)
-# ref_met <- as.matrix(reference_data$ref_met)
-# names(reference_data)
-
-
-
 base::set.seed(seed = 1)
 
 total_time <- 0
-
 
 mixes_data = readRDS( paste0(input,.Platform$file.sep,"mixes_smoothies_fruits.rds") )
 reference_data = readRDS( paste0(input,.Platform$file.sep,"reference_fruits.rds"))
@@ -80,16 +65,3 @@ saveRDS(
 object = pred_prop
 , file   = output_results
 )
-
-# print(paste0("Save predicted A matrix from dataset ",i,  " in .csv format"))
-# write.csv2( 
-#   x = prediction$A_matrix,
-#   file = output_A)
-
-# print(paste0("Save predicted T matrix from dataset ",i,  " in .csv format"))
-
-# write.csv2( 
-#   x = prediction$T_matrix, 
-#   file = output_T)
-
-

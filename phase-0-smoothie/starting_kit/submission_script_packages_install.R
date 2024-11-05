@@ -1,8 +1,3 @@
-##################################################################################################
-### PLEASE only edit the program function between YOUR CODE BEGINS/ENDS HERE                   ###
-##################################################################################################
-
-
 #' The function to estimate the A matrix
 #' In the provided example, we use basic non-negative least squares (package "nnls"), which consists of minimizing the error term $||Mix - Ref \times Prop||^2$ with only positive entries in the prop matrix.
 #'
@@ -17,12 +12,30 @@ program = function(mix=NULL, ref=NULL, ...) {
   ##
   ## YOUR CODE BEGINS HERE
   ##
+  
+  requiered_packages = c() 
+
+  installed_packages <- installed.packages( )
+  for (package in requiered_packages ) {
+      if ( !{ package %in% installed_packages } ) {
+          print(x = paste("Installation of ", package, sep = "") )
+          install.packages(
+              pkgs = package
+            , repos = "https://cloud.r-project.org"
+          )
+      } else {
+          print(x = paste(package, " is installed.", sep = "") )
+      }
+      library(package, character.only = TRUE)
+  }
+  remove(list = c("installed_packages", "package") )
+
+
   idx_feat = intersect(rownames(mix), rownames(ref))
 
   prop = apply(mix[idx_feat,], 2, function(b, A) {
     # Solve for the least squares solution using OLS
     tmp_prop = lm(b ~ A - 1)$coefficients  # Using `-1` to remove the intercept
-    # tmp_prop = nnls::nnls(b=b,A=A)$x 
     tmp_prop = tmp_prop / sum(tmp_prop)    # Sum To One
     return(tmp_prop)
   }, A=ref[idx_feat,])
@@ -32,7 +45,7 @@ program = function(mix=NULL, ref=NULL, ...) {
   return(prop)
   
   ##
-  ## YOUR CODE ENDS HERE
+  ## YOUR CODE ENDS HERE nnls()
   ##
 }
 
@@ -54,6 +67,8 @@ pred_prop <- program(
 
 
 
+
+
 ########################################################
 ### Package dependencies /!\ DO NOT CHANGE THIS PART ###
 ########################################################
@@ -61,23 +76,33 @@ pred_prop <- program(
 
 ##  to generate the zip files that contain the programs or the results to submit to the Codalab platform.
 
-
-# installed_packages <- installed.packages( )
-# for (package in c("zip") ) {
-#     if ( !{ package %in% installed_packages } ) {
-#         print(x = paste("Installation of ", package, sep = "") )
-#         install.packages(
-#             pkgs = package
-#           , repos = "https://cloud.r-project.org"
-#         )
-#     } else {
-#         print(x = paste(package, " is installed.", sep = "") )
-#     }
-#     library(package, character.only = TRUE)
-# }
-# remove(list = c("installed_packages", "package") )
-
-
+if ( !exists(x = "params") ) {
+    params                      <- NULL
+}
+if ( is.null(x = params$package_repository) ) {
+    params$package_repository   <- "https://cloud.r-project.org"
+}
+if ( is.null(x = params$install_dependencies) ) {
+    params$install_dependencies <- TRUE
+}
+print(params)
+if ( params$install_dependencies ) {
+    installed_packages <- installed.packages( )
+    for (package in c("zip") ) {
+        if ( !{ package %in% installed_packages } ) {
+            print(x = paste("Installation of ", package, sep = "") )
+            install.packages(
+                pkgs = package
+              , repos = params$package_repository
+            )
+        } else {
+            print(x = paste(package, " is installed.", sep = "") )
+        }
+        library(package, character.only = TRUE)
+    }
+    remove(list = c("installed_packages", "package") )
+}
+# -
 
 ####################################################
 ### Submission modes /!\ DO NOT CHANGE THIS PART ###
@@ -94,9 +119,22 @@ pred_prop <- program(
 #   - a function `program` with `data_test` and `input_k_value` as arguments 
 #   - any other files that you want to access from your function `program` : during the ingestion phase (when your code is evaluated), the working directory will be inside the directory obtained by unzipping your submission.
 
+###############################
+### Result submission mode  
+# Participants have to make a zip file (no constrain on the namefile), with your results as a matrix inside a rds file named `results_1.rds`.
+
+# if ( !( "tidyverse" %in% installed.packages() ) ) {
+#     install.packages(pkgs = "tidyverse", repos = "https://cloud.r-project.org")
+# }
+
+# require(tidyverse)
+
+
+
+
 
 ##############################################################
-### Validate the prediction /!\ DO NOT CHANGE THIS PART ###
+### Check the prediction /!\ DO NOT CHANGE THIS PART ###
 ##############################################################
 
 validate_pred <- function(pred, nb_samples , nb_cells,col_names ){
@@ -137,7 +175,7 @@ validate_pred <- function(pred, nb_samples , nb_cells,col_names ){
 
 
 
-validate_pred <- function(pred, nb_samples = ncol(mixes_data) , nb_cells= ncol(reference_data),col_names = colnames(reference_data) )
+# validate_pred <- function(pred, nb_samples = ncol(mixes_data) , nb_cells= ncol(reference_data),col_names = colnames(reference_data) ){
 
 
 ###############################
@@ -148,6 +186,15 @@ validate_pred <- function(pred, nb_samples = ncol(mixes_data) , nb_cells= ncol(r
 if ( !dir.exists(paths = "submissions") ) {
     dir.create(path = "submissions")
 }
+
+
+## list all functions to dump them inside R the program.R.  
+# after <- ls()
+# changed <- setdiff(after, before)
+# changed_objects <- mget(changed, inherits = T)
+# changed_function <- do.call(rbind, lapply(changed_objects, is.function))
+# new_functions <- changed[changed_function]
+# new_functions
 
 # we save the source code as a R file named 'program.R' :
 dump(
