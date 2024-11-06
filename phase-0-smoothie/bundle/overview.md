@@ -1,9 +1,19 @@
-This toy decovolution challenge is an introduction to Health data challenge (HADACA) which is a series of data challenge aiming to contribute to scientific crowdsourced benchmarking in the field of data analysis in health.
+# Smoothie deconvolution challenge
 
-The aim of a scientific data challenge is to improve the state-of-the-art from a quantitative reference point. In the field of methodological development for health data analysis, HADACA is seeking to provide a formal comparison of performance between new algorithms and state-of-the-art methods.
+### Introduction
 
-To carry out these methodological assessments, HADACA brings together scientists from a variety of disciplines to tackle a specific challenge. During the week-long conference, participants brainstorm and work together to solve the problem posed by the organisers. Teams compete against each other and then share their solution publicly, so that all the participants can move on to the next stage together. Contrarily to classical workshops, HADACA challenges result in guidelines and scientific publications which are of use to the community. Offering authorship to competing teams, along with participation in manuscript design and writing, is a strong incentive that provides international visibility and recognition to participants.
+Welcome to the *Smoothie Deconvolution* challenge, a toy model designed to introduce participants to the Health Data Challenge (HADACA), a series of data challenges focused on benchmarking deconvolution methods through crowdsourcing.
 
-HADACA challenges is a reccurent event, 1st edition occurred in 2018 in partnership with the Data Institute of University Grenoble-Alpes, 2nd edition occurred in 2019 in partnership with the Ligue contre le Cancer and sponsored by the EIT Health. 3rd edition organization was delayed by the COVID pandemic. It is now scheduled to December 2024, in partnership with the M4DI project, an axis of the PEPR Santé Numérique of the Plan Innovation Santé 2030.
+The HADACA challenge is a recurring event aimed at developping deconvolution methods for biological data.
 
-The official website: [hadaca3.sciencesconf.org](https://hadaca3.sciencesconf.org/)
+- The **first edition** took place in 2018, in collaboration with the Data Institute at University Grenoble-Alpes.
+- The **second edition** was held in 2019, in partnership with the Ligue contre le Cancer and sponsored by EIT Health.
+- The **third edition** is set for December 2024, in collaboration with the M4DI project, part of the PEPR Santé Numérique. Visit the official website for details: hadaca3.sciencesconf.org.
+    
+### Quick start guide
+
+1. Review the challenge goals to understand the objectives.
+2. Follow the step-by-step instructions in the "How do I start?" tab to make your first submission.
+3. Experiment with your code to improve performance.
+
+Enjoy the challenge!
