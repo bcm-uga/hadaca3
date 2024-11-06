@@ -6,6 +6,12 @@ With support from LabEx PERSYVAL-2 (Grenoble-Alpes University)
 
 With support from RT Math Bio Santé (CNRS)
 
-With support from GRICAD Mesocentre(Grenoble-Alpes University)
+With support from The French League agains cancer
+
+With support from the GDR BIMMMM
+
+With support from the region AURA (Auvergne Rhone Alpes), France
+
+With support from GRICAD Mesocentre (Grenoble-Alpes University)
 
 With support from RIS (CNRS MITI)
