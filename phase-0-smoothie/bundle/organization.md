@@ -1,4 +1,4 @@
-HADACA 3rd ed. is organized in closed collaboration between the **M4DI project, an axis of the PEPR santé Numérique**, and the **ITMO Cancer Aviesan (2009-2023, project ACACIA)**. 
+HADACA 3rd ed. is organized in closed collaboration between the **M4DI project, an axis of the PEPR santé Numérique**, and the **ITMO Cancer Aviesan (2019-2024, project ACACIA)**. 
 
 M4DI is dedicated to Methods and models for multimodal and multi-scale data integration. 
 
