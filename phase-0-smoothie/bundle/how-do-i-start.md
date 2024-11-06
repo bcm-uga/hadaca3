@@ -8,6 +8,6 @@
 
 [4] Check you score (more information on the scoring and ranking pipelines can be found on the *Evaluation and scoring* tab).
 
-[5] Improve you method by editing the `submission_script.R` contained in the `starting_kit` and resubmit your program to enhance your score.
+[5] Improve you method by editing the `submission_script` contained in the `starting_kit` and resubmit your program to enhance your score.
 
 
