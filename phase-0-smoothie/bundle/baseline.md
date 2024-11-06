@@ -1,11 +1,15 @@
-Baseline can be found on the `submission_script.R` contained in the `starting_kit`.
+# Baselines provides in the starting kit 
 
-## NNLS baseline
+## Submission_script.R 
 
-We propose a baseline that executes the following steps:
+This baseline uses a linear model (`lm` function) to estimate the fruit composition (`lm` function).
+For improved estimation, you can comment out line 24 and uncomment line 25 to apply a non-negative least squares deconvolution algorithm (`nnls::nnls` function).
 
-[1] Run the NNLS deconvolution algorithm on RNA mix using bulk RNA-seq reference data to generate an estimate of the proportion matrix.
+## submission_script_installpkgcran.py
 
-[2] Run the NNLS deconvolution algorithm on methylation mix using bulk methylation reference data to generate an estimate of the proportion matrix.
+This script demonstrates how to install a new package if needed.
 
-[3] Average the two estimates to generate a prediction of the proportion matrix.
+## Submission_script.py
+
+This Python script replicates the baseline approach from submission_script.R for Python users. 
+
