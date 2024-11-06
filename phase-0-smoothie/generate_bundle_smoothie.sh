@@ -2,10 +2,23 @@
 type Rscript >/dev/null 2>&1 || { echo >&2 "Rscript requiered but it's not installed.  Aborting."; exit 1; }
 
 
-echo "generate data"
+
+#PULL both repo 
+Current_folder=$PWD
+
+
+echo "pulling from "$PWD
+git pull
+
 path_data=~/projects/hadaca3_private/
 
-pwd
+cd $path_data
+echo "pulling from "$path_data
+git pull
+
+cd $Current_folder
+
+echo "generate data"
 
 #Should be a seperate script ? 
 mkdir input_data
