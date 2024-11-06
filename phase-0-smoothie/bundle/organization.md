@@ -30,6 +30,7 @@ The organization and implementation of the data challenge is coordinated by :
 
 - M. Richard 
 - Y. Blum
+- E. Amblard (postdoc bioinfo, CNRS)
 - F. Chuffart (IR bioinfo INSERM)
 - L. Lamothe (IR bioinfo CNRS),
 - N. Homberg (IR bioinfo, Univ Grenoble-Alpes),
