@@ -6,15 +6,6 @@ import pandas
 import importlib
 import subprocess
 
-from rpy2.robjects import pandas2ri
-pandas2ri.activate()
-
-
-# import rpy2.robjects as robjects
-import rpy2.robjects
-readRDS = rpy2.robjects.r['readRDS']
-saveRDS= rpy2.robjects.r["saveRDS"]
-
 # Parsing command-line arguments
 parser = argparse.ArgumentParser(description='Process some paths.')
 parser.add_argument('input', type=str, help='input data directory')
@@ -57,23 +48,6 @@ if 'program' not in globals():
     print("The 'program' function is not defined in the submitted code.")
 
 
-r_code_get_colnames = '''
-get_colnames <- function(ref_names="reference_fruits.rds") {
-    reference_data = readRDS(ref_names)
-    return (colnames(reference_data))
-}
-'''
-rpy2.robjects.r(r_code_get_colnames)
-
-mixes_data = readRDS(os.path.join(input_dir,"mixes_smoothies_fruits.rds"))
-
-reference_data = readRDS(os.path.join(input_dir,"reference_fruits.rds"))  
-
-
-# total_time = 0 
-start_time = time.perf_counter()
-
-
 
 def install_and_import_packages(required_packages):
   for package in required_packages:
@@ -85,7 +59,44 @@ def install_and_import_packages(required_packages):
           globals()[package] = importlib.import_module(package)
 
 
+import rpy2.robjects
+readRDS = rpy2.robjects.r['readRDS']
+saveRDS= rpy2.robjects.r["saveRDS"]
 
+from rpy2.robjects import pandas2ri
+pandas2ri.activate()
+
+
+r_code_get_colnames = '''
+get_colnames <- function(ref_names="reference_fruits.rds") {
+  ref_names = readRDS(ref_names)
+  return (colnames(ref_names))
+}
+'''
+rpy2.robjects.r(r_code_get_colnames)
+get_colnames = rpy2.robjects.r['get_colnames']
+
+r_code_get_rownames = '''
+get_rownames <- function(ref_names="reference_fruits.rds") {
+  ref_names = readRDS(ref_names)
+  return (rownames(ref_names))
+}
+'''
+rpy2.robjects.r(r_code_get_rownames)
+get_rownames = rpy2.robjects.r['get_rownames']
+
+
+file = os.path.join(input_dir,"mixes_smoothies_fruits.rds")
+mixes_data = readRDS(file)
+mixes_data = pandas.DataFrame(mixes_data, index=get_rownames(file),columns=get_colnames(file))
+
+file = os.path.join(input_dir,"reference_fruits.rds")
+reference_data = readRDS(file)  
+reference_data = pandas.DataFrame(reference_data, index=get_rownames(file),columns=get_colnames(file))
+
+
+# total_time = 0 
+start_time = time.perf_counter()
 pred_prop = program(
     mix=mixes_data, ref=reference_data
 )
