@@ -28,6 +28,14 @@ conda activate hadaca3_env
 #mamba install -y -c anaconda -c bioconda -c conda-forge -c r r-base snakemake=7.32.4 python=3.9 r-rmarkdown r-prettydoc r-seurat r-clue bioconductor-complexheatmap r-viridis r-magrittr r-dplyr r-nnls graphviz r-tictoc  graphviz python-kaleido tenacity plotly r-bisquerna r-extraDistr r-MASS r-EPIC
 ```
 
+
+## Generate smoothie challenge
+
+```
+cd phase-0-smoothie
+sh generate_bundle_smoothie.sh 
+```
+
 # Scripts availabale and guide: 
 Summary of scripts available: 
 * `generate_fake_data.R`: R script to generates fake data. It does not take any argument. 
