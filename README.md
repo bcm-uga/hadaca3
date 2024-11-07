@@ -63,37 +63,6 @@ sudo docker build -t hombergn/hadaca3_light .  && sudo docker push hombergn/hada
 ```
 
 
-## Build `hadaca3_pyr` docker image
-
-The docker named hadaca3_pyr also has impleted python as well.
-
-```
-cd ~/projects/hadaca3/docker/codabench_hadaca3_pyr
-
-sudo docker build -t hombergn/hadaca3_pyr .
-
-#see existing images 
-sudo docker images 
-
-
-# log in on docker hub (the username here is hombergn)
-sudo docker login -u  hombergn
-
-# rename image if necessary  
-#sudo docker tag light_hadaca hombergn/hadaca3_light 
-
-#upload on dockerhub
-sudo docker push hombergn/hadaca3_light:latest
-sudo docker push hombergn/hadaca3_pyr:latest
-
-#Single command to build and push. 
-sudo docker build -t hombergn/hadaca3_light .  && sudo docker push hombergn/hadaca3_light:latest
-```
-
-
-
-
-
 
 # Scripts availabale and guide: 
 Summary of scripts available: 
