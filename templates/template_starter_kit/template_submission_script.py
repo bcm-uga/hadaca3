@@ -32,24 +32,35 @@ pandas2ri.activate()
 
 r_code_get_colnames = '''
 get_colnames <- function(ref_names="reference_fruits.rds") {
-  reference_data = readRDS(ref_names)
-  return (colnames(reference_data))
+  ref_names = readRDS(ref_names)
+  return (colnames(ref_names))
 }
 '''
 rpy2.robjects.r(r_code_get_colnames)
+get_colnames = rpy2.robjects.r['get_colnames']
+
+r_code_get_rownames = '''
+get_rownames <- function(ref_names="reference_fruits.rds") {
+  ref_names = readRDS(ref_names)
+  return (rownames(ref_names))
+}
+'''
+rpy2.robjects.r(r_code_get_rownames)
+get_rownames = rpy2.robjects.r['get_rownames']
 
 mixes_data = readRDS(os.path.join( "mixes_smoothies_fruits.rds"))
 reference_data = readRDS(os.path.join( "reference_fruits.rds"))  
 
 
-pred_prop = program(
-  mix=mixes_data, ref=reference_data
-)
+file = "mixes_smoothies_fruits.rds"
+mixes_data = pandas.DataFrame(mixes_data, index=get_rownames(file),columns=get_colnames(file))
+file = "reference_fruits.rds"
+reference_data = pandas.DataFrame(reference_data, index=get_rownames(file),columns=get_colnames(file))
 
-get_colnames = rpy2.robjects.r['get_colnames']
-colnames_result = get_colnames("reference_fruits.rds")
-pred_prop_df = pandas.DataFrame(pred_prop, index=colnames_result)
 
+
+
+pred_prop_df = program(mixes_data, reference_data )
 
 
 ##############################################################
@@ -85,10 +96,9 @@ def validate_pred(pred, nb_samples=None, nb_cells=None, col_names=None):
       print("Warning:")
       print(error_informations)
 
+# validate_pred <- function(pred, nb_samples = ncol(mixes_data) , nb_cells= ncol(reference_data),col_names = colnames(reference_data) )
 
-
-
-validate_pred(pred_prop_df, nb_samples=mixes_data.shape[1] , nb_cells=reference_data.shape[1], col_names=colnames_result)
+validate_pred(pred_prop_df, nb_samples=mixes_data.shape[1] , nb_cells=reference_data.shape[1], col_names=reference_data.columns)
 
 
 

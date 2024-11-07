@@ -20,7 +20,8 @@ A conda evnironnement is provided follow this steps to install and activate it:
 
 To run the docker interactively you can run either R with : 
  - `sudo docker run -it -v .:/hadaca3 -w /hadaca3 hombergn/hadaca3_pyr R`  and then `source("submission_script.R")` for the R version
- - `sudo docker run -it -v .:/hadaca3 -w /hadaca3 hombergn/hadaca3_pyr python` and then `import submission_script` for the python version 
+ - `sudo docker run -it -v .:/hadaca3 -w /hadaca3 hombergn/hadaca3_pyr python` and then `import submission_script` for the python version.
+
 
 Beware that Mac users with M1 processors might encounter problems. 
 
