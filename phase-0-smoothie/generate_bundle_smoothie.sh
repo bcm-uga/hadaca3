@@ -29,7 +29,7 @@ cp "$path_data"mixes1_smoothies_fruits.rds input_data/mixes_smoothies_fruits.rds
 cp "$path_data"reference_fruits.rds input_data/reference_fruits.rds
 
 
-
+mkdir starting_kit
 rm -r starting_kit/*
 cp -r input_data/* starting_kit/
 # sh generate_data.sh $1
