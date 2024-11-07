@@ -10,13 +10,19 @@ If your submission fails on Codabench, don't panic—review the logs! You can ac
 3. Select the "Logs" tab.
 4. Browse the various types of logs available: `stdout`, `stderr`, `Ingestion stdout`, and `Ingestion stderr`, for both the ingestion and scoring steps.
 
-## Cannot create your submissions ? Try our conda environnement:  (Especially useful for python user !)
+## Cannot create your submissions ? Try interactive docker or conda environnement:  (Especially useful for python user !)
 
 A conda evnironnement is provided follow this steps to install and activate it: 
 - retrieve the file environment-r.yml from github : [environment-r.yml](https://github.com/bcm-uga/hadaca3/blob/main/docker/codabench_hadaca3_pyr/environment/environment-r.yml) : 
 - `wget https://raw.githubusercontent.com/bcm-uga/hadaca3/main/docker/codabench_hadaca3_pyr/environment/environment-r.yml`
 - and run: `conda env create -f environment-r.yml && conda activate h3`
 
+
+To run the docker interactively you can run either R with : 
+ - `sudo docker run -it -v .:/hadaca3 -w /hadaca3 hombergn/hadaca3_pyr R`  and then `source("submission_script.R")` for the R version
+ - `sudo docker run -it -v .:/hadaca3 -w /hadaca3 hombergn/hadaca3_pyr python` and then `import submission_script` for the python version 
+
+Beware that Mac users with M1 processors might encounter problems. 
 
 
 ## Running Submissions ingestion and scoring locally with Docker

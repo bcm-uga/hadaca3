@@ -15,6 +15,7 @@ RUN echo 'micromamba activate h3' >> ~/.bashrc
 ENV PATH /opt/conda/bin:$PATH
 
 
+RUN Rscript -e 'install.packages( pkgs = "zip", repos = "https://cloud.r-project.org")'
 RUN Rscript  -e 'BiocManager::install("ComplexHeatmap")'
 RUN Rscript  -e 'BiocManager::install("Biobase")'
 

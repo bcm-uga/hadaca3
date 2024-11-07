@@ -7,6 +7,7 @@ dependencies:
   - _openmp_mutex=4.5=2_gnu
   - _r-mutex=1.0.0=anacondar_1
   - _sysroot_linux-64_curr_repodata_hack=3=haa98f57_10
+  - asttokens=2.4.1=pyhd8ed1ab_0
   - binutils_impl_linux-64=2.38=h2a08ee3_1
   - binutils_linux-64=2.38.0=hc2dff05_0
   - blas=1.0=openblas
@@ -14,10 +15,15 @@ dependencies:
   - bwidget=1.9.16=h9eba36c_0
   - bzip2=1.0.8=h5eee18b_6
   - c-ares=1.19.1=h5eee18b_0
-  - ca-certificates=2024.7.2=h06a4308_0
+  - ca-certificates=2024.8.30=hbcca054_0
   - cairo=1.16.0=hb05425b_5
   - cffi=1.16.0=py311h5eee18b_1
+  - comm=0.2.2=pyhd8ed1ab_0
   - curl=8.7.1=hdbd6064_0
+  - debugpy=1.6.7=py311h6a678d5_0
+  - decorator=5.1.1=pyhd8ed1ab_0
+  - exceptiongroup=1.2.2=pyhd8ed1ab_0
+  - executing=2.1.0=pyhd8ed1ab_0
   - expat=2.6.2=h6a678d5_0
   - fontconfig=2.14.1=h4c34cd2_2
   - freetype=2.12.1=h4a9f257_0
@@ -33,8 +39,15 @@ dependencies:
   - gxx_linux-64=11.2.0=hc2dff05_0
   - harfbuzz=4.3.0=hf52aaf7_2
   - icu=73.1=h6a678d5_0
+  - importlib-metadata=8.4.0=pyha770c72_0
+  - importlib_metadata=8.4.0=hd8ed1ab_0
+  - ipykernel=6.29.5=pyh3099207_0
+  - ipython=8.27.0=pyh707e725_0
+  - jedi=0.19.1=pyhd8ed1ab_0
   - jinja2=3.1.4=py311h06a4308_0
   - jpeg=9e=h5eee18b_1
+  - jupyter_client=8.6.2=pyhd8ed1ab_0
+  - jupyter_core=5.7.2=py311h38be061_0
   - kernel-headers_linux-64=3.10.0=h57e8cba_10
   - krb5=1.20.1=h143b758_1
   - ld_impl_linux-64=2.38=h1181459_1
@@ -54,6 +67,7 @@ dependencies:
   - libnghttp2=1.57.0=h2d74bed_0
   - libopenblas=0.3.21=h043d6bf_0
   - libpng=1.6.39=h5eee18b_0
+  - libsodium=1.0.18=h36c2ea0_1
   - libssh2=1.11.0=h251f7ec_0
   - libstdcxx-devel_linux-64=11.2.0=h1234567_1
   - libstdcxx-ng=11.2.0=h1234567_1
@@ -65,24 +79,37 @@ dependencies:
   - lz4-c=1.9.4=h6a678d5_1
   - make=4.2.1=h1bed415_1
   - markupsafe=2.1.3=py311h5eee18b_0
+  - matplotlib-inline=0.1.7=pyhd8ed1ab_0
   - ncurses=6.4=h6a678d5_0
+  - nest-asyncio=1.6.0=pyhd8ed1ab_0
   - numexpr=2.8.7=py311h812550d_0
   - numpy=1.26.4=py311h24aa872_0
   - numpy-base=1.26.4=py311hbfb1bba_0
-  - openssl=3.0.14=h5eee18b_0
+  - openssl=3.3.1=hb9d3cd8_3
+  - packaging=24.1=pyhd8ed1ab_0
   - pandas=2.2.2=py311ha02d727_0
   - pandoc=2.12=h06a4308_3
   - pango=1.50.7=h05da053_0
+  - parso=0.8.4=pyhd8ed1ab_0
   - pcre2=10.42=hebb0a14_1
+  - pexpect=4.9.0=pyhd8ed1ab_0
+  - pickleshare=0.7.5=py_1003
   - pip=24.0=py311h06a4308_0
   - pixman=0.40.0=h7f8727e_1
+  - platformdirs=4.2.2=pyhd8ed1ab_0
+  - prompt-toolkit=3.0.47=pyha770c72_0
+  - psutil=6.0.0=py311h331c9d8_0
   - pthread-stubs=0.3=h0ce48e5_1
+  - ptyprocess=0.7.0=pyhd3deb0d_0
+  - pure_eval=0.2.3=pyhd8ed1ab_0
   - pybind11-abi=4=hd3eb1b0_1
   - pycparser=2.21=pyhd3eb1b0_0
   - python=3.11.9=h955ad1f_0
   - python-dateutil=2.9.0post0=py311h06a4308_2
   - python-tzdata=2023.3=pyhd3eb1b0_0
+  - python_abi=3.11=2_cp311
   - pytz=2024.1=py311h06a4308_0
+  - pyzmq=25.1.2=py311h6a678d5_0
   - r-assertthat=0.2.1=r43h6115d3f_0
   - r-base=4.3.1=h1ae530e_0
   - r-base64enc=0.1_3=r43h76d94ec_4
@@ -187,11 +214,16 @@ dependencies:
   - simplegeneric=0.8.1=py311h06a4308_2
   - six=1.16.0=pyhd3eb1b0_1
   - sqlite=3.45.3=h5eee18b_0
+  - stack_data=0.6.2=pyhd8ed1ab_0
   - sysroot_linux-64=2.17=h57e8cba_10
   - tk=8.6.14=h39e8969_0
   - tktable=2.10=h3d55465_1
+  - tornado=6.4.1=py311h331c9d8_0
+  - traitlets=5.14.3=pyhd8ed1ab_0
+  - typing_extensions=4.12.2=pyha770c72_0
   - tzdata=2024a=h04d1e81_0
   - tzlocal=5.2=py311h06a4308_0
+  - wcwidth=0.2.13=pyhd8ed1ab_0
   - wheel=0.43.0=py311h06a4308_0
   - xorg-kbproto=1.0.7=h7f98852_1002
   - xorg-libx11=1.8.9=hb711507_1
@@ -200,6 +232,28 @@ dependencies:
   - xorg-xextproto=7.3.0=h0b41bf4_1003
   - xorg-xproto=7.0.31=h27cfd23_1007
   - xz=5.4.6=h5eee18b_1
+  - zeromq=4.3.5=h6a678d5_0
+  - zipp=3.20.1=pyhd8ed1ab_0
   - zlib=1.2.13=h5eee18b_1
   - zstd=1.5.5=hc292b87_2
+  - pip:
+      - certifi==2024.8.30
+      - charset-normalizer==3.3.2
+      - colorama==0.4.6
+      - idna==3.8
+      - joblib==1.4.2
+      - kaleido==0.2.1
+      - metrics==0.3.3
+      - pathlib2==2.3.7.post1
+      - pathspec==0.5.5
+      - plotly==5.24.1
+      - pygments==2.2.0
+      - requests==2.32.3
+      - scikit-learn==1.5.1
+      - smgantt==0.0.5
+      - svm==0.1.0
+      - tenacity==9.0.0
+      - threadpoolctl==3.5.0
+      - urllib3==2.2.2
+      - xmltodict==0.13.0
 prefix: /home/nicolashomberg/miniconda3/envs/h3

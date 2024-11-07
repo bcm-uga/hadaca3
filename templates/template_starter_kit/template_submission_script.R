@@ -70,8 +70,20 @@ validate_pred <- function(pred, nb_samples = ncol(mixes_data) , nb_cells= ncol(r
 ###############################
 ### Code submission mode
 
+print("")
+for (package in c("zip") ) {
+  if ( !{ package %in% installed.packages( ) } ) {
+        print(x = paste("Installation of ", package, sep = "") )
+        install.packages(
+            pkgs = "zip"
+          , repos = "https://cloud.r-project.org"
+        )
+    } 
+}
+
+
 # we generate a zip file with the 'program' source code
-print()
+print(x='')
 if ( !dir.exists(paths = "submissions") ) {
     dir.create(path = "submissions")
 }
