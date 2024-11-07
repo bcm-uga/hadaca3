@@ -1,4 +1,17 @@
+# Step-by-step submission process
+
 If this page does not answer your questions try the FAQ page :) 
+
+## Set up the docker container (optional)
+
+1) Install docker, and setup your dockerhub account
+   
+2) Get the last docker image and run it:
+
+```
+docker pull hombergn/hadaca3_pyr
+docker run -it -v .:/hadaca3 -w /hadaca3 hombergn/hadaca3_pyr R
+```
 
 ## How to generate a prediction of the data (R)?
 
