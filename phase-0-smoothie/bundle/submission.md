@@ -11,6 +11,7 @@ If this page does not answer your questions try the FAQ page :)
 ```
 docker pull hombergn/hadaca3_pyr
 docker run -it -v .:/hadaca3 -w /hadaca3 hombergn/hadaca3_pyr R
+chown -R $USER submissions #if necessary
 ```
 
 ## How to generate a prediction of the data (R)?
