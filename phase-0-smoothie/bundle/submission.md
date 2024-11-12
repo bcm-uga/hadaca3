@@ -21,8 +21,8 @@ Next, submit either your code archive (zip_program) or your results archive (zip
 
 ```
 cd starting_kit
-docker pull hombergn/hadaca3_pyr
-docker run -it -v .:/hadaca3 -w /hadaca3 hombergn/hadaca3_pyr R
+sudo docker pull hombergn/hadaca3_pyr
+sudo docker run -it -v .:/hadaca3 -w /hadaca3 hombergn/hadaca3_pyr R
 chown -R $USER submissions #if necessary
 ```
 
