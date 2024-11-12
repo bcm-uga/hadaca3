@@ -12,8 +12,8 @@ The HADACA challenge is a recurring event aimed at developping deconvolution met
     
 ### Quick start guide
 
-1. Review the challenge goals to understand the objectives.
-2. Follow the step-by-step instructions in the "How do I start?" tab to make your first submission.
-3. Experiment with your code to improve performance.
+1. Review the _Aim of the challenge_ tab to understand the objectives.
+2. Follow the step-by-step instructions in the _How do I start?_ tab to make your first submission.
+3. Now you are ready to improve performance with your own code.
 
 Enjoy the challenge!
