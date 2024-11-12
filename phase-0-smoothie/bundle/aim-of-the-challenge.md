@@ -1,3 +1,5 @@
+This challenge is a toy challenge that allows you to get to grips with the platform, the tools and the concepts that will be covered.
+
 The objective of this challenge is to estimate the fruit composition of different smoothies (mixtures to be deconvoluted) based on the vitamin composition of the smoothie, using the exact vitamin composition of each fruit (reference profile).
 
 
