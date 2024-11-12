@@ -8,7 +8,7 @@ The starting kit provides 3 baseslines.
 This baseline uses a linear model (`lm` function) to estimate the fruit composition (`lm` function).
 For improved estimation, you can comment out line 24 and uncomment line 25 to apply a non-negative least squares deconvolution algorithm (`nnls::nnls` function).
 
-## submission_script_installpkgcran.py
+## submission_script_installpkgcran.R
 
 This script demonstrates how to install a new package if needed.
 
