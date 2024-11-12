@@ -2,6 +2,12 @@
 
 If this page does not answer your questions try the FAQ page :) 
 
+## Simple submission process 
+
+Run and generate your submissions using the command Rscript submission_script.R.
+
+Next, submit either your code archive (zip_program) or your results archive (zip_results) through the My Submission section on the Codabench website. On the My Submission page, the status of your submission will progress through the following stages: -> Submitting > Submitted > Running > Finished.
+
 ## Set up the docker container (optional)
 
 1) Install docker, and setup your dockerhub account
@@ -85,12 +91,6 @@ Edit the code inside the following chunk (i.e. the `program` function):
 		## YOUR CODE ENDS HERE
 		## 
 
-## How to submit your results ?
-
-Now, let’s submit your code (`zip_program`) or your result (`zip_results` ) in the *My Submission* menu of the challenge.
-
-On the  *My Submission* webpage,  the STATUS of your submission will go through the following steps :
- -> Submitting > Submitted > Running > Finished
 
 ## How to see your score ?
 

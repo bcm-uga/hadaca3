@@ -1,7 +1,7 @@
-# Problems with creating or submiting your code ? Try the following : 
+#  Frequently Ask question. 
 
 
-## Submissions fail ?  -> Have a look at the logs on Codabench
+**Submissions fail ?  -> Have a look at the logs on Codabench**
 
 If your submission fails on Codabench, don't panic—review the logs! You can access them via the Codabench user interface:
 
@@ -10,7 +10,7 @@ If your submission fails on Codabench, don't panic—review the logs! You can ac
 3. Select the "Logs" tab.
 4. Browse the various types of logs available: `stdout`, `stderr`, `Ingestion stdout`, and `Ingestion stderr`, for both the ingestion and scoring steps.
 
-## Cannot create your submissions ? Try interactive docker or conda environnement:  (Especially useful for python user !)
+**Cannot create your submissions ? Try interactive docker or conda environnement:  (Especially useful for python user !)**
 
 A conda evnironnement is provided follow this steps to install and activate it: 
 - retrieve the file environment-r.yml from github : [environment-r.yml](https://github.com/bcm-uga/hadaca3/blob/main/docker/codabench_hadaca3_pyr/environment/environment-r.yml) : 
@@ -27,7 +27,7 @@ Due to the usage of the super user (sudo) all files created by docker will be ow
 Beware that Mac users with M1 processors might encounter problems. 
 
 
-## Running Submissions ingestion and scoring locally with Docker
+**How to run submissions ingestion and scoring locally with Docker ?**
 
 To speed up the debugging process and avoid the full submission workflow, you can run your submission program locally using **FAKE** data. The fake data serves two purposes: first, it allows testing without relying on the actual scoring program (which requires the ground truth), and second, it speeds up computation.
 
@@ -54,6 +54,6 @@ The script `automated_docker_test.sh` first executes the R submission script loc
 
 If you wish to test each step independently or run the Python script locally, refer to the `README.md` in the `hadaca3` GitHub repository.
 
-## Include an external file to be used in the submission script
+**How to include an external file to be used in the submission script ?**
 It is possible to include an external file that is sourced in the submission script and correctly included in the zip file to be submitted on the Codabench platform.
 Beware, when unziped the file 'program.R' has to be on the current directory and not inside a folder. Aditionnal files can in other folder with the correct relative path 
