@@ -47,9 +47,13 @@ The unziped starting_kit directory contains now:
  - Launch an R console and execute the following command : `source("submission_script.R")`
  - Run the `submission_script.R` in RStudio/ Vscode
  - From docker :
-   	```sudo docker run -v .:/hadaca3 -w /hadaca3  hombergn/hadaca3_pyr Rscript submission_script.R```
+   	```
+   sudo docker run -v .:/hadaca3 -w /hadaca3  hombergn/hadaca3_pyr Rscript submission_script.R
+    ```
      and regain ownership of the files generated with
-   	```sudo chown -R $USER submissions```
+   	```
+   sudo chown -R $USER submissions
+    ```
 
 
 [3] The code of the  `submission_script.R`  generates the files:
