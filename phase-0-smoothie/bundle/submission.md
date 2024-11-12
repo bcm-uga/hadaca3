@@ -4,7 +4,12 @@ If this page does not answer your questions try the FAQ page :)
 
 ## Simple submission process 
 
-Run and generate your submissions using the command Rscript submission_script.R.
+Run and generate your submissions using the command:
+
+```
+cd starting_kit
+Rscript submission_script.R
+```
 
 Next, submit either your code archive (zip_program) or your results archive (zip_results) through the My Submission section on the Codabench website. On the My Submission page, the status of your submission will progress through the following stages: -> Submitting > Submitted > Running > Finished.
 
@@ -15,6 +20,7 @@ Next, submit either your code archive (zip_program) or your results archive (zip
 2) Get the last docker image and run it:
 
 ```
+cd starting_kit
 docker pull hombergn/hadaca3_pyr
 docker run -it -v .:/hadaca3 -w /hadaca3 hombergn/hadaca3_pyr R
 chown -R $USER submissions #if necessary
