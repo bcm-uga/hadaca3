@@ -1,5 +1,3 @@
-# Smoothie deconvolution challenge
-
 ### Introduction
 
 Welcome to the *Smoothie Deconvolution* challenge, a toy model designed to introduce participants to the Health Data Challenge (HADACA), a series of data challenges focused on benchmarking deconvolution methods through crowdsourcing.
