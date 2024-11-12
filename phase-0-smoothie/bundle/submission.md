@@ -15,6 +15,8 @@ Next, submit either your code archive (zip_program) or your results archive (zip
 
 ## Set up the docker container (optional)
 
+
+
 1) Install docker, and setup your dockerhub account
    
 2) Get the last docker image and run it:
@@ -27,6 +29,8 @@ chown -R $USER submissions #if necessary
 ```
 
 ## How to generate a prediction of the data (R)?
+
+
 
 [1] On your local machine, unzip the starting_kit.zip.
  
