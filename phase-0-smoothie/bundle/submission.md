@@ -25,6 +25,7 @@ Next, submit either your code archive (zip_program) or your results archive (zip
 cd starting_kit
 sudo docker pull hombergn/hadaca3_pyr
 sudo docker run -it -v .:/hadaca3 -w /hadaca3 hombergn/hadaca3_pyr R
+source("submission_script.R")
 chown -R $USER submissions #if necessary
 ```
 
@@ -45,7 +46,10 @@ The unziped starting_kit directory contains now:
  - From terminal run `Rscript submission_script.R` 
  - Launch an R console and execute the following command : `source("submission_script.R")`
  - Run the `submission_script.R` in RStudio/ Vscode
- - From docker :`sudo docker run -v .:/hadaca3 -w /hadaca3  hombergn/hadaca3_pyr Rscript submission_script.R`  and regain ownership of the files generated with `sudo chown -R $USER submissions`
+ - From docker :
+   	```sudo docker run -v .:/hadaca3 -w /hadaca3  hombergn/hadaca3_pyr Rscript submission_script.R```
+     and regain ownership of the files generated with
+   	```sudo chown -R $USER submissions```
 
 
 [3] The code of the  `submission_script.R`  generates the files:
@@ -82,7 +86,10 @@ The unzipped starting_kit directory contains now:
  - From terminal run `python submission_script.py` 
  - Launch an interactive python shell by executing : `python -i submission_script.py`
  - Run the `submission_script.py` in Spider/ Vscode
- - From docker : `sudo docker run -v .:/hadaca3 -w /hadaca3  hombergn/hadaca3_pyr python submission_script.py` and regain ownership of the files generated with `sudo chown -R $USER submissions`
+ - From docker :
+   	```sudo docker run -v .:/hadaca3 -w /hadaca3  hombergn/hadaca3_pyr python submission_script.py```
+   and regain ownership of the files generated with
+   	```sudo chown -R $USER submissions```
 
 
 [3] The code of the  `submission_script.R`  generates the files:
