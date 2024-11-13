@@ -2,7 +2,7 @@
                            
 
 
-## Why did my submission failed ?  
+## Why did my submission failed?  
 
 Have a look at the logs on Codabench.
 If your submission fails on Codabench, don't panic, review the logs! You can access them via the Codabench user interface:
