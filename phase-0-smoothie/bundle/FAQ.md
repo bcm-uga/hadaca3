@@ -59,7 +59,8 @@ conda env create -f environment-r.yml && conda activate h3
 sh automated_docker_test.sh
 ```
 
-Please note that this script will use the `submission_script.R` from the `hadaca3/starting_kit/` folder. **Ensure that your script is placed inside the `hadaca3/starting_kit/` folder or modify the existing script at `hadaca3/starting_kit/submission_script.R`**.
+Please note that this script will use the `submission_script.R` from the `hadaca3/starting_kit/` folder. 
+Ensure that your script is placed inside the `hadaca3/starting_kit/` folder or modify the existing script at `hadaca3/starting_kit/submission_script.R`.
 
 
 The script `automated_docker_test.sh` first executes the R submission script locally, then re-executes it within the Docker container (ingestion phase), followed by running the scoring program.
