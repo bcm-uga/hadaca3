@@ -12,13 +12,15 @@ To see your score:
 By clicking on your submission in the submissions summary table, you will access to:
 
   - details of your submission (downloaded)
-    	- submitted files, 
+
+    	- submitted files
     	- prediction results (ingestion output) 
      	- scoring results (scoring outputs) 
+  
   - some execution logs
   - a submission metadata edition menu
   
-[3] Check the leaderboard in the *Results*  menu
+Check the leaderboard in the *Results*  menu
 
 To compare your score with other participants, go to the challenge page and navigate to the *Leaderboard* or *Results* section. 
 Here, you can see how your submission ranks.
