@@ -1,25 +1,75 @@
-# Step-by-step submission process
+# Submission               
+                           
+This section describes the step-by-step submission process, if a part of the process stays unclear try the FAQ page. 
 
-If this page does not answer your questions try the FAQ page :) 
+## Simple submission process using R
 
-## Simple submission process 
+1. Download the `strarting_kit.zip` file
 
-Run and generate your submissions using the command:
+To download the dataset for this project, follow these steps:
+
+ - Go on the challenge page,
+ - Go the *Get started* menu,
+ - Click on the *Files* tab,
+ - Download the `starting_kit` file.
+
+2. On your local machine, unzip the starting_kit.zip.
+ 
+The unziped starting_kit directory contains now following files:
+
+- `submission_script.R`, an R script to use/modify to generate a submission using R.
+- `submission_script.py`, a python script to use/modify to generate a submission using python.
+- `mixes_smoothies_fruits.rds`, an RDS file embedding a `data.frame` describing **mixture data**, *i.e*, smoothies that you want to estimate composition.
+- `reference_fruits.rds`, -> an RDS file embedding a `data.frame` describing **references data**, *i.e.*, typical vitamines profiles of fruits used in smoothies recipes.
+ 
+3. Go to the starting kit directory and run the appropriate submission script:
 
 ```
 cd starting_kit
 Rscript submission_script.R
 ```
 
-Next, submit either your code archive (zip_program) or your results archive (zip_results) through the My Submission section on the Codabench website. On the My Submission page, the status of your submission will progress through the following stages: -> Submitting > Submitted > Running > Finished.
+It generates the files:
 
-## Set up the docker container (optional)
+- `zip_program`, a zip file containing your code,
+-` zip_results`, a zip file containing your estimation of receipies.
+
+There is other ways to execute `submission_script.R`, for exemple in an R console in a terminal or in RStudio.
+Execution description for `submission_script.py` is available in the following section.
+Another section showcases a way to execute the submission script throught a docker image.
 
 
+4. Next, submit either your code archive (zip_program) or your results archive (zip_results) through the *My Submission* section on the Codabench website. On the *My Submission* page, the status of your submission will progress through the following stages: > *Submitting* > *Submitted* > *Running* > *Finished*.
 
-1) Install docker, and setup your dockerhub account
+5. Now you are ready to improve performance with **your own code**.
+
+Edit the `submission_script.R` to replace the baseline method by the method of your choice, *i.e.*, modify the code inside the `program` function, located between the tags:
+
+```
+## 
+## YOUR CODE BEGINS/ENDS HERE 
+##
+```	
+
+
+## Submission process using python (beta)
+
+You can also generate `zip_program` and `zip_results` folders using the `submission_script.py` by executing the following commands:
+
+```
+cd starting_kit
+python submission_script.py
+```
+
+Then follow the steps 4 and 5 described in the previous section.
+
+
+## Submission process using docker container (beta)
+
+
+1. Install docker, and setup your dockerhub account
    
-2) Get the last docker image and run it:
+2. Get the last docker image and run it, if you want to edit the code in interactive mode, within the hadaca3 docker environment.
 
 ```
 cd starting_kit
@@ -29,107 +79,18 @@ source("submission_script.R")
 chown -R $USER submissions #if necessary
 ```
 
-## How to generate a prediction of the data (R)?
+Alternatively, run the following commande to execute the `submission_script`:
+
+```
+sudo docker run -v .:/hadaca3 -w /hadaca3  hombergn/hadaca3_pyr Rscript submission_script.R
+```
+
+and regain ownership of the files generated with:
+
+```
+sudo chown -R $USER submissions
+```
 
 
 
-[1] On your local machine, unzip the starting_kit.zip.
- 
-The unziped starting_kit directory contains now:
 
-- A `submission_script.R` -> *to modify and to use to submit your code*
-- The `reference_fruits.rds` -> *reference data, i.e. typical vitamines profiles of expected fruits types*
-- The `mixess_smoothies_fruits.rds` -> *mixes from which you will estimate fruits type proportions.
-- A `submission_script.py` -> *not useful for R users*
- 
-[2] Choose your way of executing `submission_script.R`  
- - From terminal run `Rscript submission_script.R` 
- - Launch an R console and execute the following command : `source("submission_script.R")`
- - Run the `submission_script.R` in RStudio/ Vscode
- - From docker :
-   	```
-   sudo docker run -v .:/hadaca3 -w /hadaca3  hombergn/hadaca3_pyr Rscript submission_script.R
-    ```
-     and regain ownership of the files generated with
-   	```
-   sudo chown -R $USER submissions
-    ```
-
-
-[3] The code of the  `submission_script.R`  generates the files:
-- `zip_program`  -> *for code submission, script format*
--` zip_results`  -> *for result submission, table format*
-
-Edit the `submission_script.R` to replace the baseline method by the method of your choice. 
-
-Edit the code inside the following chunk (i.e. the `program` function):  
-
-		## 
-		## YOUR CODE BEGINS HERE 
-		##
-		
-		##
-		## YOUR CODE ENDS HERE
-		## 
-
-
-
-## How to generate a prediction of the data (Python)?
-Please note that this challenge was primarily designed with R in mind, and as such, R functionality and compatibility have been tested more extensively than those in Python. When using Python, keep in mind that your scripts will need to interact with R data, which requires the rpy2 library. To facilitate this, a Conda environment has been provided. For more details, please refer to the "Conda Environment" chapter under the "FAQ" page.
-
-[1] On your local machine, unzip the starting_kit.zip.
- 
-The unzipped starting_kit directory contains now:
-
-- A `submission_script.py` -> *to modify and to use to submit your code*
-- The `reference_fruits.rds` -> *reference data, i.e. typical vitamines profiles of expected fruits types*
-- The `mixess_smoothies_fruits.rds` -> *mixes from which you will estimate fruits type proportions.
-- A `submission_script.R` -> *not useful for python users*
- 
-[2] Choose your way of executing `submission_script.py`  
- - From terminal run `python submission_script.py` 
- - Launch an interactive python shell by executing : `python -i submission_script.py`
- - Run the `submission_script.py` in Spider/ Vscode
- - From docker :
-   	```sudo docker run -v .:/hadaca3 -w /hadaca3  hombergn/hadaca3_pyr python submission_script.py```
-   and regain ownership of the files generated with
-   	```sudo chown -R $USER submissions```
-
-
-[3] The code of the  `submission_script.R`  generates the files:
-- `zip_program`  -> *for code submission, script format*
--` zip_results`  -> *for result submission, table format*
-
-Edit the `submission_script.py` to replace the baseline method by the method of your choice. 
-
-Edit the code inside the following chunk (i.e. the `program` function):
-
-		## 
-		## YOUR CODE BEGINS HERE 
-		##
-		
-		##
-		## YOUR CODE ENDS HERE
-		## 
-
-
-## How to see your score ?
-
-To view your score, go to the challenge page and navigate to the Leaderboard or Results section. Here, you can see how your submission ranks and compare your score with other participants.
-
-[1] Go on *My Submission* menu 
-
-[2] When the status of your submission is finished ( don't forget to refresh the page to update the status), click on the green button 'add to leaderboard' to see your score
-  
-By clicking on your submission in the submissions summary table, you will access to:
-
-  - details of your submission (downloaded)
-	-> submitted files, 
-	-> prediction results (ingestion output) 
-	-> scoring results (scoring outputs) 
-			
-  - some execution logs
-  
-  - a submission metadata edition menu
-  
-[3] Check the leaderboard in the *Results*  menu
