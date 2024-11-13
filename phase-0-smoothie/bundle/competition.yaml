@@ -14,24 +14,16 @@ make_input_data_available: false
 pages:
 - title: Overview
   file: overview.md
-- title: Aim of the challenge
-  file: aim-of-the-challenge.md
 - title: How do I start?
   file: how-do-i-start.md
-- title: Data
-  file: data.md
-- title: Baseline
-  file: baseline.md
 - title: Submission
   file: submission.md
 - title: Evaluation and scoring
   file: evaluation-and-scoring.md
 - title: FAQ
   file: FAQ.md
-- title: Organization 
-  file: organization.md
-- title: Sponsors
-  file: sponsors.md  
+- title: About 
+  file: about.md
 tasks:
 - index: 0
   name: Smoothie decovolution
