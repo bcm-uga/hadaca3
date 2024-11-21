@@ -13,24 +13,16 @@ make_input_data_available: false
 pages:
 - title: Overview
   file: overview.md
-- title: Aim of the challenge
-  file: aim-of-the-challenge.md
 - title: How do I start?
   file: how-do-i-start.md
-- title: Data
-  file: data.md
-- title: Baseline
-  file: baseline.md
 - title: Submission
   file: submission.md
 - title: Evaluation and scoring
   file: evaluation-and-scoring.md
 - title: FAQ
   file: FAQ.md
-- title: Organization 
-  file: organization.md
-- title: Sponsors
-  file: sponsors.md  
+- title: About
+  file: about.md  
 tasks:
 - index: 0
   name: LIGHT Cell type proportion estimation from transcriptome data1
@@ -121,12 +113,6 @@ leaderboards:
     key: median_performance
     index: 0
     sorting: desc
-    # computation: avg
-    # computation_indexes:
-    #   - 1
-    #   - 2
-    #   - 3
-    #   - 4
   - title: overall performance dataset 1
     key: Accuracy_mean_1
     index: 1
