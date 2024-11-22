@@ -126,7 +126,7 @@ for dataset_name in datasets_list :
     mix_met = extract_data_element(mixes_data,file, 'mix_met')
 
     pred_prop = program(mix_rna, ref_bulkRNA, mix_met=mix_met, ref_met=ref_met   )
-    # predi_dic[dataset_name] = rpy2.robjects.conversion.py2rpy(pred_prop)
+    validate_pred(pred_prop, nb_samples=mix_rna.shape[1], nb_cells=ref_bulkRNA.shape[1], col_names=ref_bulkRNA.columns)
     predi_dic[dataset_name] = pred_prop
 
 ############################### 

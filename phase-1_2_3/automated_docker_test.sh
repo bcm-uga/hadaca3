@@ -37,8 +37,8 @@ echo "Create submission program"
 cd starting_kit/
 rm -rf submissions
 # Rscript submission_script.R >> logs
-# Rscript submission_script.R 
-python submission_script.py
+Rscript submission_script.R 
+# python submission_script.py
 cd - 
 echo "Done"
 

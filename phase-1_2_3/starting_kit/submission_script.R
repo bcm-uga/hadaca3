@@ -42,7 +42,42 @@ program = function(mix=NULL, ref=NULL, ...) {
 ### Generate a prediction file /!\ DO NOT CHANGE THIS PART ###
 ##############################################################
 
+validate_pred <- function(pred, nb_samples = ncol(mix_rna) , nb_cells= ncol(ref_rna),col_names = colnames(ref_met) ){
 
+  error_status = 0   # 0 means no errors, 1 means "Fatal errors" and 2 means "Warning"
+  error_informations = ''
+
+  ## Ensure that all sum ofcells proportion approximately equal 1
+  if (!all(sapply(colSums(pred), function(x) isTRUE(all.equal(x, 1) )))) {
+    msg = "The prediction matrix does not respect the laws of proportions: the sum of each columns should be equal to 1\n"
+    error_informations = paste(error_informations,msg)
+    error_status = 2
+  }
+
+  ##Ensure that the prediction have the correct names ! 
+  if(! setequal(rownames(pred),col_names) ){
+    msg = paste0(    "The row names in the prediction matrix should match: ", toString(col_names),"\n")
+    error_informations = paste(error_informations,msg)
+    error_status = 2
+  }
+
+  ## Ensure that the prediction return the correct number of samples and  number of cells. 
+  if (nrow(pred) != nb_cells  | ncol(pred) != nb_samples)  {
+    msg= paste0('The prediction matrix has the dimention: ',toString(dim(pred))," whereas the dimention: ",toString(c(nb_cells,nb_samples))," is expected\n"   )
+    error_informations = paste(error_informations,msg)
+    error_status = 1
+  }
+
+  if(error_status == 1){
+    # The error is blocking and should therefor stop the execution. 
+    # tryCatch(message("hello\n"), message=function(e){cat("goodbye\n")})  use this here ? 
+    stop(error_informations)
+  }
+  if(error_status == 2){
+    print("Warning: ")
+    warning(error_informations)
+  }  
+}
 
 dir_name = paste0("data",.Platform$file.sep)
 dataset_list = list.files(dir_name,pattern="mixes*")
@@ -86,7 +121,7 @@ for (dataset_name in dataset_list){
 
   # we use the previously defined function 'program' to estimate A :
   pred_prop <- program(mix_rna, ref_bulkRNA, mix_met=mix_met, ref_met=ref_met, ref_scRNA=ref_scRNA)
-  
+  validate_pred(pred_prop,nb_samples = ncol(mix_rna),nb_cells = ncol(ref_bulkRNA),col_names = colnames(ref_met))
   predi_list[[dataset_name]] = pred_prop
 
 }
@@ -96,42 +131,7 @@ for (dataset_name in dataset_list){
 ### Check the prediction /!\ DO NOT CHANGE THIS PART ###
 ##############################################################
 
-# validate_pred <- function(pred, nb_samples = ncol(mix_rna) , nb_cells= ncol(ref_rna),col_names = colnames(ref_met) ){
 
-#   error_status = 0   # 0 means no errors, 1 means "Fatal errors" and 2 means "Warning"
-#   error_informations = ''
-
-#   ## Ensure that all sum ofcells proportion approximately equal 1
-#   if (!all(sapply(colSums(pred), function(x) isTRUE(all.equal(x, 1) )))) {
-#     msg = "The prediction matrix does not respect the laws of proportions: the sum of each columns should be equal to 1\n"
-#     error_informations = paste(error_informations,msg)
-#     error_status = 2
-#   }
-
-#   ##Ensure that the prediction have the correct names ! 
-#   if(! setequal(rownames(pred),col_names) ){
-#     msg = paste0(    "The row names in the prediction matrix should match: ", toString(col_names),"\n")
-#     error_informations = paste(error_informations,msg)
-#     error_status = 2
-#   }
-
-#   ## Ensure that the prediction return the correct number of samples and  number of cells. 
-#   if (nrow(pred) != nb_cells  | ncol(pred) != nb_samples)  {
-#     msg= paste0('The prediction matrix has the dimention: ',toString(dim(pred))," whereas the dimention: ",toString(c(nb_cells,nb_samples))," is expected\n"   )
-#     error_informations = paste(error_informations,msg)
-#     error_status = 1
-#   }
-
-#   if(error_status == 1){
-#     # The error is blocking and should therefor stop the execution. 
-#     # tryCatch(message("hello\n"), message=function(e){cat("goodbye\n")})  use this here ? 
-#     stop(error_informations)
-#   }
-#   if(error_status == 2){
-#     print("Warning: ")
-#     warning(error_informations)
-#   }  
-# }
 
 # for (dataset_name in 1:nb_datasets){
 #   ### Validate the prediction 
