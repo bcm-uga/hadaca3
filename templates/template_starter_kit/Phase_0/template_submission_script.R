@@ -83,7 +83,7 @@ for (package in c("zip") ) {
 
 
 # we generate a zip file with the 'program' source code
-print(x='')
+print('')
 if ( !dir.exists(paths = "submissions") ) {
     dir.create(path = "submissions")
 }

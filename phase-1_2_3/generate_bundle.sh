@@ -13,6 +13,8 @@ zip -FS -j -r  bundle/scoring_program.zip scoring_program/
 zip -FS -j -r  bundle/ingestion_program.zip ingestion_program/
 
 
+rm -rf starting_kit
+mkdir starting_kit
 #  generate baselines :
 Rscript ~/projects/hadaca3/templates/generate_baselines.R Phase_1  
 cp ~/projects/hadaca3/templates/tmp/* starting_kit/

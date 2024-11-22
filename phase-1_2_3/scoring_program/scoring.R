@@ -3,8 +3,6 @@
 ## magali.richard@univ-grenoble-alpes.fr
 ##---------------------------------------------
 
-nb_datasets = 4
-
 for ( package in c( "combinat", "rmarkdown", "clue", "infotheo") ) {
     if ( !{ package %in% installed.packages( ) } ) {
         install.packages(pkgs = package, repos = "https://cloud.r-project.org")
@@ -126,6 +124,10 @@ baseline_scoring_function <- function(A_real, A_pred, time) {
   rmse = eval_RMSE(A_real=A_real, A_pred=A_pred_tt)
   mae = eval_MAE(A_real=A_real, A_pred=A_pred_tt)
   pearson = eval_pearson(A_real=A_real, A_pred=A_pred_tt)
+  print(rmse)
+  print(mae)
+  print(pearson)
+  message('time',time)
 
   baseline_estimation = data.frame("rmse"=rmse,
                                    "mae"=mae,
@@ -238,6 +240,7 @@ validate_pred <- function(pred, nb_samples , nb_cells , col_names ){
 
 
 
+
 ## load R profiling of the estimation of A :
 profiling <- readRDS(file = paste0(input, .Platform$file.sep, "res", .Platform$file.sep, "Rprof.rds") )
 
@@ -263,12 +266,16 @@ for (groundthruth_name in groundtruh_list){
 
   dataset_name = paste0("mixes",phase,"_",methods_name,'_pdac.rds')
 
+  print(dataset_name)
 
-
+  print(dim(Aest_l))
   Aest = as.matrix(Aest_l[[dataset_name]])
-
+  print(dim(Aest))
   ## Load ground_thuth data
+
+
   Atruth =  readRDS(file = paste0(input, .Platform$file.sep, "ref", .Platform$file.sep, groundthruth_name) )
+  print(dim(Atruth))
   Atruth = as.matrix(Atruth)
   
   # validate_pred( Aest,nb_samples = ncol(Atruth), nb_cells=nrow(Atruth) , col_names=rownames(Atruth) )
