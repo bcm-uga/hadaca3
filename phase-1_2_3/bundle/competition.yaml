@@ -45,7 +45,7 @@ phases:
   description: good luck 
   start: '2024-03-20 '
   end: '2024-12-20 11:00'
-  max_submissions_per_day: 5
+  max_submissions_per_day: 20
   max_submissions: 100
   execution_time_limit: 60000
   auto_migrate_to_this_phase: false
@@ -58,7 +58,7 @@ phases:
   description: good luck
   start: '2024-12-20 11:01'
   # end: '2024-10-20T00:10'
-  max_submissions_per_day: 5
+  max_submissions_per_day: 15
   max_submissions: 100
   execution_time_limit: 60000
   auto_migrate_to_this_phase: true
@@ -113,28 +113,28 @@ leaderboards:
     key: median_performance
     index: 0
     sorting: desc
-  - title: overall performance dataset 1
-    key: Accuracy_mean_1
-    index: 1
-    sorting: desc
-    hidden: false  
-  - title: overall performance dataset 2
-    key: Accuracy_mean_2
-    index: 2
-    sorting: desc
-    hidden: false
-  - title: overall performance dataset 3
-    key: Accuracy_mean_3
-    index: 3
-    sorting: desc
-    hidden: false
-  - title: overall performance dataset 4
-    key: Accuracy_mean_4
-    index: 4
-    sorting: desc
-    hidden: false
-  - title: Excecution Time global
-    key: Time
-    index: 5
-    sorting: desc
-    hidden: false
+  # - title: overall performance dataset 1
+  #   key: Accuracy_mean_1
+  #   index: 1
+  #   sorting: desc
+  #   hidden: false  
+  # - title: overall performance dataset 2
+  #   key: Accuracy_mean_2
+  #   index: 2
+  #   sorting: desc
+  #   hidden: false
+  # - title: overall performance dataset 3
+  #   key: Accuracy_mean_3
+  #   index: 3
+  #   sorting: desc
+  #   hidden: false
+  # - title: overall performance dataset 4
+  #   key: Accuracy_mean_4
+  #   index: 4
+  #   sorting: desc
+  #   hidden: false
+  # - title: Excecution Time global
+  #   key: Time
+  #   index: 5
+  #   sorting: desc
+  #   hidden: false

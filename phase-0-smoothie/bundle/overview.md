@@ -7,8 +7,6 @@ The HADACA challenge is a recurring event aimed at developping deconvolution met
 - The **first edition** took place in 2018, in collaboration with the Data Institute at University Grenoble-Alpes.
 - The **second edition** was held in 2019, in partnership with the Ligue contre le Cancer and sponsored by EIT Health.
 - The **third edition** is set for December 2024, in collaboration with the M4DI project, part of the PEPR Santé Numérique. Visit the official website for details: http://hadaca3.sciencesconf.org.
-    
-
                            
 **Aim of the challenge**     
                            

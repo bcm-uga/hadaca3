@@ -246,14 +246,32 @@ profiling <- readRDS(file = paste0(input, .Platform$file.sep, "res", .Platform$f
 Aest_l  = readRDS(file = paste0(input, .Platform$file.sep, "res", .Platform$file.sep, "prediction.rds") )
 
 l_res = list()
-for (dataset_name in 1:nb_datasets){
+
+
+# mixes2_insilicodirichletEMFA_pdac.rds
+# groundtruth2_invivo_pdac.rds
+
+dir_name = paste0(input, .Platform$file.sep, "ref", .Platform$file.sep)
+groundtruh_list = list.files(dir_name,pattern="groundtruth*")
+
+for (groundthruth_name in groundtruh_list){
+  
+  
+  gt_list = unlist(strsplit(groundthruth_name, "_"))
+  methods_name =  gt_list[2]
+  phase =  substr(gt_list[1], nchar(gt_list[1]), nchar(gt_list[1]))
+
+  dataset_name = paste0("mixes",phase,"_",methods_name,'_pdac.rds')
+
+
 
   Aest = as.matrix(Aest_l[[dataset_name]])
 
   ## Load ground_thuth data
-  Atruth =  readRDS(file = paste0(input, .Platform$file.sep, "ref", .Platform$file.sep, "ground_truth_",toString(dataset_name),".rds") )
+  Atruth =  readRDS(file = paste0(input, .Platform$file.sep, "ref", .Platform$file.sep, groundthruth_name) )
   Atruth = as.matrix(Atruth)
-  validate_pred( Aest,nb_samples = ncol(Atruth), nb_cells=nrow(Atruth) , col_names=rownames(Atruth) )
+  
+  # validate_pred( Aest,nb_samples = ncol(Atruth), nb_cells=nrow(Atruth) , col_names=rownames(Atruth) )
 
   timing=profiling[[dataset_name]]
 
@@ -261,13 +279,14 @@ for (dataset_name in 1:nb_datasets){
   baseline_scores = baseline_scoring_function(A_real=Atruth, A_pred=Aest, time=timing)
   # rownames(baseline_scores$baseline_estimation) = baseline
 
-  saveRDS(baseline_scores, paste0(output,"/scores_",toString(dataset_name),".rds"))
+  # saveRDS(baseline_scores, paste0(output,"/scores_",toString(dataset_name),".rds"))
+  saveRDS(baseline_scores, paste0(output,"/scores_",dataset_name))
 
   stopifnot(exprs = all( !is.na(x = baseline_scores) ) )
   # print(x = paste0("Scores dataset ",toString(dataset_name), ": ", paste(baseline_scores, collapse = ", ") ) )
 
   score_mean = mean(x = as.numeric(baseline_scores$baseline_estimation[, -ncol(baseline_scores$baseline_estimation)]) )
-  cat(paste0("Accuracy_mean_",toString(dataset_name), ": " , score_mean, "\n"), file = output_file, append = TRUE)
+  cat(paste0("Accuracy_mean_",toString(methods_name), ": " , score_mean, "\n"), file = output_file, append = TRUE)
 
   l_res[[dataset_name]] = score_mean
 
@@ -280,13 +299,13 @@ cat(paste0("median_performance : " , median(unlist(l_res)), "\n"), file = output
 cat(paste0("Time: ", sum(unlist(profiling)), "\n"), file = output_file, append = TRUE )
 print( paste0("Time: ", toString(unlist(profiling)), " ", sum(unlist(profiling)), "\n") )
 
-rmarkdown::render(
-  input       = paste0(program, .Platform$file.sep, "detailed_results.Rmd")
-  , envir       = parent.frame( )
-  , output_dir  = output
-  # , output_file = "scores.html"
-  , output_file = "detailed_results.html"
-)
+# rmarkdown::render(
+#   input       = paste0(program, .Platform$file.sep, "detailed_results.Rmd")
+#   , envir       = parent.frame( )
+#   , output_dir  = output
+#   # , output_file = "scores.html"
+#   , output_file = "detailed_results.html"
+# )
 
 print(x = "Output :")
 print(x = list.files(path = output , all.files = TRUE, full.names = TRUE, recursive = TRUE) )

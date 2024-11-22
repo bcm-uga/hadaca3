@@ -17,6 +17,8 @@ program = function(mix=NULL, ref=NULL, ...) {
   ## YOUR CODE BEGINS HERE
   ##
 
+  install.packages("beeswarm")
+
   # Creation of an index, idx_feat, corresponding to the intersection of features present in the references and those present in the mixtures.
   idx_feat = intersect(rownames(mix), rownames(ref))
   
@@ -33,9 +35,26 @@ program = function(mix=NULL, ref=NULL, ...) {
   return(prop)
   
   ##
-  ## YOUR CODE ENDS HERE
+  ## YOUR CODE ENDS HERE nnls()
   ##
 }
+
+install.packages = function (pkgs, repos="https://cloud.r-project.org", ...) {
+  installed_packages <- installed.packages( )
+  for (package in pkgs ) {
+    if ( !{ package %in% installed_packages } ) {
+     print(x = paste("Installation of ", package, sep = "") )
+      utils::install.packages(
+        pkgs = package,
+        repos = repos,
+        ...
+      )
+    } else {
+      print(x = paste(package, " is installed.", sep = "") )
+    }
+  }
+}
+
 
 
 ##############################################################
@@ -44,120 +63,64 @@ program = function(mix=NULL, ref=NULL, ...) {
 
 
 
-dir_name = paste0("data",.Platform$file.sep)
-dataset_list = list.files(dir_name,pattern="mixes*")
+mixes_data = readRDS("mixes_smoothies_fruits.rds")
+reference_data = readRDS("reference_fruits.rds")
 
-reference_data <- readRDS(file =  paste0(dir_name, "reference_pdac.rds"))
+# we use the previously defined function 'program' to estimate A :
+pred_prop <- program(
+  mix = mixes_data ,
+  ref = reference_data
+)
 
 
-predi_list = list()
-for (dataset_name in dataset_list){
 
-  print(paste0("generating prediction for dataset:",toString(dataset_name) ))
+##############################################################
+### Validate the prediction /!\ DO NOT CHANGE THIS PART ###
+##############################################################
 
-  mixes_data <- readRDS(file = paste0(dir_name, dataset_name))
+validate_pred <- function(pred, nb_samples , nb_cells,col_names ){
 
-  if ("mix_rna" %in% names(mixes_data)) {
-    mix_rna = mixes_data$mix_rna
-  } else {
-    mix_rna = mixes_data
-  }
-  if ("mix_met" %in% names(mixes_data)) {
-    mix_met = mixes_data$mix_met  
-  } else {
-    mix_met = NULL
-  }
+  error_status = 0   # 0 means no errors, 1 means "Fatal errors" and 2 means "Warning"
+  error_informations = ''
 
-  if ("ref_bulkRNA" %in% names(reference_data)) {
-    ref_bulkRNA = reference_data$ref_bulkRNA
-  } else {
-    ref_bulkRNA = reference_data
-  }
-  if ("ref_met" %in% names(reference_data)) {
-    ref_met = reference_data$ref_met  
-  } else {
-    ref_met = NULL
-  }
-  if ("ref_scRNA" %in% names(reference_data)) {
-    ref_scRNA = reference_data$ref_scRNA  
-  } else {
-    ref_scRNA = NULL
+  ## Ensure that all sum ofcells proportion approximately equal 1
+  if (!all(sapply(colSums(pred), function(x) isTRUE(all.equal(x, 1) )))) {
+    msg = "The prediction matrix does not respect the laws of proportions: the sum of each columns should be equal to 1\n"
+    error_informations = paste(error_informations,msg)
+    error_status = 2
   }
 
-  # we use the previously defined function 'program' to estimate A :
-  pred_prop <- program(mix_rna, ref_bulkRNA, mix_met=mix_met, ref_met=ref_met, ref_scRNA=ref_scRNA)
-  
-  predi_list[[dataset_name]] = pred_prop
+  ##Ensure that the prediction have the correct names ! 
+  if(! setequal(rownames(pred),col_names) ){
+    msg = paste0(    "The row names in the prediction matrix should match: ", toString(col_names),"\n")
+    error_informations = paste(error_informations,msg)
+    error_status = 2
+  }
 
+  ## Ensure that the prediction return the correct number of samples and  number of cells. 
+  if (nrow(pred) != nb_cells  | ncol(pred) != nb_samples)  {
+    msg= paste0('The prediction matrix has the dimention: ',toString(dim(pred))," whereas the dimention: ",toString(c(nb_cells,nb_samples))," is expected\n"   )
+    error_informations = paste(error_informations,msg)
+    error_status = 1
+  }
+
+  if(error_status == 1){
+    # The error is blocking and should therefor stop the execution. 
+    stop(error_informations)
+  }
+  if(error_status == 2){
+    print("Warning: ")
+    warning(error_informations)
+  }  
 }
 
 
-##############################################################
-### Check the prediction /!\ DO NOT CHANGE THIS PART ###
-##############################################################
 
-# validate_pred <- function(pred, nb_samples = ncol(mix_rna) , nb_cells= ncol(ref_rna),col_names = colnames(ref_met) ){
-
-#   error_status = 0   # 0 means no errors, 1 means "Fatal errors" and 2 means "Warning"
-#   error_informations = ''
-
-#   ## Ensure that all sum ofcells proportion approximately equal 1
-#   if (!all(sapply(colSums(pred), function(x) isTRUE(all.equal(x, 1) )))) {
-#     msg = "The prediction matrix does not respect the laws of proportions: the sum of each columns should be equal to 1\n"
-#     error_informations = paste(error_informations,msg)
-#     error_status = 2
-#   }
-
-#   ##Ensure that the prediction have the correct names ! 
-#   if(! setequal(rownames(pred),col_names) ){
-#     msg = paste0(    "The row names in the prediction matrix should match: ", toString(col_names),"\n")
-#     error_informations = paste(error_informations,msg)
-#     error_status = 2
-#   }
-
-#   ## Ensure that the prediction return the correct number of samples and  number of cells. 
-#   if (nrow(pred) != nb_cells  | ncol(pred) != nb_samples)  {
-#     msg= paste0('The prediction matrix has the dimention: ',toString(dim(pred))," whereas the dimention: ",toString(c(nb_cells,nb_samples))," is expected\n"   )
-#     error_informations = paste(error_informations,msg)
-#     error_status = 1
-#   }
-
-#   if(error_status == 1){
-#     # The error is blocking and should therefor stop the execution. 
-#     # tryCatch(message("hello\n"), message=function(e){cat("goodbye\n")})  use this here ? 
-#     stop(error_informations)
-#   }
-#   if(error_status == 2){
-#     print("Warning: ")
-#     warning(error_informations)
-#   }  
-# }
-
-# for (dataset_name in 1:nb_datasets){
-#   ### Validate the prediction 
-#   pred_prop = predi_list[[dataset_name]] 
-#       tryCatch(
-#         #try to do this
-#         {
-#           validate_pred(pred_prop)
-#         },
-#         error=function(e) {
-#             message(paste('An Error Occurred for the dataset : ',dataset_name))
-#             stop(e)
-#         },
-#         warning=function(w) {
-#             message(paste('An Warning Occurred for the dataset : ',dataset_name))
-#             warning(w)
-#         }
-#     )
-
-# }
-
+validate_pred <- function(pred, nb_samples = ncol(mixes_data) , nb_cells= ncol(reference_data),col_names = colnames(reference_data) )
 
 
 ###############################
 ### Code submission mode
-
 
 print("")
 for (package in c("zip") ) {
@@ -172,7 +135,7 @@ for (package in c("zip") ) {
 
 
 # we generate a zip file with the 'program' source code
-
+print('')
 if ( !dir.exists(paths = "submissions") ) {
     dir.create(path = "submissions")
 }
@@ -208,8 +171,9 @@ prediction_name = "prediction.rds"
 
 ## we save the estimated A matrix as a rds file named 'results.rds' :
 saveRDS(
-object = predi_list
-, file   = paste0("submissions", .Platform$file.sep, prediction_name)) 
+object = pred_prop
+, file   = paste0("submissions", .Platform$file.sep, prediction_name)
+) 
 
 # write_rds(pred_prop, file = "prediction_hugo.rds")
 

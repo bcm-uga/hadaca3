@@ -1,141 +1,64 @@
-import os
-import subprocess
-import sys
-import zipfile
-import numpy as np
-import pandas as pd
-# from scipy.optimize import nnls
-import inspect 
-import importlib
-
-# import rpy2.robjects as ro
-from rpy2.robjects import pandas2ri
-pandas2ri.activate()
-# from rpy2.robjects.packages import importr
-
-import rpy2.robjects as ro
-readRDS = ro.r['readRDS']
-saveRDS= ro.r["saveRDS"]
+##################################################################################################
+### PLEASE only edit the program function between YOUR CODE BEGINS/ENDS HERE                   ###
+##################################################################################################
 
 
 ########################################################
 ### Package dependencies /!\ DO NOT CHANGE THIS PART ###
 ########################################################
+import subprocess
+import sys
+import importlib
 
-nb_datasets = 4
-def install(package):
-    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+def program(mix=None, ref=None, **kwargs):
 
-# List of required packages
-required_packages = [
-    "numpy",
-    "pandas",
-    "scipy",
-    "rpy2",
-    "zipfile",
-    "inspect"
-]
+  ##
+  ## YOUR CODE BEGINS HERE
+  ##
 
-# Install each package if not already installed
-for package in required_packages:
-    try:
-        globals()[package] = importlib.import_module(package)
-    except ImportError:
-        print('impossible to import, installing packages',package)
-        install(package)
-        globals()[package] = importlib.import_module(package)
+  required_packages = ["sklearn","pandas",'scipy']
+  install_and_import_packages(required_packages)
+  from sklearn.linear_model import LinearRegression
 
-####################################################
-### Submission modes /!\ DO NOT CHANGE THIS PART ###
-####################################################
+  def estimate_proportions(mix_df, ref_df):
+    results = []
+    for i in range(len(mix_df.columns)):
+        mix_col = mix_df.iloc[:, i]  # Select the i-th column as a Series
+        res = LinearRegression(fit_intercept=False).fit(ref_df, mix_col).coef_
+        # res, _ = scipy.optimize.nnls(ref_df.to_numpy(), mix_col.to_numpy())
+        results.append(res)
 
-###############################
-### Code submission mode
-# Participants need to make a zip file (no constrain on the namefile) that contains:
-#   - your code inside a Python file named `program.py`. This file will be sourced and have to contain:
-#   - a function `program` with `data_test` and `input_k_value` as arguments
-#   - any other files that you want to access from your function `program`: during the ingestion phase (when your code is evaluated), the working directory will be inside the directory obtained by unzipping your submission.
+    # Normalize the results to get proportions
+    props = pandas.DataFrame([res_i / sum(res_i) for res_i in results], columns=ref_df.columns)
+    return props.T
+  
 
-###############################
-### Result submission mode  
-# Participants have to make a zip file (no constrain on the namefile), with your results as a matrix inside a pkl file named `results_1.pkl`.
+  # Creation of an index, idx_feat, corresponding to the intersection of features present in the references and those present in the mixtures.
+  idx_feat = mix.index.intersection(ref.index)
+  mix_filtered = mix.loc[idx_feat, :]
+  ref_filtered = ref.loc[idx_feat, :]
 
-##################################################################################################
-### Submission modes /!\ EDIT THE FOLLOWING CODE BY COMMENTING/UNCOMMENTING THE REQUIRED PARTS ###
-##################################################################################################
+  prop = estimate_proportions(mix_filtered, ref_filtered)
+ 
+  # Labeling of estimated proportions 
+  prop.columns = mix.columns
 
-# Write a function to predict cell-type heterogeneity proportion matrix
-# In the provided example, we use a naive method to generate the baseline prediction.
-
-def program(mix_rna=None, mix_met=None, ref_rna=None, ref_met=None):
-    """
-    The function to estimate the A matrix
-    
-    Parameters:
-    mix_rna (numpy.ndarray): the bulk matrix associated to the transcriptome data set
-    mix_met (numpy.ndarray): the bulk matrix associated to the methylation data set
-    ref_rna (numpy.ndarray): the reference matrix associated to the transcriptome data set
-    ref_met (numpy.ndarray): the reference matrix associated to the methylation data set
-    
-    Returns:
-    numpy.ndarray: the estimated A matrix
-    """
-
-    ##
-    ## YOUR CODE BEGINS HERE
-    ##
-
-    ###### Install requiered packages if necessary
-    # List of required packages
-    required_packages = [
-        "scipy",
-    ]
-
-    # Install each package if not already installed
-    for package in required_packages:
-        try:
-            # __import__(package)
-            globals()[package] = importlib.import_module(package)
-        except ImportError:
-            subprocess.check_call([sys.executable, "-m", "pip", "install", package])
-            globals()[package] = importlib.import_module(package)
+  return prop
+  ##
+  ## YOUR CODE ENDS HERE
+  ##
 
 
-    def estimate_proportions(mix, ref):
-        res = [scipy.optimize.nnls(ref, mix[:, i])[0] for i in range(mix.shape[1])]
-        props = np.array([res_i / sum(res_i) for res_i in res])
-        return props.T
-
-    if mix_rna is not None:
-        prop_rna = estimate_proportions(mix_rna, ref_rna)
-    else:
-        prop_rna = None
-
-    if mix_met is not None:
-        prop_met = estimate_proportions(mix_met, ref_met)
-    else:
-        prop_met = None
-
-
-    if prop_rna is not None and prop_met is not None:
-        assert prop_rna.shape == prop_met.shape, "Dimensions of RNA and Methylation data do not match"
-        prop = (prop_rna + prop_met) / 2
-    elif prop_rna is not None:
-        prop = prop_rna
-    elif prop_met is not None:
-        prop = prop_met
-    else:
-        raise ValueError("At least one of mix_rna or mix_met must be provided")
-
-    if not np.allclose(np.sum(prop, axis=0), 1):
-        prop = prop / np.sum(prop, axis=0)
-
-    return prop
-
-    ##
-    ## YOUR CODE ENDS HERE
-    ##
-
+# Install and import each package
+def install_and_import_packages(required_packages):
+  for package in required_packages:
+      try:
+          globals()[package] = importlib.import_module(package)
+      except ImportError:
+          print('impossible to import, installing packages',package)
+          package_to_install = 'scikit-learn' if package == 'sklearn' else package
+          subprocess.check_call([sys.executable, "-m", "pip", "install", package_to_install])
+          globals()[package] = importlib.import_module(package)
 
 ##############################################################
 ### Check the prediction /!\ DO NOT CHANGE THIS PART ###
@@ -146,7 +69,7 @@ def validate_pred(pred, nb_samples=None, nb_cells=None, col_names=None):
     error_informations = ''
 
     # Ensure that all sum of cells proportion approximately equal 1
-    if not np.allclose(np.sum(pred, axis=0), 1):
+    if not numpy.allclose(numpy.sum(pred, axis=0), 1):
         msg = "The prediction matrix does not respect the laws of proportions: the sum of each column should be equal to 1\n"
         error_informations += msg
         error_status = 2
@@ -175,34 +98,146 @@ def validate_pred(pred, nb_samples=None, nb_cells=None, col_names=None):
 ### Generate a prediction file /!\ DO NOT CHANGE THIS PART ###
 ##############################################################
 
-r_code_get_colnames_nested = '''
-get_colnames_nested <- function(reference_data) {
-    return (colnames(reference_data$ref_bulkRNA))
+# List of required packages
+required_packages = [
+  "numpy",
+  "pandas",
+  "rpy2",
+  "zipfile",
+  "inspect",
+]
+install_and_import_packages(required_packages)
+
+# from rpy2.robjects import pandas2ri
+import os
+import rpy2.robjects
+readRDS = rpy2.robjects.r['readRDS']
+saveRDS= rpy2.robjects.r["saveRDS"]
+
+from rpy2.robjects import pandas2ri
+pandas2ri.activate()
+
+# TODO rewrite this 
+# r_code_get_colnames_nested = '''
+# get_colnames_nested <- function(reference_data) {
+#     return (colnames(reference_data$ref_bulkRNA))
+# }
+# '''
+# ro.r(r_code_get_colnames_nested)
+
+r_code_get_colnames = '''
+get_colnames <- function(ref_names = "reference_fruits.rds", mat = NULL) {
+  ref_names <- readRDS(ref_names)
+
+  if (!is.null(mat)) {
+    col_names=colnames(ref_names[[mat]])
+    if(is.null(col_names)){
+    return(NULL)}
+    else{
+        return(col_names)
+    }
+
+  } else {
+    return(colnames(ref_names))
+  }
 }
 '''
-ro.r(r_code_get_colnames_nested)
+rpy2.robjects.r(r_code_get_colnames)
+get_colnames = rpy2.robjects.r['get_colnames']
+
+r_code_get_rownames = '''
+get_rownames <- function(ref_names = "reference_fruits.rds", mat = NULL) {
+  ref_names <- readRDS(ref_names)
+  if (!is.null(mat)) {
+    return(rownames(ref_names[[mat]]))
+  } else {
+    return(rownames(ref_names))
+  }
+}
+'''
+rpy2.robjects.r(r_code_get_rownames)
+get_rownames = rpy2.robjects.r['get_rownames']
+
+
+# Function to convert R object to pandas DataFrame or numpy array
+def r_object_to_python(r_object,file,element_name):
+    try:
+        # Try to convert to pandas DataFrame
+        return pandas2ri.rpy2py(r_object)
+    except NotImplementedError:
+        # If not convertible to DataFrame, we need to read row and colnames with R
+        if rpy2.robjects.r['is.matrix'](r_object)[0] or rpy2.robjects.r['is.data.frame'](r_object)[0]:
+            columns = get_colnames(file,element_name)
+            rows = get_rownames(file,element_name)
+            if(isinstance(columns, type (rpy2.robjects.NULL))):
+                df = pandas.DataFrame(r_object, index=rows)
+            else: 
+                columns = list(columns)
+                df = pandas.DataFrame(r_object, columns=columns, index=rows)
+
+            return df
+        else:
+            # we should not come in this case 
+            return(pandas.DataFrame(r_object))
+
+# Function to extract named data elements and convert appropriately
+def extract_data_element(data, file, element_name):
+    if element_name in data.names:
+        element = data.rx2(element_name)
+        return r_object_to_python(element,file,element_name)
+    return None
+
+
+dir_name = "data"+os.sep
+
+datasets_list = [filename for filename in os.listdir(dir_name) if filename.startswith("mixes")]
+
 
 predi_list = []
-for dataset_name in range(1, nb_datasets + 1):
+# print(datasets_list)
+# datasets_list = [datasets_list[-1]]
+for dataset_name in datasets_list :
 
-    dir_name = "data"+os.sep
-    mixes_data = readRDS(os.path.join(dir_name, f"mixes_data_{dataset_name}.rds"))
+    # mixes_data = readRDS(os.path.join(dir_name, f"mixes_data_{dataset_name}.rds"))
+    file= os.path.join(dir_name,dataset_name)
+    mixes_data = readRDS(file)
+
     print(f"generating prediction for dataset: {dataset_name}")
 
-    mix_rna= np.array(mixes_data.rx('mix_rna'))
+    mix_rna = extract_data_element(mixes_data,file, 'mix_rna')
+
+    mix_rna = extract_data_element(mixes_data, 'mix_rna') or pandas2ri.rpy2py(mixes_data)
+
+    # Extract mix_met if present
+    mix_met = extract_data_element(mixes_data, 'mix_met')
+
+    # Load reference_data
+    reference_file_path = "path_to_reference_data.rds"
+    reference_data = read_rds(reference_file_path)
+
+    # Extract ref_bulkRNA or fallback to reference_data
+    ref_bulkRNA = extract_data_element(reference_data, 'ref_bulkRNA') or pandas2ri.rpy2py(reference_data)
+
+    # Extract ref_met if present
+    ref_met = extract_data_element(reference_data, 'ref_met')
+
+    # Extract ref_scRNA if present
+    ref_scRNA = extract_data_element(reference_data, 'ref_scRNA')
+
+    mix_rna= numpy.array(mixes_data.rx('mix_rna'))
     mix_rna = mix_rna[0]
 
-    mix_met = np.array(mixes_data.rx('mix_met'))
+    mix_met = numpy.array(mixes_data.rx('mix_met'))
     mix_met = mix_met[0]
 
     reference_data = readRDS(os.path.join(dir_name, "reference_pdac.rds"))
 
-    ref_rna = np.array(reference_data.rx('ref_bulkRNA'))
-    ref_met = np.array(reference_data.rx('ref_met'))
+    ref_rna = numpy.array(reference_data.rx('ref_bulkRNA'))
+    ref_met = numpy.array(reference_data.rx('ref_met'))
     ref_rna = ref_rna[0]
     ref_met = ref_met[0]
 
-    get_colnames_nested = ro.r['get_colnames_nested']
+    get_colnames_nested = rpy2.robjects.r['get_colnames_nested']
     colnames_result = get_colnames_nested(reference_data)
 
     pred_prop = program(
@@ -210,11 +245,12 @@ for dataset_name in range(1, nb_datasets + 1):
         ref_rna=ref_rna, ref_met=ref_met
     )
     
-    pred_prop_df = pd.DataFrame(pred_prop, index=colnames_result)
+    pred_prop_df = pandas.DataFrame(pred_prop, index=colnames_result)
 
     # validate_pred(pred_prop, nb_samples=mix_rna.shape[1] if mix_rna is not None else mix_met.shape[1], nb_cells=ref_rna.shape[1], col_names=reference_data['ref_met'].columns)
 
     predi_list.append(pred_prop_df)
+    break
 
 ############################### 
 ### Code submission mode
@@ -228,7 +264,7 @@ if not os.path.exists("submissions"):
 with open(os.path.join("submissions", "program.py"), 'w') as f:
     f.write(inspect.getsource(program))
 
-date_suffix = pd.Timestamp.now().strftime("%Y_%m_%d_%H_%M_%S")
+date_suffix = pandas.Timestamp.now().strftime("%Y_%m_%d_%H_%M_%S")
 
 # we create the associated zip file:
 zip_program = os.path.join("submissions", f"program_{date_suffix}.zip")

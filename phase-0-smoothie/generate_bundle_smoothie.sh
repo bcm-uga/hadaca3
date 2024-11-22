@@ -32,16 +32,14 @@ cp "$path_data"reference_fruits.rds input_data/reference_fruits.rds
 mkdir starting_kit
 rm -rf starting_kit/*
 cp -r input_data/* starting_kit/
-# sh generate_data.sh $1
-# sh generate_data.sh real
-echo 'data generated'
+
 
 # Zip folder 
 echo "create bunlde.zip"
 zip -FS -j -r  bundle/scoring_program.zip scoring_program/
 zip -FS -j -r  bundle/ingestion_program.zip ingestion_program/
 
-#Phase_0 is useless for now 
+# Without argument the script "generate_baselines.R" will create the Phase 0 baselines
 Rscript ~/projects/hadaca3/templates/generate_baselines.R Phase_0  
 cp ~/projects/hadaca3/templates/tmp/* starting_kit/
 rm -r ~/projects/hadaca3/templates/tmp/ 
