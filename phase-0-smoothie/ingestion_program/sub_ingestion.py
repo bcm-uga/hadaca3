@@ -97,8 +97,7 @@ reference_data = pandas.DataFrame(reference_data, index=get_rownames(file),colum
 
 # total_time = 0 
 start_time = time.perf_counter()
-pred_prop = program(
-    mix=mixes_data, ref=reference_data
+pred_prop = program( mixes_data, reference_data
 )
 total_time = time.perf_counter() - start_time
 

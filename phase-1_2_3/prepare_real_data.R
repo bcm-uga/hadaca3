@@ -1,31 +1,10 @@
 print('Begining of real data migration')
 
-# # Get the command line arguments
-# args <- commandArgs(trailingOnly = TRUE)
-
-# # Print the arguments
-# print("arguments are:")
-# print(args)
-
-# if (length(args) >=1) {
-#     nb_datasets = as.numeric(args[1])
-#     print(paste0("The number of datasets to generate is ",toString(nb_datasets)))
-# } else {
-#     nb_datasets = 2
-#     print(paste0("no argument is given, we set the number of datasets to the defaults number: ",nb_datasets))
-# }
-
 
 path_data="~/projects/hadaca3_private/"
 
 
 source(paste0(path_data,"datasets.R"))
-# cat(datasets, "\n")
-
-
-# while (length(datasets) < nb_datasets*2 ){
-#     datasets <- c(datasets,datasets)
-# }
 
 dir.create("data/", showWarnings = FALSE)
 
@@ -47,11 +26,8 @@ for (phase in 1:2){
             to = paste0(dir_name,mix_dataset_name))
 
         file.copy(from = paste0(path_data, ground_truth_name),   # Copy files
-            # to = paste0("data/", paste0(i,"/ground_truth_",i,".rds")))
             to = paste0(dir_name,ground_truth_name))
 
-        # paste0("reference_data_","$i",".rds")
-        # i = i +1 
     }
 }
 

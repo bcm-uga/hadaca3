@@ -58,8 +58,7 @@ install.packages = function (pkgs, repos="https://cloud.r-project.org", ...) {
 # we use the previously defined function 'program' to estimate A :
 start_time <- proc.time()
 pred_prop <- .tempEnv$program(
-  mix = mixes_data,
-  ref = reference_data
+  mixes_data, reference_data
 )
 elapsed_time <- proc.time() - start_time
 print (paste0("Prediction has ", nrow(pred_prop), " rows and ", ncol(pred_prop), " columns"))

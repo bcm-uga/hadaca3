@@ -259,18 +259,17 @@ groundtruh_list = list.files(dir_name,pattern="groundtruth*")
 
 for (groundthruth_name in groundtruh_list){
   
-  
   gt_list = unlist(strsplit(groundthruth_name, "_"))
   methods_name =  gt_list[2]
   phase =  substr(gt_list[1], nchar(gt_list[1]), nchar(gt_list[1]))
 
   dataset_name = paste0("mixes",phase,"_",methods_name,'_pdac.rds')
 
-  print(dataset_name)
+  message(dataset_name)
 
-  print(dim(Aest_l))
+  # print(dim(Aest_l))
   Aest = as.matrix(Aest_l[[dataset_name]])
-  print(dim(Aest))
+  # print(dim(Aest))
   ## Load ground_thuth data
 
 

@@ -7,6 +7,8 @@ The HADACA challenge is a recurring event aimed at developping deconvolution met
 - The **first edition** took place in 2018, in collaboration with the Data Institute at University Grenoble-Alpes.
 - The **second edition** was held in 2019, in partnership with the Ligue contre le Cancer and sponsored by EIT Health.
 - The **third edition** is set for December 2024, in collaboration with the M4DI project, part of the PEPR Santé Numérique. Visit the official website for details: http://hadaca3.sciencesconf.org.
+    
+
                            
 **Aim of the challenge**     
                            
@@ -17,5 +19,12 @@ The objective of this challenge is to estimate the fruit composition of differen
 
 <img title="Exemple of decovolution" alt="Exemple of decovolution" src="https://raw.githubusercontent.com/bcm-uga/hadaca3/08d6c575e1c157ce9d67319487e6c64ffef8700a/phase-0-smoothie/bundle/decovo_intro.png" width="800" >
 
+
+
+There is a playlist of YouTube videos to help you with your first steps on Codabench. 
+
+ <iframe width="840" height="630" style="border:none;" allowfullscreen=""
+src="https://www.youtube.com/embed/lvWF-ruQlvw?list=PLU1mBHFYvdQoq74OkE2nIuGv6BpsHv7jj">
+</iframe> 
 
 Enjoy the challenge!
