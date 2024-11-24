@@ -1,7 +1,8 @@
 version: '2'
 title: Smoothie decovolution
 # docker_image: hombergn/hadaca3_light
-docker_image: hombergn/hadaca3_pyr
+# docker_image: hombergn/hadaca3_pyr
+docker_image: hombergn/hadaca3_final
 queue: null
 description: HADACA3
 registration_auto_approve: true
