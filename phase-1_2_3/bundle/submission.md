@@ -90,7 +90,3 @@ and regain ownership of the files generated with:
 ```
 sudo chown -R $USER submissions
 ```
-
-
-
-
