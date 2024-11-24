@@ -25,6 +25,8 @@ DEBUG = FALSE
 #Number of cells types  /!\ change also cell_name_list
 k = 5 
 cell_name_list =  c("endo" ,   "fibro"  , "immune" , "classic" ,"basal" )
+
+# sample_name_list =  paste0("sample", 1:30)
 #Number of Probes
 nb_probes = 30
 #number of observations
@@ -41,10 +43,10 @@ rna_mean = 5e4
 rna_sd = 2e3
 
 ##Names 
-name_A = 'ground_truth'
+name_A = 'groundtruth'
 
 name_T = 'reference_pdac'
-name_D = 'mixes_data'
+name_D = 'mixes'
 
 name_T_rna= 'ref_bulkRNA'
 name_T_met= 'ref_met'
@@ -78,6 +80,7 @@ proportion_4_1_probe <-
 create_ground_truth = function(nb_probes,k,min=0,max=1){
     A = replicate(nb_probes,proportion_4_1_probe(k,min,max))
     rownames(A) = cell_name_list
+    colnames(A) = paste("bulk",1:nb_probes)
     return(A)
 }
 
@@ -100,7 +103,8 @@ create_ref_matrix <- function(k,nb_met_sondes, rna_mean,rna_sd,rna_min,rna_max){
     T_rna = replicate(k,rtnorm(nb_genes, mean = rna_mean, sd= rna_sd, min = rna_min, max=rna_max ) )
     colnames(T_met) = cell_name_list
     colnames(T_rna) = cell_name_list
-
+    rownames(T_met) = paste0("sample", 1:nb_met_sondes)
+    rownames(T_rna) = paste0("sample", 1:nb_genes)
     # if (DEBUG){
     #     print(head(T_met))
     #     print(head(T_rna))
@@ -134,6 +138,13 @@ create_bulk <- function(Ref_m,A,mean = 0, sd = 0.05, val_min = 0, val_max = 1){
     D_rna = Ref_m$T_rna%*%A
     D_met = add_noise(D_met)
     D_rna = add_noise(D_rna,sd = 1500, val_min = 0, val_max = 100000)
+
+    rownames(D_met) = paste0("sample", 1:nb_met_sondes)
+    rownames(D_rna) = paste0("sample", 1:nb_genes)
+
+    colnames(D_rna) = paste("bulk",1:nb_probes)
+    colnames(D_met) = paste("bulk",1:nb_probes)
+
     # if (DEBUG){
     #     print("\nD_met with noise:\n") 
     #     print(head(D_met))
@@ -163,16 +174,16 @@ write_to_disk_ref <- function(Ref_m){
     saveRDS(T, file = paste0(dir_name, name_T,".rds"))
 }
 
-write_to_disk_bulk_gt <- function(ground_truth, Bulk_m,dataset_name){
+write_to_disk_bulk_gt <- function(ground_truth, Bulk_m,dataset_name,i){
     D= list()
     D[[name_D_rna]]= Bulk_m$D_rna
     D[[name_D_met]]= Bulk_m$D_met
 
-    dir_name = paste0("data/",dataset_name,'/')
+    dir_name = paste0("data/",dataset_name,toString(i),'/')
     dir.create(dir_name, showWarnings = FALSE)
 
-    saveRDS(D, file = paste0(dir_name, name_D,"_",dataset_name,".rds"))
-    saveRDS(ground_truth, file = paste0(dir_name, name_A,"_",dataset_name,".rds"))
+    saveRDS(D, file = paste0(dir_name, name_D,i,"_",dataset_name,'_pdac',".rds"))
+    saveRDS(ground_truth, file = paste0(dir_name, name_A,i,"_",dataset_name,'_pdac',".rds"))
 }
 
 ## Generate the reference (common for all datasets): 
@@ -180,19 +191,19 @@ Ref_m = create_ref_matrix(k,nb_met_sondes, rna_mean,rna_sd,rna_min,rna_max)
 write_to_disk_ref(Ref_m)
 
 
-
+i = 1
 #### nb_datasets is hte number of datasets per phase ! 
 for (dataset_name in 1:(nb_datasets *2)){
 
-    dataset_name = toString( dataset_name)
+    dataset_name = paste0(toString( dataset_name))
     print(paste0("generating dataset:",dataset_name ))
 
     ground_truth = create_ground_truth(nb_probes,k)
     Bulk_m = create_bulk(Ref_m,ground_truth)
 
-    write_to_disk_bulk_gt(ground_truth,Bulk_m,dataset_name)
+    write_to_disk_bulk_gt(ground_truth,Bulk_m,dataset_name,i+1)
     
-
+    i = (i +1)%%2
     # if (DEBUG){
     #     ### re Read data 
     #     dir_name = paste0("data/",dataset_name,'/')

@@ -20,10 +20,10 @@ mkdir data
 
 #Test if argument exist
 
-# if [ $# -lt 1 ]
-if [false]
+if [ $# -lt 1 ]
+# if [false]
 then
-nb_datasets=9
+nb_datasets=2
 echo "Creating fake data because there is no argument"
 
 Rscript generate_fake_data.R  $((nb_datasets )) 
