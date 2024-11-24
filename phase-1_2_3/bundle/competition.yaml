@@ -27,40 +27,60 @@ tasks:
 - index: 0
   name: LIGHT Cell type proportion estimation from transcriptome data1
   description: LIGHT COMETH data challenge
-  reference_data: ground_truth.zip  #rename to ground_truth! 
+  reference_data: ground_truth.zip 
   input_data: input_data.zip
   scoring_program: scoring_program.zip
   ingestion_program: ingestion_program.zip
 - index: 1
   name: FINAL Evaluation LIGHT Cell type proportion estimation from transcriptome data1
   description: LIGHT COMETH data challenge
-  reference_data: ground_truth_final.zip  #rename to ground_truth! 
+  reference_data: ground_truth_final.zip 
   input_data: input_data_final.zip
+  scoring_program: scoring_program.zip
+  ingestion_program: ingestion_program.zip
+  - index: 2
+  name: INTRODUCTORY Evaluation LIGHT Cell type proportion estimation from transcriptome data1
+  description: LIGHT COMETH data challenge
+  reference_data: ground_truth_phase1.zip 
+  input_data: input_data_phase1.zip
   scoring_program: scoring_program.zip
   ingestion_program: ingestion_program.zip
 solutions: []
 phases:
+- index: 2
+  name: INTRODUCTORY PHASE - Cell type proportion estimation from transcriptome and methylome data, using multimodal references.
+  description: good luck 
+  start: '2024-02-20 '
+  end: '2024-03-20 10:40'
+  max_submissions_per_day: 20
+  max_submissions: 100
+  execution_time_limit: 600000
+  auto_migrate_to_this_phase: false
+  hide_output: false
+  starting_kit: starting_kit_phase1.zip
+  tasks:
+  - 2
 - index: 0
-  name: Cell type proportion estimation from transcriptome and methylome data, using multimodal references.
+  name: MAIN PHASE - Cell type proportion estimation from transcriptome and methylome data, using multimodal references.
   description: good luck 
   start: '2024-03-20 '
   end: '2024-12-20 11:00'
   max_submissions_per_day: 20
   max_submissions: 100
-  execution_time_limit: 60000
+  execution_time_limit: 600000
   auto_migrate_to_this_phase: false
   hide_output: false
   starting_kit: starting_kit_phase2-3.zip
   tasks:
   - 0
 - index: 1
-  name: FINAL PHASE Cell type proportion estimation from transcriptome and methylome data, using multimodal references.
+  name: FINAL PHASE - Cell type proportion estimation from transcriptome and methylome data, using multimodal references.
   description: good luck
   start: '2024-12-20 11:01'
   # end: '2024-10-20T00:10'
   max_submissions_per_day: 15
   max_submissions: 100
-  execution_time_limit: 60000
+  execution_time_limit: 600000
   auto_migrate_to_this_phase: true
   hide_output: false
   # starting_kit: starting_kit.zip

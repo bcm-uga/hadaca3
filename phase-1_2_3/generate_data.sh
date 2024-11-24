@@ -1,5 +1,6 @@
 
 
+Phase_1_dataset_name="insilicopseudobulk"
 # echo $1
 
 # the folder data is also created insite the generate_data.R
@@ -36,20 +37,6 @@ echo "At least one argument exists, migrating real data. \n
 This script will only copy files from the project hadaca3_private, so make sure they exist and they are up to date."  
 echo $1
 
-# h3_p_path="~/projects/hadaca3_private/"
-# cur_path=$PWD
-
-# cd $h3_p_path
-# cmd_snakemake_clean="snakemake --cores 8 -s 00_run_pipeline.py -p clean"
-# # cmd_snakemake_build="snakemake --cores 8 -s 00_run_pipeline.py -p "
-# cmd_snakemake_build="snakemake --cores 4 -s 00_run_pipeline.py -p --resources mem_mb=16000 --max-jobs-per-second 1 generate_data"
-
-# $cmd_snakemake_clean 
-# $cmd_snakemake_build 
-
-## This script anonymise the datasets and move them to the folder data. 
-# Rscript prepare_real_data.R  $((nb_datasets )) 
-
 
 Rscript prepare_real_data.R 
 
@@ -59,19 +46,28 @@ path_data="data/"
 
 fi
 
+mkdir input_data_phase1
+mkdir ground_truth_phase1
 
 ### moving reference file which is common to all datasets
-
 cp "$path_data"reference_data/reference_pdac.rds input_data/reference_pdac.rds
 cp "$path_data"reference_data/reference_pdac.rds input_data_final/reference_pdac.rds
+cp "$path_data"reference_data/reference_pdac.rds input_data_phase1/reference_pdac.rds
 rm -rf "$path_data"reference_data/ 
+
+
+dataset_phase1="$path_data"$Phase_1_dataset_name"1/mixes1_"$Phase_1_dataset_name"_pdac.rds"
+dataset_phase1_gt="$path_data"$Phase_1_dataset_name"1/groundtruth1_"$Phase_1_dataset_name"_pdac.rds"
+
+cp "$dir"$dataset_phase1 input_data_phase1/
+cp "$dir"$dataset_phase1_gt ground_truth_phase1/
+
+
 
 
 for dir in "$path_data"*1/     # list directories in the form "/tmp/dirname/"
 do
     dir=${dir%*/}      # remove the trailing "/"
-    # echo "${dir##*/}"    # print everything after the final "/"
-    # echo $dir
     cp "$dir"/mixes* input_data/
     cp "$dir"/groundtruth* ground_truth/
 done
@@ -80,7 +76,6 @@ for dir in "$path_data"*2/     # list directories in the form "/tmp/dirname/"
 do
     dir=${dir%*/}      # remove the trailing "/"
     # echo "${dir##*/}"    # print everything after the final "/"
-    # echo $dir
     cp "$dir"/mixes* input_data_final/
     cp "$dir"/groundtruth* ground_truth_final/
 done
@@ -105,6 +100,9 @@ done
 
 mkdir starting_kit/data/
 cp -r input_data/* starting_kit/data/
+
+mkdir starting_kit_phase1/data/
+cp -r input_data_phase1/* starting_kit_phase1/data/
 
 # cp "$path_data"mixes_data.rds starting_kit/mixes_data.rds
 # cp "$path_data"reference_data.rds starting_kit/reference_data.rds
