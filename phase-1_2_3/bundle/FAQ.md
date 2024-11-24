@@ -26,9 +26,9 @@ conda env create -f environment-r.yml && conda activate h3
 To run the docker interactively you can run with: 
 
 ```
-# for the R version
+## for the R version
 sudo docker run -it -v .:/hadaca3 -w /hadaca3 hombergn/hadaca3_pyr R`  and then `source("submission_script.R") 
-# for the python version
+## for the python version
 sudo docker run -it -v .:/hadaca3 -w /hadaca3 hombergn/hadaca3_pyr python` and then `import submission_script
 ```
 
@@ -71,4 +71,3 @@ If you wish to test each step independently or run the Python script locally, re
 
 It is possible to include an external file that is sourced in the submission script and correctly included in the zip file to be submitted on the Codabench platform.
 Beware, when unziped the file 'program.R' has to be on the current directory and not inside a folder. Aditionnal files can in other folder with the correct relative path 
-                           

@@ -1,4 +1,6 @@
 # Evaluation and Scoring   
+
+TO DO ELISE (update the following sentence to better describe the scoring process)
                            
 The **score** (discriminating metric) is computed on the estimated proportion matrix. The metric is a combination of row-correlation, column-correlation and mean absolute error between the *ground_truth* and the estimate provided by the participants.
 
@@ -24,5 +26,3 @@ Check the leaderboard in the *Results*  menu
 
 To compare your score with other participants, go to the challenge page and navigate to the *Leaderboard* or *Results* section. 
 Here, you can see how your submission ranks.
-
-
