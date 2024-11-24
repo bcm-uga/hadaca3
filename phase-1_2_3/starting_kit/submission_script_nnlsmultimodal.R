@@ -2,34 +2,29 @@
 ### PLEASE only edit the program function between YOUR CODE BEGINS/ENDS HERE                   ###
 ##################################################################################################
 
-#' The function to estimate the A matrix
-#' In the provided example, we use basic non-negative least squares (package "nnls"), which consists of minimizing the error term $||Mix - Ref \times Prop||^2$ with only positive entries in the prop matrix.
+#' The function to predict the A matrix
+#' In the provided example, we use basic non-negative least squares (package "nnls"), which consists in minimizing the error term $||Mix - Ref \times Prop||^2$ with only positive entries in the prop matrix.
 #'
-#' @param mix a matrix of bulks (columns) and features (rows)
-#' @param ref a matrix pure types (columns) and features (rows)
+#' @param mix a matrix of bulk samples (columns) and features (rows)
+#' @param ref a matrix of pure cell types (columns) and features (rows)
 #' @param ... other parameters that will be ignored
 #' 
-#' @return the estimated A matrix
+#' @return the predicted A matrix
+#' @examples
 #' 
 program = function(mix=NULL, ref=NULL, ...) {
-
   ##
   ## YOUR CODE BEGINS HERE
   ##
-
-  # Creation of an index, idx_feat, corresponding to the intersection of features present in the references and those present in the mixtures.
-  idx_feat = intersect(rownames(mix), rownames(ref))
   
-  # Estimation of proportions
+  idx_feat = intersect(rownames(mix), rownames(ref))
   prop = apply(mix[idx_feat,], 2, function(b, A) {
-    tmp_prop = lm(b ~ A - 1)$coefficients  # Using `-1` to remove the intercept
-    # tmp_prop = nnls::nnls(b=b,A=A)$x  
-    tmp_prop = tmp_prop / sum(tmp_prop)    # Sum To One
+    tmp_prop = nnls::nnls(b=b, A=A)$x
+    tmp_prop = tmp_prop / sum(tmp_prop) # Sum To One
     return(tmp_prop)
-  }, A=ref[idx_feat,])
-
-  # Labeling of estimated proportions 
+  }, A=ref[idx_feat,])  
   rownames(prop) = colnames(ref)
+  
   return(prop)
   
   ##

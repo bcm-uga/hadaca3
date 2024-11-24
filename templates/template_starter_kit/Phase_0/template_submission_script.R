@@ -2,47 +2,31 @@
 ### PLEASE only edit the program function between YOUR CODE BEGINS/ENDS HERE                   ###
 ##################################################################################################
 
-#' The function to estimate the A matrix
-#' In the provided example, we use basic non-negative least squares (package "nnls"), which consists of minimizing the error term $||Mix - Ref \times Prop||^2$ with only positive entries in the prop matrix.
-#'
-#' @param mix a matrix of bulks (columns) and features (rows)
-#' @param ref a matrix pure types (columns) and features (rows)
-#' @param ... other parameters that will be ignored
-#' 
-#' @return the estimated A matrix
-#' 
-program = function(mix=NULL, ref=NULL, ...) {
-
-  ##
-  ## YOUR CODE BEGINS HERE
-  ##
-
-  # Creation of an index, idx_feat, corresponding to the intersection of features present in the references and those present in the mixtures.
-  idx_feat = intersect(rownames(mix), rownames(ref))
-  
-  # Estimation of proportions
-  prop = apply(mix[idx_feat,], 2, function(b, A) {
-    tmp_prop = lm(b ~ A - 1)$coefficients  # Using `-1` to remove the intercept
-    # tmp_prop = nnls::nnls(b=b,A=A)$x  
-    tmp_prop = tmp_prop / sum(tmp_prop)    # Sum To One
-    return(tmp_prop)
-  }, A=ref[idx_feat,])
-
-  # Labeling of estimated proportions 
-  rownames(prop) = colnames(ref)
-  return(prop)
-  
-  ##
-  ## YOUR CODE ENDS HERE
-  ##
-}
+### Write programs Here !
 
 
 ##############################################################
 ### Generate a prediction file /!\ DO NOT CHANGE THIS PART ###
 ##############################################################
 
-validate_pred <- function(pred, nb_samples = ncol(mix_rna) , nb_cells= ncol(ref_rna),col_names = colnames(ref_met) ){
+
+
+mixes_data = readRDS("mixes_smoothies_fruits.rds")
+reference_data = readRDS("reference_fruits.rds")
+
+# we use the previously defined function 'program' to estimate A :
+pred_prop <- program(
+  mix = mixes_data ,
+  ref = reference_data
+)
+
+
+
+##############################################################
+### Validate the prediction /!\ DO NOT CHANGE THIS PART ###
+##############################################################
+
+validate_pred <- function(pred, nb_samples , nb_cells,col_names ){
 
   error_status = 0   # 0 means no errors, 1 means "Fatal errors" and 2 means "Warning"
   error_informations = ''
@@ -70,7 +54,6 @@ validate_pred <- function(pred, nb_samples = ncol(mix_rna) , nb_cells= ncol(ref_
 
   if(error_status == 1){
     # The error is blocking and should therefor stop the execution. 
-    # tryCatch(message("hello\n"), message=function(e){cat("goodbye\n")})  use this here ? 
     stop(error_informations)
   }
   if(error_status == 2){
@@ -79,84 +62,13 @@ validate_pred <- function(pred, nb_samples = ncol(mix_rna) , nb_cells= ncol(ref_
   }  
 }
 
-dir_name = paste0("data",.Platform$file.sep)
-dataset_list = list.files(dir_name,pattern="mixes*")
-
-reference_data <- readRDS(file =  paste0(dir_name, "reference_pdac.rds"))
 
 
-predi_list = list()
-for (dataset_name in dataset_list){
-
-  print(paste0("generating prediction for dataset:",toString(dataset_name) ))
-
-  mixes_data <- readRDS(file = paste0(dir_name, dataset_name))
-
-  if ("mix_rna" %in% names(mixes_data)) {
-    mix_rna = mixes_data$mix_rna
-  } else {
-    mix_rna = mixes_data
-  }
-  if ("mix_met" %in% names(mixes_data)) {
-    mix_met = mixes_data$mix_met  
-  } else {
-    mix_met = NULL
-  }
-
-  if ("ref_bulkRNA" %in% names(reference_data)) {
-    ref_bulkRNA = reference_data$ref_bulkRNA
-  } else {
-    ref_bulkRNA = reference_data
-  }
-  if ("ref_met" %in% names(reference_data)) {
-    ref_met = reference_data$ref_met  
-  } else {
-    ref_met = NULL
-  }
-  if ("ref_scRNA" %in% names(reference_data)) {
-    ref_scRNA = reference_data$ref_scRNA  
-  } else {
-    ref_scRNA = NULL
-  }
-
-  # we use the previously defined function 'program' to estimate A :
-  pred_prop <- program(mix_rna, ref_bulkRNA, mix_met=mix_met, ref_met=ref_met, ref_scRNA=ref_scRNA)
-  validate_pred(pred_prop,nb_samples = ncol(mix_rna),nb_cells = ncol(ref_bulkRNA),col_names = colnames(ref_met))
-  predi_list[[dataset_name]] = pred_prop
-
-}
-
-
-##############################################################
-### Check the prediction /!\ DO NOT CHANGE THIS PART ###
-##############################################################
-
-
-
-# for (dataset_name in 1:nb_datasets){
-#   ### Validate the prediction 
-#   pred_prop = predi_list[[dataset_name]] 
-#       tryCatch(
-#         #try to do this
-#         {
-#           validate_pred(pred_prop)
-#         },
-#         error=function(e) {
-#             message(paste('An Error Occurred for the dataset : ',dataset_name))
-#             stop(e)
-#         },
-#         warning=function(w) {
-#             message(paste('An Warning Occurred for the dataset : ',dataset_name))
-#             warning(w)
-#         }
-#     )
-# }
-
+validate_pred <- function(pred, nb_samples = ncol(mixes_data) , nb_cells= ncol(reference_data),col_names = colnames(reference_data) )
 
 
 ###############################
 ### Code submission mode
-
 
 print("")
 for (package in c("zip") ) {
@@ -171,7 +83,7 @@ for (package in c("zip") ) {
 
 
 # we generate a zip file with the 'program' source code
-
+print('')
 if ( !dir.exists(paths = "submissions") ) {
     dir.create(path = "submissions")
 }
@@ -207,8 +119,9 @@ prediction_name = "prediction.rds"
 
 ## we save the estimated A matrix as a rds file named 'results.rds' :
 saveRDS(
-object = predi_list
-, file   = paste0("submissions", .Platform$file.sep, prediction_name)) 
+object = pred_prop
+, file   = paste0("submissions", .Platform$file.sep, prediction_name)
+) 
 
 # write_rds(pred_prop, file = "prediction_hugo.rds")
 

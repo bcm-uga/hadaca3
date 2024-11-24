@@ -96,8 +96,6 @@ def validate_pred(pred, nb_samples=None, nb_cells=None, col_names=None):
       print("Warning:")
       print(error_informations)
 
-# validate_pred <- function(pred, nb_samples = ncol(mixes_data) , nb_cells= ncol(reference_data),col_names = colnames(reference_data) )
-
 validate_pred(pred_prop_df, nb_samples=mixes_data.shape[1] , nb_cells=reference_data.shape[1], col_names=reference_data.columns)
 
 

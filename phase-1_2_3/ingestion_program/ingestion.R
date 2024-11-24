@@ -45,28 +45,7 @@ print(x = list.files(path = submission_program, all.files = TRUE, full.names = T
 print(x = "")
 
 ## output files
-# output_program       <- paste0(output, .Platform$file.sep, "output_program.txt")
-# output_profiling     <- paste0(output, .Platform$file.sep, "Rprof.out"         )
 output_profiling_rds <- paste0(output, .Platform$file.sep, "Rprof.rds"         )
-#output_dataType      <- paste0(output, .Platform$file.sep, "dataType.rds"      )
-# file.create(output_program, output_profiling)
-
-## diverting R output to a text file :
-## sink(file = output_program, append = FALSE)
-
-
-# Rprof(
-#     filename         = output_profiling
-#   , append           = FALSE
-#   , interval         = 0.02
-#   , memory.profiling = TRUE
-#   , gc.profiling     = FALSE
-#   , line.profiling   = FALSE
-# )
-# start_time <- proc.time()
-
-
-# Rprof(output_profiling,interval = 0.02)
 
 
 #Check it is a result submission or a program submission

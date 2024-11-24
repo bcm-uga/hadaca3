@@ -26,26 +26,11 @@ source(
   , local = .tempEnv
 )
 
-nb_datasets = 4
 
 ####################################
 ## read input data :
 #####################################
-
-
-
-# mixes_data <- readRDS(file = paste0(input, .Platform$file.sep, "mixes_data.rds") )
-
-# mix_rna <- mixes_data$mix_rna
-# mix_met <- mixes_data$mix_met
-# names(mixes_data)
-
-# reference_data <- readRDS(file = paste0(input, .Platform$file.sep, "reference_data.rds")  )
-# ref_rna <- as.matrix(reference_data$ref_bulkRNA)
-# ref_met <- as.matrix(reference_data$ref_met)
-# names(reference_data)
-
-
+# nb_datasets = 4
 
 base::set.seed(seed = 1)
 
@@ -54,45 +39,68 @@ l_time = list()
 predi_list = list()
 # l_time= c()
 
-for (dataset_name in 1:nb_datasets){
-  dir_name = paste0(input,.Platform$file.sep)
+
+dir_name = paste0(input,.Platform$file.sep)
+dataset_list = list.files(dir_name,pattern="mixes*")
+reference_data <- readRDS(file =  paste0(dir_name, "reference_pdac.rds"))
+# names(reference_data)
+
+for (dataset_name in dataset_list){
   print(paste0("generating prediction for dataset:",toString(dataset_name) ))
 
 
-  mixes_data <- readRDS(file = paste0(dir_name,"mixes_data_",toString(dataset_name)  ,".rds"))
-  mix_rna <- mixes_data$mix_rna
-  mix_met <- mixes_data$mix_met
+  mixes_data <- readRDS(file = paste0(dir_name,dataset_name))
   names(mixes_data)
+  # mix_rna <- mixes_data$mix_rna
+  # mix_met <- mixes_data$mix_met
 
-  reference_data <- readRDS(file =  paste0(dir_name, "reference_pdac.rds"))
-  ref_rna <- as.matrix(reference_data$ref_bulkRNA)
-  # ref_sc_rna <- as.matrix(reference_data$ref_scRNA)
-  ref_met <- as.matrix(reference_data$ref_met)
-  names(reference_data)
+
+  # ref_rna <- as.matrix(reference_data$ref_bulkRNA)
+  # # ref_sc_rna <- as.matrix(reference_data$ref_scRNA)
+  # ref_met <- as.matrix(reference_data$ref_met)
+
+  if ("mix_rna" %in% names(mixes_data)) {
+    mix_rna = mixes_data$mix_rna
+  } else {
+    mix_rna = mixes_data
+  }
+  if ("mix_met" %in% names(mixes_data)) {
+    mix_met = mixes_data$mix_met  
+  } else {
+    mix_met = NULL
+  }
+
+  if ("ref_bulkRNA" %in% names(reference_data)) {
+    ref_bulkRNA = reference_data$ref_bulkRNA
+  } else {
+    ref_bulkRNA = reference_data
+  }
+  if ("ref_met" %in% names(reference_data)) {
+    ref_met = reference_data$ref_met  
+  } else {
+    ref_met = NULL
+  }
+  if ("ref_scRNA" %in% names(reference_data)) {
+    ref_scRNA = reference_data$ref_scRNA  
+  } else {
+    ref_scRNA = NULL
+  }
+
 
   # we use the previously defined function 'program' to estimate A :
   start_time <- proc.time()
-  pred_prop <- .tempEnv$program(
-    mix_rna = mix_rna, mix_met = mix_met,
-    ref_rna = ref_rna, ref_met = ref_met
-  )
+  pred_prop <- .tempEnv$program(mix_rna, ref_bulkRNA, mix_met=mix_met, ref_met=ref_met, ref_scRNA=ref_scRNA)
+
+
   elapsed_time <- proc.time() - start_time
   print (paste0("Prediction has ", nrow(pred_prop), " rows and ", ncol(pred_prop), " columns"))
 
   l_time[[dataset_name]] = as.numeric(elapsed_time["elapsed"])
-  # l_time[[dataset_name]] = elapsed_time["elapsed"]
-  # total_time <- total_time + elapsed_time["elapsed"]
 
   predi_list[[dataset_name]] = pred_prop
 
 }
 
-# print(str(l_time))
-# print(sum(unlist(l_time)))
-# # print(typeof(l_time))
-# print(l_time)
-# print(sum(l_time))
-## save profiling
 saveRDS(
     object = l_time
   , file   = output_profiling_rds
