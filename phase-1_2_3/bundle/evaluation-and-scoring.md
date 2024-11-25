@@ -1,8 +1,6 @@
 # Evaluation and Scoring   
-
-TO DO ELISE (update the following sentence to better describe the scoring process)
                            
-The **score** (discriminating metric) is computed on the estimated proportion matrix. The metric is a combination of row-correlation, column-correlation and mean absolute error between the *ground_truth* and the estimate provided by the participants.
+The **global score** is used to rank the different methods and is computed from the estimated proportion matrix. This score is a combination of several metrics measuring the accuracy of the estimations compared to the real proportions of several datasets: Pearson and Spearman correlations on the total matrix, on the columns (samples correlations) and on the rows (cell types correlations), Mean Absolute Error (MAE) and Root Mean Square Error (RMSE), and Aitchison distance. The combination is a weighted geometric mean, such that all correlations account for one third, all errors for a second third and the distance for the last third of the global score.
 
 To see your score:
 
