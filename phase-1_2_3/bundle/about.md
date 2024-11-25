@@ -18,7 +18,7 @@ The role ot the scientific committee is to precisely define the scientific quest
 -  S. Dejean (researcher in statistic, IMT, Toulouse, France),
 -  C. Lecellier (researcher in genomics, IGMM, Montpellier, France),
 -  M. Richard (researcher in computational biology, TIMC, Grenoble, France),
--  M. TÃ©rÃ©zol (researcher in bioinformatics, MMG, Marseille, France).
+-  M. Térézol (researcher in bioinformatics, MMG, Marseille, France).
 
 
 In addition, 3 external expert have joined the committee : 
@@ -37,8 +37,8 @@ The organization and implementation of the data challenge is coordinated by :
 - F. Chuffart (IR bioinfo INSERM)
 - L. Lamothe (IR bioinfo CNRS),
 - N. Homberg (IR bioinfo, Univ Grenoble-Alpes),
-- M. TÃ©rÃ©zol (IE bioinfo CNRS) and
-- H. Barbot (PhD student, co-supervised by M.Richard and Y. Blum).
+- M. Térézol (IE bioinfo CNRS) and
+- H. Barbot (PhD student, co-supervised by D. Causeur, M. Richard and Y. Blum).
                            
 ## Sponsors                
                            

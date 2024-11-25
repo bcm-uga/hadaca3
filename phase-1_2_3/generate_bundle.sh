@@ -13,8 +13,8 @@ cd $Current_folder
 
 
 echo "generate data"
-# sh generate_data.sh $1
-sh generate_data.sh real
+sh generate_data.sh $1
+# sh generate_data.sh real
 echo 'data generated'
 
 # Zip folder 
