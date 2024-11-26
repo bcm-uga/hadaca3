@@ -128,28 +128,19 @@ rpy2.robjects.r(r_code_get_rowandcolnames)
 get_both_row_col = rpy2.robjects.r['get_both']
 
 
-# Function to convert R object to pandas DataFrame or numpy array
+# # Function to convert R object to pandas DataFrame or numpy array
 def r_object_to_python(r_object,file,element_name):
     try:
         # Try to convert to pandas DataFrame
         return pandas2ri.rpy2py(r_object)
     except NotImplementedError:
-        # If not convertible to DataFrame, we need to read row and colnames with R
-        if rpy2.robjects.r['is.matrix'](r_object)[0] or rpy2.robjects.r['is.data.frame'](r_object)[0]:
-            rows, columns =get_both_row_col(file,element_name)
-            # l = get_both_row_col(file,element_name)
-            # print(l)
-            # rows, columns = l[0],l[1]
-            if(isinstance(columns, type (rpy2.robjects.NULL))):
-                df = pandas.DataFrame(r_object, index=rows)
-            else: 
-                columns = list(columns)
-                df = pandas.DataFrame(r_object, columns=columns, index=rows)
-
-            return df
-        else:
-            # we should not come in this case 
-            return(pandas.DataFrame(r_object))
+        rows, columns =get_both_row_col(file,element_name)
+        if(isinstance(columns, type (rpy2.robjects.NULL))):
+            df = pandas.DataFrame(r_object, index=rows)
+        else: 
+            columns = list(columns)
+            df = pandas.DataFrame(r_object, columns=columns, index=rows)
+        return df
 
 # Function to extract named data elements and convert appropriately
 def extract_data_element(data, file, element_name):
