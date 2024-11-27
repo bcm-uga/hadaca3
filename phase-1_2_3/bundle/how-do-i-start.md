@@ -16,7 +16,7 @@ TO DO LUCIE
 
 
 Reference data for supervised deconvolution is a rds file of a list with the following structure: 
-
+```
 -ref_bulkRNA: Matrix with dimensions 27786 x 5 (gene x cell_type)
 
 -ref_scRNA: List of 3 elements:
@@ -57,6 +57,7 @@ cg00000165 0.2302060 0.1527960 0.4541206 0.6928373 0.5090004
 cg00000236 0.8361639 0.8810673 0.8744915 0.8656830 0.8651425
 cg00000321 0.3017272 0.7842141 0.4368221 0.5817505 0.2712210
 
+```
 
 The challenge provides bulk mixtures for deconvolution, with two types of mixed omics data available for estimating cell type proportions in these mixtures:
 
