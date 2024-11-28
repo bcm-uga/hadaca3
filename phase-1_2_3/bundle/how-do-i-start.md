@@ -142,7 +142,7 @@ For all further *in silico* simulated datasets, the ground truth is obtained fro
 Last three *in silico* simulation introduce dependence structure between genes and CpG probes. These dependences are estimated from the *in vitro* dataset by two different approaches :
 
 - EMFA : We estimate a factor model of the conditionnal variance-covariance matrix of *in vitro* data. The factor model is estimated by an Expectation-Maximisation algorithm (https://doi.org/10.1198/jasa.2009.tm08332)
-- Copula : Capolas can caracterise characterise various complex forms of dependence, such as non-linear or tail dependence between multiple variables. We estimate the empirical copula of the residsual between *in vitro* bulk samples and *in vitro* references (https://doi.org/10.18637/jss.v021.i04).
+- Copula : Copulas can characterise various complex forms of dependence, such as non-linear or tail dependence between multiple variables. We estimate the empirical copula of the residsual between *in vitro* bulk samples and *in vitro* references (https://doi.org/10.18637/jss.v021.i04).
 
 The dataset `SDEL` is derived from the EMFA simulation procedure, but with very low proportion for one cell type.
 
