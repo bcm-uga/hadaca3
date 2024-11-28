@@ -1,6 +1,9 @@
 args <- commandArgs(trailingOnly = TRUE)
 
 
+
+try(system("ln -sf  ../ingested_program/attachement/ attachement", intern = TRUE, ignore.stderr = TRUE))
+
 ## index of the input file :
 # i                  <- trimws(x = args[1] )
 # print(paste0("index of the input file :", i))
@@ -30,7 +33,6 @@ source(
 ####################################
 ## read input data :
 #####################################
-# nb_datasets = 4
 
 base::set.seed(seed = 1)
 

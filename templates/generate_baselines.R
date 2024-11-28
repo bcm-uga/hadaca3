@@ -29,6 +29,12 @@ output_path = paste0(mainDir,"tmp/")
 start_marker= "### Write programs Here !"
 
 
+copy_file <- function(file){
+    file_to_take = file.path(dir_h3_p,file)
+    target = file.path(output_path,file)
+    file.copy( file_to_take ,target,overwrite =TRUE)
+}
+
 create_base_script <- function(dict_name, suffix_file){
 
     dict = get(dict_name)
@@ -58,8 +64,20 @@ create_base_script <- function(dict_name, suffix_file){
         # print(lines_templates_files)
         # Write the modified lines back to the file
         writeLines(lines_templates_files, output_files)
-    }
 
+        if(identical(baseline,"nnlsmultimodalSource") )  {
+            dir.create(file.path(output_path, "attachement/"), showWarnings = FALSE)
+            for ( file in c("attachement/link_gene_CpG.R","attachement/probes_features.rds")     ){
+                copy_file(file)
+            }
+        }
+        if(identical(suffix_file,".py"))  {
+            dir.create(file.path(output_path, "attachement/"), showWarnings = FALSE)
+            for ( file in c("attachement/additionnal_script.py")     ){
+                copy_file(file)
+            }
+        }
+    }
 }
 
 # create_base_script(dict_Phase_0,".R")

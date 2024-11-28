@@ -99,28 +99,6 @@ for (dataset_name in dataset_list){
 ##############################################################
 
 
-
-# for (dataset_name in 1:nb_datasets){
-#   ### Validate the prediction 
-#   pred_prop = predi_list[[dataset_name]] 
-#       tryCatch(
-#         #try to do this
-#         {
-#           validate_pred(pred_prop)
-#         },
-#         error=function(e) {
-#             message(paste('An Error Occurred for the dataset : ',dataset_name))
-#             stop(e)
-#         },
-#         warning=function(w) {
-#             message(paste('An Warning Occurred for the dataset : ',dataset_name))
-#             warning(w)
-#         }
-#     )
-# }
-
-
-
 ###############################
 ### Code submission mode
 
@@ -152,15 +130,36 @@ dump(
 
 date_suffix = format(x = Sys.time( ), format = "%Y_%m_%d_%H_%M_%S")
 
-# we create the associated zip file :
+
+
 zip_program <- paste0("submissions", .Platform$file.sep, "program_", date_suffix, ".zip")
 zip::zip(zipfile= zip_program
-                , files= paste0("submissions", .Platform$file.sep, "program.R")
-                , mode = "cherry-pick"
-                )
+  , files   = paste0("submissions", .Platform$file.sep, "program.R")
+  , mode = "cherry-pick")
+
+if(dir.exists("attachement")) {
+  zip::zip_append(
+      zipfile = zip_program
+      , files= paste0("attachement", .Platform$file.sep)
+    , mode = "cherry-pick"
+  )
+}
 
 zip::zip_list(zip_program)
 print(x = zip_program)
+
+
+
+
+# # we create the associated zip file :
+# zip_program <- paste0("submissions", .Platform$file.sep, "program_", date_suffix, ".zip")
+# zip::zip(zipfile= zip_program
+#                 , files= paste0("submissions", .Platform$file.sep, "program.R")
+#                 , mode = "cherry-pick"
+#                 )
+
+# zip::zip_list(zip_program)
+# print(x = zip_program)
 
 ###############################
 ### Result submission mode  

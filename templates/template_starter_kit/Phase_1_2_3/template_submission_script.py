@@ -134,10 +134,38 @@ with open(os.path.join("submissions", "program.py"), 'w') as f:
 
 date_suffix = pandas.Timestamp.now().strftime("%Y_%m_%d_%H_%M_%S")
 
+
+
+
 # we create the associated zip file:
 zip_program = os.path.join("submissions", f"program_{date_suffix}.zip")
 with zipfile.ZipFile(zip_program, 'w') as zipf:
     zipf.write(os.path.join("submissions", "program.py"), arcname="program.py")
+
+
+def zipdir(path, ziph):
+    # ziph is zipfile handle
+    for root, dirs, files in os.walk(path):
+        for file in files:
+            ziph.write(os.path.join(root, file), 
+                       os.path.relpath(os.path.join(root, file), 
+                                       os.path.join(path, '..')))
+if os.path.exists("attachement"):
+    with zipfile.ZipFile(zip_program, 'a', zipfile.ZIP_DEFLATED) as zipf:
+        zipdir('attachement/', zipf)
+
+
+
+# # Check if the "attachment" directory exists
+# if os.path.exists("attachement"):
+#     # Append the contents of the "attachment" directory to the zip archive
+#     with zipfile.ZipFile(zip_program, mode="a") as zf:
+#         for root, _, files in os.walk("attachement"):
+#             for file in files:
+#                 file_path = os.path.join(root, file)
+#                 # Add file to zip while preserving directory structure
+#                 arcname = os.path.relpath(file_path, start="attachement")
+#                 zf.write(file_path, arcname)
 
 print(zip_program)
 

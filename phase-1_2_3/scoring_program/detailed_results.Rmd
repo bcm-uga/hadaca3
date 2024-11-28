@@ -44,8 +44,8 @@ dic_datasets2short <- list(
   insilicodirichletCopule =  "SDC5" 
 )
 
-# input = "test_output/"
-# output = "test_output/"
+# input = "../test_output/"
+# output = "../test_output/"
 
 
 datasets = c("VITR", "VIVO", "SBN5", "SDN5", "SDN4", "SDN6", "SDE5", "SDEL", "SDC5")
@@ -95,11 +95,14 @@ for (name in names(prediction)) {
 
 
 datasets <- datasets[datasets %in%  unlist(dic_longnames2short)]
+
+# Try with only one dataset (like phase 1)
+# datasets = datasets[1] # 1:4
+
 prediction <- prediction[datasets]
 time <- time[datasets]
 ground_truth <- ground_truth[datasets]
 score <- score[datasets]
-
 ```
 
 
@@ -131,6 +134,8 @@ We have 9 different datasets:
 - `SDEL` : *in silico simulation*, using a Dirichlet distribution, with EMFA dependence, for 5 cell-types including one with very low proportions
 - `SDC5` : *in silico simulation*, using a Dirichlet distribution, with copula dependence, for 5 cell-types
 
+For the `VIVO` dataset, we don't know the ground truth. However, we have a proxy for the relative proportions of cancer cell types, as measured on histological slides. Since we only have a partial ground truth, we can only compute correlation metrics on the cancer types.
+
 ```{r Heatmap_pred, eval=FALSE}
 ## Heatmap of predictions
 for (dataset in seq_along(prediction)) {
@@ -161,6 +166,14 @@ heatmaps[[1]] + heatmaps[[2]] #+ heatmaps[[3]]
 ```{r abs_bias, warning=FALSE}
 color_pallet = RColorBrewer::brewer.pal(9, "Set1")
 names(color_pallet) = datasets
+color_pallet = color_pallet[which(!is.na(names(color_pallet)))]
+
+if (any(names(color_pallet) == "VIVO")) {
+  color_pallet_abs_bias = color_pallet[-which(names(color_pallet) == "VIVO")]
+} else {
+  color_pallet_abs_bias = color_pallet
+}
+
 
 ground_truth_corrected = ground_truth
 prediction_corrected = prediction
@@ -215,21 +228,20 @@ boxplots = ggplot(abs_bias, aes(x=CellType, y=Error, fill=Dataset)) +
     legend.position = "bottom"
   ) +
   scale_fill_manual(
-    values = color_pallet[-which(names(color_pallet) == "VIVO")]
+    values = color_pallet_abs_bias
   )
 plotly::layout(
   plotly::ggplotly(boxplots), 
   boxmode = "group",
   legend = list(
-    x = 0,
-    y = -0.3,
-    xanchor = 'left',
-    yanchor = 'bottom',
+    # x = 0,
+    # y = -0.3,
+    # xanchor = 'left',
+    # yanchor = 'bottom',
     orientation = 'h')
 )
 ```
 
-<!-- Boxplot of absolute error between estimated proportions and ground truth proportions $|\hat{\beta}_{prop} - \beta_{true\_prop}|$ for each cell type. -->
 Boxplot of absolute error between estimated proportions $\hat{\beta}$ and ground truth proportions $\beta$ for each cell type. For the sample $j$ and the cell type $i$,  $\text{Absolut error}_{i,j} = |\hat{\beta}_{i,j} - \beta_{i,j}|$
 
 ## Boxplot of each metric
@@ -338,15 +350,42 @@ boxplots_metric = ggplot(df_metric, aes(x = Dataset, y = metric_score, fill = Da
   scale_fill_manual(
     values = color_pallet
   )
-plotly::layout(
-  plotly::ggplotly(boxplots_metric), 
-  legend = list(
-    x = 0,
-    y = -0.3,
-    xanchor = 'left',
-    yanchor = 'bottom',
-    orientation = 'h')
+pp = plotly::ggplotly(boxplots_metric, width = 900, height = 650)
+# pp
+pp = plotly::layout(pp, legend = list(orientation = 'h'))
+# pp
+invisible(
+  lapply(seq_along(pp$x$layout$shapes), \(i){ # ça ne regle pas entierement le pb, ils sont toujours sur les plots du dessus
+  
+  # if a strip shape (using the strip color), reduce the height of the strip box
+  if(isTRUE(pp$x$layout$shapes[[i]]$fillcolor == "rgba(179,179,179,1)")) {
+   pp$x$layout$shapes[[i]]$y1 <<- 18    # base at 23.379
+  }
+  # there are less annotations than shapes
+  if(i <= length(pp$x$layout$annotations)) { 
+    # reduce the font size of the strip text
+    if(any(pp$x$layout$annotations[[i]]$text %in% unique(df_metric$metric_name))) {
+      pp$x$layout$annotations[[i]]$font$size <<- 11   # base at 11.6895
+    }
+  }
+})
 )
+pp
+
+# plotly::layout(
+#   pp,
+#   legend = list(
+#     # x = 0,
+#     # y = 0,#-0.2,
+#     # xanchor = 'left',
+#     # yanchor = 'right',
+#     orientation = 'h'),
+#   # ggplotly make strip are on top of upper plot (which is not nice)
+#   # the simplest way (but ugly) is to add space for each strip position
+#   # yaxis = list(range = c(-0.05, max(df_metric[df_metric$metric_name == "RMSE", "metric_score"], na.rm = TRUE)))#,
+#   # yaxis2 = list(range = c(-0.5, 1)),
+#   # yaxis3 = list(range = c(-0.5, 1))
+# )
 ```
 
 
@@ -413,17 +452,40 @@ scatter_prop = ggplot(df_scatter) +
     name = "Cell type"
   ) +
   theme_light() +
-  theme(plot.title = element_text(hjust = 0.5)) +
-  scale_fill_manual(
-    values = color_pallet
-  )
-plotly::ggplotly(scatter_prop)
+  theme(plot.title = element_text(hjust = 0.5))
+
+pp = plotly::ggplotly(scatter_prop, width = 900, height = 1000)
+# pp
+pp = plotly::layout(pp, legend = list(orientation = 'h'))
+# pp
+invisible(
+  lapply(seq_along(pp$x$layout$shapes), \(i){ # ça ne regle pas entierement le pb, ils sont toujours sur les plots du dessus
+  
+  # if a strip shape (using the strip color), reduce the height of the strip box
+  if(isTRUE(pp$x$layout$shapes[[i]]$fillcolor == "rgba(179,179,179,1)")) {
+   pp$x$layout$shapes[[i]]$y1 <<- 18    # base at 23.379
+  }
+  # there are less annotations than shapes
+  if(i <= length(pp$x$layout$annotations)) { 
+    # reduce the font size of the strip text
+    if(any(pp$x$layout$annotations[[i]]$text %in% unique(df_metric$metric_name))) {
+      pp$x$layout$annotations[[i]]$font$size <<- 11   # base at 11.6895
+    }
+  }
+})
+)
+pp
 ```
 
 ## Radar charts
 
 ```{r scores_global_radarchart, fig.width=20, fig.height=11.25, warning=FALSE, message=FALSE, results='hide'}
-par(mfrow = c(3,3))
+if (length(datasets) == 9) {
+  par(mfrow = c(3,3))
+} else if (length(datasets) > 1) {
+  par(mfrow = c(length(datasets) %/% 3, 3))
+}
+
 for (data in seq_along(datasets)) {
   ground_truth_data = ground_truth[[data]]
   

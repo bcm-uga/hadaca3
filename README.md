@@ -238,3 +238,5 @@ for instance if `nb_datasets=4`, there are 4 datasets in phase 2 and 4 others da
 * create vm docker depending on the challenge business
 * add submissions (meta) informations inside the detialed view
 * Add participants to create their conda env/. 
+* **Use other type of data the rds ! ! ! **
+* Define precisely the naming of the final data and create small data from the beginning which will make everything faster ! 
