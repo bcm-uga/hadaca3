@@ -120,17 +120,32 @@ The data has the folloing structure:
 
 In Phase 2, multiple datasets are provided, each with different characteristics. These datasets are labeled as follows:
 
-TO DO HUGO
+- `VITR` : *in vitro* mixtures of pure cell types
+- `VIVO` : real *in vivo* bulk samples
+- `SBN5` : *in silico simulation* of pseudo-bulk from simulated single-cell data, for 5 cell-types
+- `SDN5` : *in silico simulation*, using a Dirichlet distribution, without correlation between features, for 5 cell-types
+- `SDN4` : *in silico simulation*, using a Dirichlet distribution, without correlation between features, for 4 cell-types
+- `SDN6` : *in silico simulation*, using a Dirichlet distribution, without correlation between features, for 6 cell-types
+- `SDE5` : *in silico simulation*, using a Dirichlet distribution, with EMFA dependence, for 5 cell-types
+- `SDEL` : *in silico simulation*, using a Dirichlet distribution, with EMFA dependence, for 5 cell-types including one with very low proportions
+- `SDC5` : *in silico simulation*, using a Dirichlet distribution, with copula dependence, for 5 cell-types
 
-- `VIVO` : real in vivo bulk samples
-- `VITR`: in vitro mixtures of pure cell types
-- `SBN5` : in silico simulation of pseudo-bulk from simulated single-cell data, for 5 cell-types
-- `SDN4` : in silico simulation, using a Dirichlet distribution, without correlation between features, for 4 cell-types
-- `SDN5` : in silico simulation, using a Dirichlet distribution, without correlation between features, for 5 cell-types
-- `SDN6` : in silico simulation, using a Dirichlet distribution, without correlation between features, for 6 cell-types
-- `SDE5` : in silico simulation, using a Dirichlet distribution, with EMFA correlation, for 5 cell-types
-- `SDEL` : in silico simulation, using a Dirichlet distribution, with EMFA correlation, for 5 cell-types including one with very low proportions
-- `SDC5` : in silico simulation, using a Dirichlet distribution, with copule correlation, for 5 cell-types
+
+Since `VITR` is an in vitro mixtures, the true proportions of each cell type in each sample are controlled and therefore the ground truth can be assumed to be known.
+
+For the `VIVO` dataset, we don't know the ground truth. However, we have a proxy for the relative proportions of cancer cell types, as measured on histological slides. Since we only have a partial ground truth, we can only compute correlation metrics on the cancer types.
+
+The principle of the `SBN5` pseudo bulk simulation is based on how bulk samples are obtained in reality. The global gene expression or DNA methylation in a bulk sample is from a multitude of heterogeneous cell. Single cell technology can produce gene expression or DNA methylation of one cell, so a *in silico* mixture of such data from different cell population with known proportions of each cell type produce a pseudo-bulk sample.
+
+For all further *in silico* simulated datasets, the ground truth is obtained from a Dirichlet distribution with different set of parameters, chosen to generate a ground truth close to the *in vitro* ground truth. The first data set is a basic simulation procedure with no explicit dependence or correlation introduce between genes and CpG probes. Based on this simple simulation, we produce two other datasets: with only four cell types from reference to generate samples for the first one, and with one more cell type than reference for the second one.
+
+Last three *in silico* simulation introduce dependence structure between genes and CpG probes. These dependences are estimated from the *in vitro* dataset by two different approaches :
+
+- EMFA : We estimate a factor model of the conditionnal variance-covariance matrix of *in vitro* data. The factor model is estimated by an Expectation-Maximisation algorithm (https://doi.org/10.1198/jasa.2009.tm08332)
+- Copula : Capolas can caracterise characterise various complex forms of dependence, such as non-linear or tail dependence between multiple variables. We estimate the empirical copula of the residsual between *in vitro* bulk samples and *in vitro* references (https://doi.org/10.18637/jss.v021.i04).
+
+The dataset `SDEL` is derived from the EMFA simulation procedure, but with very low proportion for one cell type.
+
 
 ## Baselines                 
 
