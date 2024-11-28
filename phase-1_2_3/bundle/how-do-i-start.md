@@ -8,58 +8,19 @@ This section provides you a dataset description and the baseline methods suggest
 
 **Data source**
 
-TO DO LUCIE
+- Reference data
+
+The organizer are providing an example of reference data for pdac tissue. 3 reference data are avaibale : bulk RNA-Seq, bulk methylation and single-cell RNA-seq.
+
+    - bulk RNA-Seq
+    - bulk methylation
+    - single-cell RNA-seq : for the 3 
+- 
 
 **Data description**
 
-TO DO LUCIE
-
-
-Reference data for supervised deconvolution is a rds file of a list with the following structure: 
-```
--ref_bulkRNA: Matrix with dimensions 27786 x 5 (gene x cell_type)
-
--ref_scRNA: List of 3 elements:
-    -ref_sc_peng: List of 2 elements:
-        counts: dgCMatrix with dimensions 24005 x 4976 (gene x cell)
-        metadata: List of 2 elements:
-          cell_type: Vector of 4976 elements in c("basal","classic","endo","fibro","immune")
-          sample: Vector of 4976 elements in c("N1","N10","N11","N2","N3","N4","N5","N6","N7","N8","N9","T1","T10","T11","T12","T13","T14" "T15","T16","T17","T18","T19","T2","T20","T21","T22","T23","T24","T3","T4","T5","T6","T7","T8","T9")
-    
-    -ref_sc_baron: List of 2 elements:
-        counts: dgCMatrix with dimensions 20125 x 551 (gene x cell) 
-        metadata: List of 2 elements:
-          cell_type: Vector of 551 elements in c("endo","fibro","immune")
-          sample: Vector of 551 elements in c("h_1","h_2","h_3","h_4")
-    
-    - ref_sc_raghavan: List of 2 elements:
-        counts: dgCMatrix with dimensions 18710 x 4953 (gene x cell)
-        metadata: List of 2 elements:
-          cell_type: Vector of 4953 elements in c("basal","classic","endo","immune")
-          sample: Vector of 4953 elements c("met_2")
-    
--ref_met: Matrix with dimensions 416830 x 5 (probe x cell_type)
-
-
-> reference$ref_bulkRNA[1:5,]
-               endo       fibro     immune     classic      basal
-5S_rRNA  0.00000000  0.00000000 0.00000000  0.12377391 0.24216543
-7SK      0.03452479  0.00000000 0.01654273  1.95287720 0.51918127
-A1BG     0.10674770 10.27678539 6.19426480  0.16168673 0.08580523
-A1BG-AS1 1.19123408  3.84204450 2.88999093  0.01559645 0.00000000
-A1CF     0.00000000  0.04385526 0.03356041 34.38164078 0.52449554
-
-> reference$ref_met[1:5,]
-                endo     fibro    immune   classic     basal
-cg00000029 0.5770137 0.4734866 0.6315287 0.1184762 0.0877167
-cg00000109 0.8546109 0.8383937 0.8467374 0.8331711 0.8502325
-cg00000165 0.2302060 0.1527960 0.4541206 0.6928373 0.5090004
-cg00000236 0.8361639 0.8810673 0.8744915 0.8656830 0.8651425
-cg00000321 0.3017272 0.7842141 0.4368221 0.5817505 0.2712210
-
-```
-
 The challenge provides bulk mixtures for deconvolution, with two types of mixed omics data available for estimating cell type proportions in these mixtures:
+
 
     an RNA-seq data matrix
     a METHepic data matrix.
@@ -99,28 +60,62 @@ Example to load and inspect the reference data:
 
 ```       
 ## read reference data
-       references = readRDS("reference_pdac.rds")
+       reference = readRDS("reference_pdac.rds")
 
-       # format of bulk RNA references
-       colnames(reference$ref_bulkRNA)
-       [1] "endo"    "fibro"   "immune"  "classic" "basal"
-       dim(reference$ref_bulkRNA)
-       [1] 21104     5
+> reference$ref_bulkRNA[1:5,]
+               endo       fibro     immune     classic      basal
+5S_rRNA  0.00000000  0.00000000 0.00000000  0.12377391 0.24216543
+7SK      0.03452479  0.00000000 0.01654273  1.95287720 0.51918127
+A1BG     0.10674770 10.27678539 6.19426480  0.16168673 0.08580523
+A1BG-AS1 1.19123408  3.84204450 2.88999093  0.01559645 0.00000000
+A1CF     0.00000000  0.04385526 0.03356041 34.38164078 0.52449554
 
-       # format of methylome references
-       > colnames(reference$ref_met)
-       [1] "endo"    "fibro"   "immune"  "classic" "basal"  
-       > dim(reference$ref_met)
-       [1] 824678      5
+> reference$ref_met[1:5,]
+                endo     fibro    immune   classic     basal
 
-       # format of scRNAseq references
-       > dim(referencerefscRNArefscRNAcounts) # 23376 gene expression for 20146 cells
-       [1] 23376      20146
-       > dim(referencerefscRNArefscRNAmetadata) # cell labels
-       [1] 20146      1
-       > table(referencerefscRNArefscRNAmetadata[,1])
-       [1] basal classic    endo   fibro  immune 
-           2036    2178    8874    3946    3112 
+cg00000029 0.5770137 0.4734866 0.6315287 0.1184762 0.0877167
+cg00000109 0.8546109 0.8383937 0.8467374 0.8331711 0.8502325
+cg00000165 0.2302060 0.1527960 0.4541206 0.6928373 0.5090004
+cg00000236 0.8361639 0.8810673 0.8744915 0.8656830 0.8651425
+cg00000321 0.3017272 0.7842141 0.4368221 0.5817505 0.2712210
+
+> reference$ref_scRNA$ref_sc_peng$counts[101:105,101:105]
+5 x 5 sparse Matrix of class "dgCMatrix"
+              T1_TACAGTGTCAGCTCGG T1_TACCTTATCTCGCTTG T1_TACGGATGTCAGTGGA T1_TACGGGCGTACTTGAC T1_TAGTGGTAGGGAGTAA
+KCNAB2                          .                   .                   .                   .                   .
+RPL22                          10                   6                   5                   2                  11
+RP1-120G22.11                   .                   .                   .                   .                   .
+RNF207                          .                   .                   .                   .                   .
+ICMT                            .                   .                   .                   .                   .
+
+```
+
+The data has the folloing structure:
+```
+-ref_bulkRNA: Matrix with dimensions 27786 x 5 (gene x cell_type)
+
+-ref_scRNA: List of 3 elements:
+    -ref_sc_peng: List of 2 elements:
+        counts: dgCMatrix with dimensions 24005 x 4976 (gene x cell)
+        metadata: List of 2 elements:
+          cell_type: Vector of 4976 elements in c("basal","classic","endo","fibro","immune")
+          sample: Vector of 4976 elements in c("N1","N10","N11","N2","N3","N4","N5","N6","N7","N8","N9","T1","T10","T11","T12","T13","T14" "T15","T16","T17","T18","T19","T2","T20","T21","T22","T23","T24","T3","T4","T5","T6","T7","T8","T9")
+    
+    -ref_sc_baron: List of 2 elements:
+        counts: dgCMatrix with dimensions 20125 x 551 (gene x cell) 
+        metadata: List of 2 elements:
+          cell_type: Vector of 551 elements in c("endo","fibro","immune")
+          sample: Vector of 551 elements in c("h_1","h_2","h_3","h_4")
+    
+    - ref_sc_raghavan: List of 2 elements:
+        counts: dgCMatrix with dimensions 18710 x 4953 (gene x cell)
+        metadata: List of 2 elements:
+          cell_type: Vector of 4953 elements in c("basal","classic","endo","immune")
+          sample: Vector of 4953 elements c("met_2")
+    
+-ref_met: Matrix with dimensions 416830 x 5 (probe x cell_type)
+
+
 ```
 
 In Phase 2, multiple datasets are provided, each with different characteristics. These datasets are labeled as follows:
