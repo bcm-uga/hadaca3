@@ -1,6 +1,8 @@
 
 
-Phase_1_dataset_name="insilicopseudobulk"
+# Phase_1_dataset_name="insilicopseudobulk"
+Phase_1_dataset_name="insilicodirichletEMFA"
+
 # echo $1
 
 # the folder data is also created insite the generate_data.R
@@ -8,14 +10,22 @@ echo cean data first
 sh clean.sh
 echo cleaning done. 
 
+rm -rf input_data
+rm -rf input_data_final
 
 mkdir input_data
 mkdir input_data_final
 # for i in $(seq 1 $nb_datasets); do mkdir input_data/input_data_$i ;  done ; 
 # for i in $(seq 1 $nb_datasets); do mkdir input_data_final/input_data_$i ;  done ; 
 
+
+rm -rf ground_truth
+rm -rf ground_truth_final
+
 mkdir ground_truth
 mkdir ground_truth_final
+
+rm -rf data
 mkdir data
 
 #Test if argument exist
@@ -46,6 +56,9 @@ path_data="data/"
 
 fi
 
+
+rm -rf input_data_phase1
+rm -rf ground_truth_phase1
 mkdir input_data_phase1
 mkdir ground_truth_phase1
 
@@ -57,7 +70,11 @@ rm -rf "$path_data"reference_data/
 
 
 dataset_phase1="$path_data"$Phase_1_dataset_name"1/mixes1_"$Phase_1_dataset_name"_pdac.rds"
+
+echo $dataset_phase1
 dataset_phase1_gt="$path_data"$Phase_1_dataset_name"1/groundtruth1_"$Phase_1_dataset_name"_pdac.rds"
+echo $dataset_phase1_gt
+
 
 cp "$dir"$dataset_phase1 input_data_phase1/
 cp "$dir"$dataset_phase1_gt ground_truth_phase1/
@@ -81,28 +98,10 @@ do
 done
 
 
-# for i in  $(seq 1 $nb_datasets);
-# do
-#     echo "Number $i"
 
-#     cp "$path_data""$i"/mixes_data_"$i".rds input_data/
-#     cp "$path_data""$i"/ground_truth_"$i".rds ground_truth/
-    
-# done
-
-# for i in  $(seq $((nb_datasets+1)) $((nb_datasets * 2)));
-# do
-#     echo "Number $i"
-#     num=$((i -nb_datasets ))
-#     cp "$path_data""$i"/mixes_data_"$i".rds input_data_final/mixes_data_"$num".rds
-#     cp "$path_data""$i"/ground_truth_"$i".rds ground_truth_final/ground_truth_"$num".rds
-# done
 
 mkdir starting_kit/data/
 cp -r input_data/* starting_kit/data/
 
 mkdir starting_kit_phase1/data/
 cp -r input_data_phase1/* starting_kit_phase1/data/
-
-# cp "$path_data"mixes_data.rds starting_kit/mixes_data.rds
-# cp "$path_data"reference_data.rds starting_kit/reference_data.rds

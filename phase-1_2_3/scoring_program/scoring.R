@@ -379,6 +379,8 @@ for (groundthruth_name in groundtruh_list){
 
   # baseline_scores = baseline_scoring_function(A_real=Atruth, A_pred=Aest, time=as.numeric(timing))
   baseline_scores = scoring_function(A_real=Atruth,  A_pred=Aest)
+
+  score_mean = as.numeric(baseline_scores$score_aggreg)
   # break
   # baseline_scores = baseline_scoring_function(A_real=Atruth, A_pred=Aest, time=timing)
   # rownames(baseline_scores$baseline_estimation) = baseline
@@ -388,11 +390,12 @@ for (groundthruth_name in groundtruh_list){
 
   saveRDS(scores, paste0(output,"/scores_",dataset_name))
 
-  message(scores)
+  cat(scores)
   # stopifnot(exprs = all( !is.na(x = scores) ) )
   # print(x = paste0("Scores dataset ",toString(dataset_name), ": ", paste(baseline_scores, collapse = ", ") ) )
 
-  score_mean = mean(x = as.numeric(scores) )
+  # score_mean = mean(x = as.numeric(scores), na.rm =TRUE )
+  # score_mean = as.numeric(scores$score_aggreg)
   cat(paste0("Accuracy_mean_",toString(methods_name), ": " , score_mean, "\n"), file = output_file, append = TRUE)
 
   l_res[[dataset_name]] = score_mean

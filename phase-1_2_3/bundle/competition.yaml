@@ -3,7 +3,7 @@ title: Multimodal data integration to quantify tumor heterogeneity in cancer res
 # docker_image: hombergn/hadaca3_light
 # docker_image: hombergn/hadaca3_pyr
 docker_image: hombergn/hadaca3_final
-queue: null
+queue:  a05e3a5f-09df-40e3-978e-02f147289877 
 description: HADACA3
 registration_auto_approve: true
 enable_detailed_results: true
@@ -35,15 +35,15 @@ tasks:
 - index: 1
   name: LIGHT Cell type proportion estimation from transcriptome data1
   description: LIGHT COMETH data challenge
-  reference_data: ground_truth.zip 
-  input_data: input_data.zip
+  reference_data: ground_truth_phase2.zip 
+  input_data: input_data_phase2.zip
   scoring_program: scoring_program.zip
   ingestion_program: ingestion_program.zip
 - index: 2
   name: FINAL Evaluation LIGHT Cell type proportion estimation from transcriptome data1
   description: LIGHT COMETH data challenge
-  reference_data: ground_truth_final.zip 
-  input_data: input_data_final.zip
+  reference_data: ground_truth_phase3.zip 
+  input_data: input_data_phase3.zip
   scoring_program: scoring_program.zip
   ingestion_program: ingestion_program.zip
 solutions: []
@@ -65,7 +65,7 @@ phases:
   name: MAIN PHASE - Cell type proportion estimation from transcriptome and methylome data, using multimodal references.
   description: good luck 
   start: '2024-03-20 10:41'
-  end: '2024-12-20 11:00'
+  end: '2024-11-28 11:00'
   max_submissions_per_day: 20
   max_submissions: 100
   execution_time_limit: 600000
@@ -77,7 +77,7 @@ phases:
 - index: 2
   name: FINAL PHASE - Cell type proportion estimation from transcriptome and methylome data, using multimodal references.
   description: good luck
-  start: '2024-12-20 11:01'
+  start: '2024-11-28 11:01'
   # end: '2024-10-20T00:10'
   max_submissions_per_day: 15
   max_submissions: 100

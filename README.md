@@ -231,3 +231,10 @@ cd -
 
 The variable `nb_datasets` stand for the number of datasets per phase in the phase 2 and 3. 
 for instance if `nb_datasets=4`, there are 4 datasets in phase 2 and 4 others datasets in phase 3.  
+
+
+# To improve for next challenge
+
+* create vm docker depending on the challenge business
+* add submissions (meta) informations inside the detialed view
+* Add participants to create their conda env/. 

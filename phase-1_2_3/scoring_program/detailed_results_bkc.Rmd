@@ -44,20 +44,23 @@ dic_datasets2short <- list(
   insilicodirichletCopule =  "SDC5" 
 )
 
-# input = "test_output/"
-# output = "test_output/"
+order = c("VITR", "VIVO", "SBN5", "SDN5", "SDN4", "SDN6", "SDE5", "SDEL", "SDC5")
 
 
-datasets = c("VITR", "VIVO", "SBN5", "SDN5", "SDN4", "SDN6", "SDE5", "SDEL", "SDC5")
+input ='test_output/'
+output ='test_output/'
 
 
+# Aest_l  = readRDS(file = paste0(input, .Platform$file.sep, "res", .Platform$file.sep, "prediction.rds") )
 dir_name = paste0(input, .Platform$file.sep, "ref", .Platform$file.sep)
+message((dir_name))
 groundtruh_list = list.files(dir_name,pattern="groundtruth*")
 
-# print(groundtruh_list)
+print(groundtruh_list)
 
 
 dic_longnames2short =list()
+# dic_longnames2short_gt =list()
 
 ground_truth= list()
 score = list()
@@ -73,7 +76,6 @@ for (groundthruth_name in groundtruh_list){
   # dic_longnames2short_gt[[groundthruth_name]] = dic_datasets2short[[methods_name]]
 
   gt_file =  readRDS(file = paste0(dir_name,.Platform$file.sep, groundthruth_name) )
-
   ground_truth[[dic_datasets2short[[methods_name]]]] = gt_file
 
 
@@ -83,22 +85,17 @@ for (groundthruth_name in groundtruh_list){
 }
 
 prediction <- readRDS(paste0(input,.Platform$file.sep,"res",.Platform$file.sep,"prediction.rds"))
+names(prediction) = dic_longnames2short
+
 time = readRDS(file = paste0(input, .Platform$file.sep, "res", .Platform$file.sep, "Rprof.rds") )
-
-stopifnot(identical(names(prediction), names(time)))
-
-
-for (name in names(prediction)) {
-  names(time)[which(name == names(prediction))] = dic_longnames2short[name]
-  names(prediction)[which(name == names(prediction))] = dic_longnames2short[name]
-}
+names(time) = dic_longnames2short
 
 
-datasets <- datasets[datasets %in%  unlist(dic_longnames2short)]
-prediction <- prediction[datasets]
-time <- time[datasets]
-ground_truth <- ground_truth[datasets]
-score <- score[datasets]
+# datasets = dic_longnames2short
+# datasets <- datasets[match(order, datasets)]
+
+
+datasets = order
 
 ```
 
@@ -117,19 +114,21 @@ knitr::kable(
   table.attr = "style='overflow-x:auto; display:block; white-space:nowrap;'"
 )
 # kableExtra::scroll_box(score_table, width = "100%", height = "400px")
+
+
+
 ```
 
 We have 9 different datasets: 
-
-- `VITR` : *in vitro* mixtures of pure cell types
-- `VIVO` : real *in vivo* bulk samples
-- `SBN5` : *in silico simulation* of pseudo-bulk from simulated single-cell data, for 5 cell-types
-- `SDN5` : *in silico simulation*, using a Dirichlet distribution, without correlation between features, for 5 cell-types
-- `SDN4` : *in silico simulation*, using a Dirichlet distribution, without correlation between features, for 4 cell-types
-- `SDN6` : *in silico simulation*, using a Dirichlet distribution, without correlation between features, for 6 cell-types
-- `SDE5` : *in silico simulation*, using a Dirichlet distribution, with EMFA dependence, for 5 cell-types
-- `SDEL` : *in silico simulation*, using a Dirichlet distribution, with EMFA dependence, for 5 cell-types including one with very low proportions
-- `SDC5` : *in silico simulation*, using a Dirichlet distribution, with copula dependence, for 5 cell-types
+* VITR: *in vitro* dataset,
+* VIVO: *in vivo* dataset where we can only evaluate prediction by correlations metric because of the ground truth,
+* SBN5; pseudo bulk simulation procedure, without gene/CpG probe dependence introduce on residual error, 
+* SDN5: basic simulation procedure, with proportion drawn up according to a Dirichlet law and without gene/CpG probe dependence introduce on residual error, 
+* SDN4: basic simulation procedure with one less cell type than reference, with proportion drawn up according to a Dirichlet law and without gene/CpG probe dependence introduce on residual error,
+* SDN6: basic simulation procedure with one more cell type than reference, with proportion drawn up according to a Dirichlet law and without gene/CpG probe dependence introduce on residual error,
+* SDE5: EMFA simulation procedure, with proportion drawn up according to a Dirichlet law and with gene/CpG probe dependence introduce on residual error by a factor model, 
+* SDEL: EMFA simulation procedure with low proportion to the immune cell type (more to the normal one), with proportion drawn up according to a Dirichlet law and with gene/CpG probe dependence introduce on residual error by a factor model, 
+* SDC5: Copula simulation procedure, with proportion drawn up according to a Dirichlet law and with gene/CpG probe dependence introduce on residual error by an empirical copula.
 
 ```{r Heatmap_pred, eval=FALSE}
 ## Heatmap of predictions
@@ -159,9 +158,6 @@ heatmaps[[1]] + heatmaps[[2]] #+ heatmaps[[3]]
 ## Boxplot of the absolute error
 
 ```{r abs_bias, warning=FALSE}
-color_pallet = RColorBrewer::brewer.pal(9, "Set1")
-names(color_pallet) = datasets
-
 ground_truth_corrected = ground_truth
 prediction_corrected = prediction
 for (data in seq_along(datasets)) {
@@ -213,9 +209,6 @@ boxplots = ggplot(abs_bias, aes(x=CellType, y=Error, fill=Dataset)) +
   theme(
     plot.title = element_text(hjust = 0.5),
     legend.position = "bottom"
-  ) +
-  scale_fill_manual(
-    values = color_pallet[-which(names(color_pallet) == "VIVO")]
   )
 plotly::layout(
   plotly::ggplotly(boxplots), 
@@ -229,29 +222,28 @@ plotly::layout(
 )
 ```
 
-<!-- Boxplot of absolute error between estimated proportions and ground truth proportions $|\hat{\beta}_{prop} - \beta_{true\_prop}|$ for each cell type. -->
-Boxplot of absolute error between estimated proportions $\hat{\beta}$ and ground truth proportions $\beta$ for each cell type. For the sample $j$ and the cell type $i$,  $\text{Absolut error}_{i,j} = |\hat{\beta}_{i,j} - \beta_{i,j}|$
+Boxplot of absolute error between estimated proportions and ground truth proportions $|\hat{\beta}_{prop} - \beta_{true\_prop}|$ for each cell type.
 
 ## Boxplot of each metric
 
 ```{r scores_samples_all_metrics, warning=FALSE}
 correlationP_1col = function(Ai_real, Ai_pred) {
-  # Ai_pred = Ai_pred[names(Ai_real)]
+  Ai_pred = Ai_pred[names(Ai_real)]
   return(cor(Ai_real, Ai_pred, method = "pearson"))
 }
 correlationS_1col = function(Ai_real, Ai_pred) {
-  # Ai_pred = Ai_pred[names(Ai_real)]
+  Ai_pred = Ai_pred[names(Ai_real)]
   return(cor(Ai_real, Ai_pred, method = "spearman"))
 }
 eval_Aitchison_1col = function(Ai_real, Ai_pred, min = 1e-9) {
-  # Ai_pred = Ai_pred[names(Ai_real)]
+  Ai_pred = Ai_pred[names(Ai_real)]
   # Aitchison dist doesn't like 0 
   Ai_real[Ai_real < min] = min
   Ai_pred[Ai_pred < min] = min
   return(coda.base::dist(rbind(Ai_real, Ai_pred), method = "aitchison")[1])
 }
 eval_Aitchison = function(A_real, A_pred, min = 1e-9) {
-  # A_pred = A_pred[rownames(A_real),]
+  A_pred = A_pred[rownames(A_real),]
   # Aitchison dist doesn't like 0 
   A_real[A_real < min] = min
   A_pred[A_pred < min] = min
@@ -269,16 +261,9 @@ eval_MAE = function (A_real, A_pred){
   return(mean(abs(A_real - A_pred)))
 }
 
-
-
-
 df_metric = do.call(
   what = rbind,
   args = lapply(seq_along(datasets), function(data) {
-    
-    stopifnot(identical(rownames(prediction_corrected[[data]]), rownames(ground_truth_corrected[[data]])))
-    prediction_corrected[[data]][rownames(ground_truth_corrected[[data]]),]
-
     data.frame(
       "RMSE" = sapply(seq(ncol(ground_truth_corrected[[data]])), function(sample) {
         eval_RMSE(ground_truth_corrected[[data]][,sample], prediction_corrected[[data]][,sample])
@@ -295,7 +280,7 @@ df_metric = do.call(
       "Spearman" = sapply(seq(ncol(ground_truth_corrected[[data]])), function(sample) {
         correlationS_1col(ground_truth_corrected[[data]][,sample], prediction_corrected[[data]][,sample])
       }),
-      "Dataset" = datasets[data]
+      "Dataset" = datasets[[data]]
     )
   })
 )
@@ -308,7 +293,7 @@ df_metric = tidyr::pivot_longer(
 ) 
 df_metric$Dataset = factor(df_metric$Dataset, levels = datasets)
 df_metric$metric_name = factor(df_metric$metric_name, levels = c("RMSE", "MAE", "Aitchison", "Pearson", "Spearman"))
-df_metric[(df_metric$Dataset == "VIVO") & (df_metric$metric_name %in% c("RMSE", "MAE", "Aitchison")), "metric_score"] = NA_real_
+df_metric[(df_metric$Dataset == "VIVO") & (df_metric$metric_name %in% c("RMSE", "MAE")), "metric_score"] = NA_real_
 
 # boxplots_metric = lapply(c("RMSE","MAE","Aitchison","Pearson","Spearman"), function(metric)
 #   ggplot(df_metric, aes(x=Dataset, y=get(metric), color=Dataset)) +
@@ -334,9 +319,6 @@ boxplots_metric = ggplot(df_metric, aes(x = Dataset, y = metric_score, fill = Da
     plot.title = element_text(hjust = 0.5),
     legend.position = "bottom",
     axis.text.x = element_blank() # element_text(angle = 45, hjust = 1)
-  ) +
-  scale_fill_manual(
-    values = color_pallet
   )
 plotly::layout(
   plotly::ggplotly(boxplots_metric), 
@@ -348,17 +330,6 @@ plotly::layout(
     orientation = 'h')
 )
 ```
-
-
-Boxplot of 15 or 30 samples for five different metrics : between estimated proportions and ground truth proportions for each cell type
-
-- Root Mean Squared Error: for the sample $j$, $\text{RMSE}_j = \sqrt{\frac{\sum_{i=1}^{N} \big(\hat{\beta}_{i,j}-\beta_{i,j}\big)^2}{N}}$.
-- Mean Absolut Error: for the sample $j$, $\text{MAE}_j = \frac{\sum_{i=1}^{N} \big|\hat{\beta}_{i,j}-\beta_{i,j}\big|}{N}$.
-- Aitchison distance: this distance use a isomorphism to transform a vector of proportions, true and estimated vectors for each samples, from the unity simplex to the real space (see https://en.wikipedia.org/wiki/Compositional_data#Aitchison_geometry). Then, an Euclidean distance is calculated between the transformed estimated vector of proportions and the transformed ground truth vector of proportions.
-- Pearson correlation: for the sample $j$, the Pearson correlation is calculated between the estimated vector of proportions $\hat{\beta}_j$ and the ground truth vector of proportions $\beta_j$.
-- Spearman correlation: for the sample $j$, the Spearman correlation is calculated between the estimated vector of proportions $\hat{\beta}_j$ and the ground truth vector of proportions $\beta_j$.
-
-
 
 ## Scatter plots between truth and prediction
 
@@ -383,7 +354,7 @@ df_scatter = do.call(
       values_to = "true_prop"
     )
     
-    prop_data = cbind(prediction_data, ground_truth_data[,"true_prop"], Dataset = datasets[data])
+    prop_data = cbind(prediction_data, ground_truth_data[,"true_prop"], Dataset = datasets[[data]])
   })
 )
 df_scatter$Dataset = factor(df_scatter$Dataset, levels = datasets)
@@ -399,24 +370,21 @@ scatter_prop = ggplot(df_scatter) +
     ylim = c(0,1)
   ) +
   labs(
-    x = "Ground truth proportion",
-    y = "Prediction",
-    title = paste("Proportions predicted by your method vs true ones for all datasets")
-  ) +
-  scale_x_continuous(
-    labels = scales::percent
-  ) +
-  scale_y_continuous(
-    labels = scales::percent
-  ) +
-  scale_color_discrete(
-    name = "Cell type"
-  ) +
-  theme_light() +
-  theme(plot.title = element_text(hjust = 0.5)) +
-  scale_fill_manual(
-    values = color_pallet
-  )
+      x = "Ground truth proportion",
+      y = "Prediction",
+      title = paste("Proportions predicted by your method vs true ones for all datasets")
+    ) +
+    scale_x_continuous(
+      labels = scales::percent
+    ) +
+    scale_y_continuous(
+      labels = scales::percent
+    ) +
+    scale_color_discrete(
+      name = "Cell type"
+    ) +
+    theme_light() +
+    theme(plot.title = element_text(hjust = 0.5))
 plotly::ggplotly(scatter_prop)
 ```
 
@@ -453,7 +421,7 @@ for (data in seq_along(datasets)) {
     df_radarplot, 
     axistype=2, # add the max/best value of each axe (but I don't know how to add the min/worst)
     
-    title = paste("Global metrics scores for your method\non dataset", datasets[data]),
+    title = paste("Global metrics scores for your method\non dataset", datasets[[data]]),
     #custom polygon
     pcol=rgb(0.2,0.5,0.5,0.9), pfcol=rgb(0.2,0.5,0.5,0.5), plwd=4,
    

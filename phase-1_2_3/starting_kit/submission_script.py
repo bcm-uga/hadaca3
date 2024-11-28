@@ -26,6 +26,7 @@ def program(mix=None, ref=None, **kwargs):
         mix_col = mix_df.iloc[:, i]  # Select the i-th column as a Series
         res = LinearRegression(fit_intercept=False).fit(ref_df, mix_col).coef_
         # res, _ = scipy.optimize.nnls(ref_df.to_numpy(), mix_col.to_numpy())
+        res[res < 0] = 0
         results.append(res)
 
     # Normalize the results to get proportions

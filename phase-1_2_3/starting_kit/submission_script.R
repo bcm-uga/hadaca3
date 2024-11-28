@@ -24,6 +24,7 @@ program = function(mix=NULL, ref=NULL, ...) {
   prop = apply(mix[idx_feat,], 2, function(b, A) {
     tmp_prop = lm(b ~ A - 1)$coefficients  # Using `-1` to remove the intercept
     # tmp_prop = nnls::nnls(b=b,A=A)$x  
+    tmp_prop[tmp_prop < 0] = 0
     tmp_prop = tmp_prop / sum(tmp_prop)    # Sum To One
     return(tmp_prop)
   }, A=ref[idx_feat,])
