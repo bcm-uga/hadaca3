@@ -67,7 +67,7 @@ create_base_script <- function(dict_name, suffix_file){
 
         if(identical(baseline,"nnlsmultimodalSource") )  {
             dir.create(file.path(output_path, "attachement/"), showWarnings = FALSE)
-            for ( file in c("attachement/link_gene_CpG.R","attachement/probes_features.rds")     ){
+            for ( file in c("attachement/Source_prior_known_features.R","attachement/random_choosen_features.rds")     ){
                 copy_file(file)
             }
         }

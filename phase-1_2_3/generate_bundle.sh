@@ -26,7 +26,7 @@ zip -FS -j -r  bundle/ingestion_program.zip ingestion_program/
 
 #Genereate starter_kit_phase1_2_3
 # rm -rf starting_kit
-mkdir starting_kit
+# mkdir starting_kit
 #  generate baselines :
 rm -rf ~/projects/hadaca3/templates/tmp/
 Rscript ~/projects/hadaca3/templates/generate_baselines.R Phase_1  
@@ -34,7 +34,7 @@ cp -R ~/projects/hadaca3/templates/tmp/* starting_kit/
 
 
 # rm -rf starting_kit_phase1
-mkdir starting_kit_phase1
+# mkdir starting_kit_phase1
 
 rm -rf ~/projects/hadaca3/templates/tmp/
 Rscript ~/projects/hadaca3/templates/generate_baselines.R Phase_1_only  
