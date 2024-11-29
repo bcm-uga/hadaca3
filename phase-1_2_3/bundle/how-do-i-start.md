@@ -174,13 +174,15 @@ The dataset `SDEL` is derived from the EMFA simulation procedure, but with very 
 
 ## Baselines                 
 
-TO DO HUGO
+A baseline is a simple approach designed to address the problem raised by the challenge, in this case multi-omic deconvolution. It serves as a straightforward method that is easy to understand and provides a foundation for further improvements.
+The starting kit contains 5 baselines.
 
-A baseline is a simple approach designed to address the problem raised by the challenge, which is deconvolution in our case. It serves as a foundation for further improvements.
-The starting kit contains 3 baselines.
+**submission_script.R** - This baseline uses a non-negative least squares deconvolution algorithm (`nnls::nnls` function) to estimate the mixture composition, for each cell type, of from transcriptomic data.
 
-**submission_script.R** - This baseline uses a non-negative least squares algorithm (`nnls::nnls` function) to estimate the mixture composition, for each cell type, and then integrate the two results by averaging them (`mean` function).
+**submission_script_nnlsmultimodal.R** - This baseline uses a non-negative least squares deconvolution algorithm (`nnls::nnls` function) to estimate the mixture composition, for each cell type, and then integrate the two results by averaging them (`mean` function).
+
+**submission_script_nnlsmultimodalSource.R** - This script demonstrates how to source an other script R or rds file if needed.
 
 **submission_script_installpkgcran.R** - This script demonstrates how to install a new package from CRAN if needed.
 
-**Submission_script.py** (beta) - This Python script replicates the baseline approach from submission_script.R for Python users. 
+**Submission_script.py** (beta) - This Python script replicates the baseline approach from submission_script.R for Python users.  
