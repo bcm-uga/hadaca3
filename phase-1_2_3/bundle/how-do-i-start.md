@@ -10,14 +10,22 @@ This section provides you a dataset description and the baseline methods suggest
 
 - Reference data
 
-The organizer are providing an example of reference data for pdac tissue. 3 reference data are avaibale : bulk RNA-Seq, bulk methylation and single-cell RNA-seq.
+The organizer are providing an example of references data for pdac tissue. 3 references data are avaibale : **bulk RNA-Seq, bulk methylation and single-cell RNA-seq**. All references are a combination of publicaly available datasets. For each, 5 cell types are included: immune cells (immune), fibroblasts (fribro), endothelial cells (endo), classic cancer cells (classic) and basal (basal). 
 
-    - bulk RNA-Seq
-    - bulk methylation
-    - single-cell RNA-seq : for the 3 
-- 
+    - bulk RNA-Seq:  immune and fibro cells were retreived from the GTEx Analysis V10 ([GTEx portal](https://www.gtexportal.org/home/downloads/adult-gtex/bulk_tissue_expression), link to paper [1](https://www.liebertpub.com/doi/full/10.1089/bio.2015.0032) [2](https://www.nature.com/articles/ng.2653)), endo were retreived from GEO [GSE135123](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE135123) (link to [paper](https://pmc.ncbi.nlm.nih.gov/articles/PMC6890669/)), basal and classix we retreived from [this paper](https://pmc.ncbi.nlm.nih.gov/articles/PMC6082139/).
+    - bulk methylation: 
+    - single-cell RNA-seq: 3 datasets were retreived. Peng for all 5 cell types (link to [paper](https://www.nature.com/articles/s41422-019-0195-y) and [download](https://ngdc.cncb.ac.cn/gsa/browse/CRA001160)). Baron for endo, immune and  fibro (link to [paper](https://pmc.ncbi.nlm.nih.gov/articles/PMC5228327/#S26title) and [download](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE84133)). Raghavan for basal, classic, endo and immune (link to [paper](https://www.cell.com/cell/fulltext/S0092-8674(21)01332-5?_returnURL=https%3A%2F%2Flinkinghub.elsevier.com%2Fretrieve%2Fpii%2FS0092867421013325%3Fshowall%3Dtrue) and [download](https://singlecell.broadinstitute.org/single_cell/study/SCP1644/microenvironment-drives-cell-state-plasticity-and-drug-response-in-pancreatic-cancer))
+    
+- Source data
+
+**Data processing**
+
 
 **Data description**
+
+
+
+
 
 The challenge provides bulk mixtures for deconvolution, with two types of mixed omics data available for estimating cell type proportions in these mixtures:
 
