@@ -13,11 +13,13 @@ This section will give you a description of the dataset and baseline methods sug
 - **Reference data**
 
 
-The organizers provide an example of reference profiles for PDAC. Three reference types are available : **bulk RNAseq, bulk methylation and single-cell RNAseq**. All references are publicly available. Each reference type contains 5 cell types: immune cells (immune), fibroblasts (fibro), endothelial cells (endo), and classic (classic) and basal (basal) cancer cells. 
+The organizers provide an example of reference profiles for PDAC. Three reference types are available : **bulk RNAseq, MethEPIC and single-cell RNAseq**. All references are publicly available. Each reference type contains 5 cell types: immune cells (immune), fibroblasts (fibro), endothelial cells (endo), and classic (classic) and basal (basal) cancer cells. 
 
-  - bulk RNAseq:  immune cells and fibroblasts were retrieved from the GTEx Analysis V10 ([GTEx portal](https://www.gtexportal.org/home/downloads/adult-gtex/bulk_tissue_expression), link to paper [1](https://www.liebertpub.com/doi/full/10.1089/bio.2015.0032) [2](https://www.nature.com/articles/ng.2653)), endothelial cells were retrieved from GEO [GSE135123](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE135123) (link to [paper](https://pmc.ncbi.nlm.nih.gov/articles/PMC6890669/)), basal and classic cells were retrieved from [this paper](https://pmc.ncbi.nlm.nih.gov/articles/PMC6082139/).
-  - bulk methylation: basal and classic cells were retrieved from [this paper](https://pmc.ncbi.nlm.nih.gov/articles/PMC6082139/). endo cells were retreived from [GSE82234](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE82234), [link to paper](https://pmc.ncbi.nlm.nih.gov/articles/PMC5242294/). Immune and fibro cells were retreived from XXXXX.
-  - single-cell RNAseq: 3 datasets were retrieved. For Peng we have all 5 cell types (link to [paper](https://www.nature.com/articles/s41422-019-0195-y) and [download](https://ngdc.cncb.ac.cn/gsa/browse/CRA001160)). For Baron we have endo, immune and  fibro (link to [paper](https://pmc.ncbi.nlm.nih.gov/articles/PMC5228327/#S26title) and [download](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE84133)). For Raghavan we have basal, classic, endo and immune (link to [paper](https://www.cell.com/cell/fulltext/S0092-8674(21)01332-5?_returnURL=https%3A%2F%2Flinkinghub.elsevier.com%2Fretrieve%2Fpii%2FS0092867421013325%3Fshowall%3Dtrue) and [download](https://singlecell.broadinstitute.org/single_cell/study/SCP1644/microenvironment-drives-cell-state-plasticity-and-drug-response-in-pancreatic-cancer))
+  \- bulk RNAseq:  immune cells and fibroblasts were retrieved from the GTEx Analysis V10 ([GTEx portal](https://www.gtexportal.org/home/downloads/adult-gtex/bulk_tissue_expression), link to paper [1](https://www.liebertpub.com/doi/full/10.1089/bio.2015.0032) [2](https://www.nature.com/articles/ng.2653)), endothelial cells were retrieved from GEO [GSE135123](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE135123) (link to [paper](https://pmc.ncbi.nlm.nih.gov/articles/PMC6890669/)), basal and classic cells were retrieved from [this paper](https://pmc.ncbi.nlm.nih.gov/articles/PMC6082139/).
+  
+  \- MethEPIC: basal and classic cells were retrieved from [this paper](https://pmc.ncbi.nlm.nih.gov/articles/PMC6082139/). endo cells were retreived from [GSE82234](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE82234), [link to paper](https://pmc.ncbi.nlm.nih.gov/articles/PMC5242294/). Immune and fibro cells were retreived from XXXXX.
+  
+  \- single-cell RNAseq: 3 datasets were retrieved. For Peng we have all 5 cell types (link to [paper](https://www.nature.com/articles/s41422-019-0195-y) and [download](https://ngdc.cncb.ac.cn/gsa/browse/CRA001160)). For Baron we have endo, immune and  fibro (link to [paper](https://pmc.ncbi.nlm.nih.gov/articles/PMC5228327/#S26title) and [download](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE84133)). For Raghavan we have basal, classic, endo and immune (link to [paper](https://www.cell.com/cell/fulltext/S0092-8674(21)01332-5?_returnURL=https%3A%2F%2Flinkinghub.elsevier.com%2Fretrieve%2Fpii%2FS0092867421013325%3Fshowall%3Dtrue) and [download](https://singlecell.broadinstitute.org/single_cell/study/SCP1644/microenvironment-drives-cell-state-plasticity-and-drug-response-in-pancreatic-cancer))
     
 - **Source data**
 
@@ -25,7 +27,9 @@ The challenge provides bulk mixtures ready to be tested for deconvolution. There
 The majority of bulk mixtures are *in silico* simulations based on publicly available source datasets:
 
  \- bulk RNAseq: from GEO GSE281204 (available soon).
+ 
  \- MethEPIC: from GEO GSE281305 (available soon).
+ 
  \- single-cell RNAseq: Peng, link to [paper](https://www.nature.com/articles/s41422-019-0195-y) and [download](https://ngdc.cncb.ac.cn/gsa/browse/CRA001160). The dataset was processed with an in-house script for cell type labelling.
  
 The other bulk mixtures are from *in vivo* or *in vitro* data sequencing, see description below. 
