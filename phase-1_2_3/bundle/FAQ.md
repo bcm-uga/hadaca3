@@ -2,7 +2,7 @@
                            
 
 
-## Why did my submission failed?  
+## Why did my submission fail?  
 
 Have a look at the logs on Codabench.
 If your submission fails on Codabench, don't panic, review the logs! You can access them via the Codabench user interface:
@@ -14,22 +14,24 @@ If your submission fails on Codabench, don't panic, review the logs! You can acc
 
 ## How to configure my environment? 
 
-Try interactive docker or conda environnement, it is especially useful for python user!
+Try interactive docker or conda environnement, it is especially useful for python users!
 
-A conda environment is provided follow this steps to install and activate it. Retrieve the file [env_final_pyr.yml](https://github.com/bcm-uga/hadaca3/blob/main/docker/codabench_hadaca_final/environment/env_final_pyr.yml) from github as follow:
+A conda environment is provided. Follow these steps to install and activate it. Retrieve the file [env_final_pyr.yml](https://github.com/bcm-uga/hadaca3/blob/main/docker/codabench_hadaca_final/environment/env_final_pyr.yml) from GitHub as follow:
 
 ``` 
 wget https://raw.githubusercontent.com/bcm-uga/hadaca3/refs/heads/main/docker/codabench_hadaca_final/environment/env_final_pyr.yml
 conda env create -f env_final_pyr.yml && conda activate h3_final
 ```
 
-To run the docker interactively you can run with: 
+To run the docker interactively you can run: 
 
 ```
 ## for the R version
-sudo docker run -it -v .:/hadaca3 -w /hadaca3 hombergn/hadaca3_final R`  and then `source("submission_script.R") 
+sudo docker run -it -v .:/hadaca3 -w /hadaca3 hombergn/hadaca3_final R
+source("submission_script.R") 
 ## for the python version
-sudo docker run -it -v .:/hadaca3 -w /hadaca3 hombergn/hadaca3_final python` and then `import submission_script
+sudo docker run -it -v .:/hadaca3 -w /hadaca3 hombergn/hadaca3_final python
+import submission_script
 ```
 
 Due to the usage of the super user (sudo) all files created by docker will be owned by root. In order to retrieve ownership, you can use this command:
@@ -38,7 +40,7 @@ Due to the usage of the super user (sudo) all files created by docker will be ow
 sudo chown -R $USER submissions
 ```
 
-Beware that Mac users with M1 processors might encounter problems. 
+Beware that Mac users with M1 processors might encounter problems.
 
 
 ## How to run submissions ingestion and scoring locally with Docker?
@@ -59,8 +61,8 @@ conda env create -f environment-r.yml && conda activate h3
 sh automated_docker_test.sh
 ```
 
-Please note that this script will use the `submission_script.R` from the `hadaca3/starting_kit/` folder. 
-Ensure that your script is placed inside the `hadaca3/starting_kit/` folder or modify the existing script at `hadaca3/starting_kit/submission_script.R`.
+Please note that this script will use the `submission_script.R` from the `starting_kit/` folder. 
+Ensure that your script is placed inside the `starting_kit/` folder or modify the existing script at `starting_kit/submission_script.R`.
 
 
 The script `automated_docker_test.sh` first executes the R submission script locally, then re-executes it within the Docker container (ingestion phase), followed by running the scoring program.
@@ -70,4 +72,4 @@ If you wish to test each step independently or run the Python script locally, re
 ## How to include an external file to be used in the submission script?
 
 It is possible to include an external file that is sourced in the submission script and correctly included in the zip file to be submitted on the Codabench platform.
-Beware, when unziped the file 'program.R' has to be on the current directory and not inside a folder. Aditionnal files can in other folder with the correct relative path 
+Beware, when unzipped the file 'program.R' has to be on the current directory and not inside a folder. Additionnal files can be located in other folders with the correct relative path. 
