@@ -6,63 +6,117 @@ This section provides you a dataset description and the baseline methods suggest
                            
 ## Data   
 
-**Data source**
+### Data source
 
-- Reference data
+- **Reference data**
 
-The organizer are providing an example of references data for pdac tissue. 3 references data are avaibale : **bulk RNA-Seq, bulk methylation and single-cell RNA-seq**. All references are a combination of publicaly available datasets. For each, 5 cell types are included: immune cells (immune), fibroblasts (fribro), endothelial cells (endo), classic cancer cells (classic) and basal (basal). 
+The organizer are providing an example of references data for pdac tissue. 3 references data are avaibale : **bulk RNA-Seq (for pure cell types), METHepic references (methylation data for pure cell types) and single-cell RNA-seq**. All references are a combination of publicaly available datasets. For each, 5 cell types are included: immune cells (immune), fibroblasts (fribro), endothelial cells (endo), classic cancer cells (classic) and basal (basal). 
 
-    - bulk RNA-Seq:  immune and fibro cells were retreived from the GTEx Analysis V10 ([GTEx portal](https://www.gtexportal.org/home/downloads/adult-gtex/bulk_tissue_expression), link to paper [1](https://www.liebertpub.com/doi/full/10.1089/bio.2015.0032) [2](https://www.nature.com/articles/ng.2653)), endo were retreived from GEO [GSE135123](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE135123) (link to [paper](https://pmc.ncbi.nlm.nih.gov/articles/PMC6890669/)), basal and classix we retreived from [this paper](https://pmc.ncbi.nlm.nih.gov/articles/PMC6082139/).
-    - bulk methylation: 
-    - single-cell RNA-seq: 3 datasets were retreived. Peng for all 5 cell types (link to [paper](https://www.nature.com/articles/s41422-019-0195-y) and [download](https://ngdc.cncb.ac.cn/gsa/browse/CRA001160)). Baron for endo, immune and  fibro (link to [paper](https://pmc.ncbi.nlm.nih.gov/articles/PMC5228327/#S26title) and [download](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE84133)). Raghavan for basal, classic, endo and immune (link to [paper](https://www.cell.com/cell/fulltext/S0092-8674(21)01332-5?_returnURL=https%3A%2F%2Flinkinghub.elsevier.com%2Fretrieve%2Fpii%2FS0092867421013325%3Fshowall%3Dtrue) and [download](https://singlecell.broadinstitute.org/single_cell/study/SCP1644/microenvironment-drives-cell-state-plasticity-and-drug-response-in-pancreatic-cancer))
+  \- bulk RNA-Seq:  immune and fibro cells were retreived from the GTEx Analysis V10 ([GTEx portal](https://www.gtexportal.org/home/downloads/adult-gtex/bulk_tissue_expression), link to paper [1](https://www.liebertpub.com/doi/full/10.1089/bio.2015.0032) [2](https://www.nature.com/articles/ng.2653)), endo were retreived from GEO [GSE135123](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE135123) (link to [paper](https://pmc.ncbi.nlm.nih.gov/articles/PMC6890669/)), basal and classic we retreived from [this paper](https://pmc.ncbi.nlm.nih.gov/articles/PMC6082139/).
+  
+  \- METHepic: immune and fibro cells were retreived from [this paper](), endo were retreived from GEO [GSE82234](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE82234) (link to [paper](https://pmc.ncbi.nlm.nih.gov/articles/PMC5242294/)), basal and classic we retreived from [this paper](https://pmc.ncbi.nlm.nih.gov/articles/PMC6082139/).
+  
+  \- single-cell RNA-seq: 3 datasets were retreived. Peng for all 5 cell types (link to [paper](https://www.nature.com/articles/s41422-019-0195-y) and [download](https://ngdc.cncb.ac.cn/gsa/browse/CRA001160)). Baron for endo, immune and  fibro (link to [paper](https://pmc.ncbi.nlm.nih.gov/articles/PMC5228327/#S26title) and [download](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE84133)). Raghavan for basal, classic, endo and immune (link to [paper](https://www.cell.com/cell/fulltext/S0092-8674(21)01332-5?_returnURL=https%3A%2F%2Flinkinghub.elsevier.com%2Fretrieve%2Fpii%2FS0092867421013325%3Fshowall%3Dtrue) and [download](https://singlecell.broadinstitute.org/single_cell/study/SCP1644/microenvironment-drives-cell-state-plasticity-and-drug-response-in-pancreatic-cancer))
     
-- Source data
+- **Source data**
 
-**Data processing**
-
-
-**Data description**
+The challenge provides bulk mixtures for deconvolution, with two types of mixed omics data available for estimating cell type proportions in these mixtures: an RNA-seq data matrix and a METHepic data matrix.
+The majority of datasets for bulk mixtures are in sillico simulations based on source data publicly available:
 
 
+ \- bulk RNA-Seq: from GEO GSE281204 (available soon).
 
+\- METHepic: from GEO GSE281305 (available soon).
 
+\- single-cell RNA-seq: Peng, link to [paper](https://www.nature.com/articles/s41422-019-0195-y) and [download](https://ngdc.cncb.ac.cn/gsa/browse/CRA001160). The data set was processed with a in house script for cell type assignation.
+ 
+The orther bulk mixture datasets are from in vivo or in vitro sequencing, see description bellow. 
 
-The challenge provides bulk mixtures for deconvolution, with two types of mixed omics data available for estimating cell type proportions in these mixtures:
+### Data processing
 
+The RNA-seq reference data has been normalized using edgeR.
 
-    an RNA-seq data matrix
-    a METHepic data matrix.
+The methylation reference data consists of beta values, not normalized (be careful for batch effect).
 
-The corresponding file, `data/mixes_data_1.rds`, contains a list of matching DNAmethylation and RNA-seq bulk data for 30 samples.
+The single-cell RNA-seq data has been processed according to the following steps: from counts, Seurat object were created and metadata corresponding to cell type and sample were associated to each cell were added. For raghavan and peng there were no distintion beween classic and basal cells. These datasets were subseted with only tumor, normalised (using SCTranform function from the Seurat package) and run through [PurIST](https://github.com/naimurashid/PurIST/tree/master) to differentiate basal and classic cells. We only kept cells with that were "likely" or "strong" for the assignation (we wiltered out "lean" assignation). The available dataset for this challenge are not normalized (same counts as downloaded from the paper). 
+
+### Data description
+
+-  **Mixes**
+  
+All bulk mixtures (simulated or from in vitro or in vivo sequencing) contain DNAmethylation and RNA-seq bulk data for 30 samples.
+
+The data is a list of 2 elements with the following structure:
+
+```
+- mix_rna: Matrix with dimensions nb_genes x 30 (gene x sample)
+    
+- mix_met: Matrix with dimensions nb_probes x 30 (probe x sample)
+```
 
 Example to load and inspect the data:
 
 ```
 ## read mixture data
- mixes = readRDS("data/mixes_data_1.rds")
-       dim(mixes$mix_rna)
-       [1] 21104    30
-dim(mixes$mix_met)
-       [1] 824678     30
+mixes = readRDS("mixes1_insilicodirichletEMFA_pdac.rds")
+
+> dim(mixes$mix_rna)
+[1] 15908    30
+> dim(mixes$mix_met)
+[1] 410460     30
+
+> mixes$mix_rna[1:5,1:5]
+                [,1]        [,2]       [,3]       [,4]        [,5]
+A1BG      175.672119  192.545376 159.730514 178.485733  222.423391
+A1BG-AS1  267.621892  260.162802 141.181363 208.780955  289.865525
+A1CF        2.366686    6.427183   7.452182   4.166786    2.354932
+A2M      1188.737986 1555.621759 945.910236 822.971807 2455.294006
+A2M-AS1    16.578611   15.646713  13.846738  14.359070   16.605442
+
+> mixes$mix_met[1:5,1:5]
+                 [,1]       [,2]       [,3]      [,4]       [,5]
+cg00000109 0.75610815 0.74979232 0.75328176 0.7513898 0.77448260
+cg00000165 0.05747755 0.06266522 0.02914655 0.0528465 0.04592764
+cg00000236 0.77793411 0.78411988 0.73972585 0.7964341 0.78363719
+cg00000321 0.55275824 0.51767339 0.51584411 0.6112040 0.47065240
+cg00000363 0.39013598 0.44852883 0.48662104 0.4155861 0.46907377
+
+
 ```
-Additionally, reference matrices are provided, including:
 
-    Bulk RNA-seq references (for pure cell types)
-    METHepic references (methylation data for pure cell types)
-    Single-cell RNA-seq references
+- **Reference**
 
-The reference data is contained in the file reference_pdac.rds. This file is a list with the following components:
+The reference data is contained in the file `reference_pdac.rds`.
 
-    2 bulk reference datasets: RNA-seq and Methylation (Met)
-    1 single-cell RNA-seq reference dataset, which includes both the data and associated metadata. The single-cell dataset is itself a list of 3 components containing:
-        Gene expression data (counts)
-        Metadata (cell labels)
+The data is a list of 3 elements with the following structure:
 
-The RNA-seq reference data has been normalized using edgeR.
+```
+- ref_bulkRNA: Matrix with dimensions 27786 x 5 (gene x cell_type)
 
-The methylation reference data consists of beta values.
+- ref_scRNA: List of 3 elements:
+    -ref_sc_peng: List of 2 elements:
+        counts: dgCMatrix with dimensions 24005 x 4976 (gene x cell)
+        metadata: List of 2 elements:
+          cell_type: Vector of 4976 elements in c("basal","classic","endo","fibro","immune")
+          sample: Vector of 4976 elements in c("N1","N10","N11","N2","N3","N4","N5","N6","N7","N8","N9","T1","T10","T11","T12","T13","T14" "T15","T16","T17","T18","T19","T2","T20","T21","T22","T23","T24","T3","T4","T5","T6","T7","T8","T9")
+    
+    -ref_sc_baron: List of 2 elements:
+        counts: dgCMatrix with dimensions 20125 x 551 (gene x cell) 
+        metadata: List of 2 elements:
+          cell_type: Vector of 551 elements in c("endo","fibro","immune")
+          sample: Vector of 551 elements in c("h_1","h_2","h_3","h_4")
+    
+    - ref_sc_raghavan: List of 2 elements:
+        counts: dgCMatrix with dimensions 18710 x 4953 (gene x cell)
+        metadata: List of 2 elements:
+          cell_type: Vector of 4953 elements in c("basal","classic","endo","immune")
+          sample: Vector of 4953 elements c("met_2")
+    
+- ref_met: Matrix with dimensions 416830 x 5 (probe x cell_type)
 
-The single-cell RNA-seq data has been processed according to the following steps.
+
+```
+
 
 Example to load and inspect the reference data:
 
@@ -96,35 +150,17 @@ RP1-120G22.11                   .                   .                   .       
 RNF207                          .                   .                   .                   .                   .
 ICMT                            .                   .                   .                   .                   .
 
-```
 
-The data has the folloing structure:
-```
--ref_bulkRNA: Matrix with dimensions 27786 x 5 (gene x cell_type)
-
--ref_scRNA: List of 3 elements:
-    -ref_sc_peng: List of 2 elements:
-        counts: dgCMatrix with dimensions 24005 x 4976 (gene x cell)
-        metadata: List of 2 elements:
-          cell_type: Vector of 4976 elements in c("basal","classic","endo","fibro","immune")
-          sample: Vector of 4976 elements in c("N1","N10","N11","N2","N3","N4","N5","N6","N7","N8","N9","T1","T10","T11","T12","T13","T14" "T15","T16","T17","T18","T19","T2","T20","T21","T22","T23","T24","T3","T4","T5","T6","T7","T8","T9")
-    
-    -ref_sc_baron: List of 2 elements:
-        counts: dgCMatrix with dimensions 20125 x 551 (gene x cell) 
-        metadata: List of 2 elements:
-          cell_type: Vector of 551 elements in c("endo","fibro","immune")
-          sample: Vector of 551 elements in c("h_1","h_2","h_3","h_4")
-    
-    - ref_sc_raghavan: List of 2 elements:
-        counts: dgCMatrix with dimensions 18710 x 4953 (gene x cell)
-        metadata: List of 2 elements:
-          cell_type: Vector of 4953 elements in c("basal","classic","endo","immune")
-          sample: Vector of 4953 elements c("met_2")
-    
--ref_met: Matrix with dimensions 416830 x 5 (probe x cell_type)
-
+> reference$ref_scRNA$ref_sc_peng$metadata[1:5,]
+                    cell_type sample
+T1_AAAGTAGAGTCGTACT    immune     T1
+T1_AAGACCTGTCTGGTCG      endo     T1
+T1_AAGCCGCCAGTAAGAT      endo     T1
+T1_AAGTCTGAGCAAATCA    immune     T1
+T1_AATCCAGTCTCCTATA     fibro     T1
 
 ```
+## Mixes to deconvolve
 
 In Phase 2, multiple datasets are provided, each with different characteristics. These datasets are labeled as follows:
 
