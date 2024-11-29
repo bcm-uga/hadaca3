@@ -73,8 +73,8 @@ Then follow steps 4 and 5 described above.
 
 ```
 cd starting_kit
-sudo docker pull hombergn/hadaca3_pyr
-sudo docker run -it -v .:/hadaca3 -w /hadaca3 hombergn/hadaca3_pyr R
+sudo docker pull hombergn/hadaca3_final
+sudo docker run -it -v .:/hadaca3 -w /hadaca3 hombergn/hadaca3_final R
 source("submission_script.R")
 chown -R $USER submissions #if necessary
 ```
@@ -82,7 +82,7 @@ chown -R $USER submissions #if necessary
 Alternatively, run the following commande to execute the `submission_script`:
 
 ```
-sudo docker run -v .:/hadaca3 -w /hadaca3  hombergn/hadaca3_pyr Rscript submission_script.R
+sudo docker run -v .:/hadaca3 -w /hadaca3  hombergn/hadaca3_final Rscript submission_script.R
 ```
 
 and regain ownership of the files generated with:

@@ -98,6 +98,8 @@ do
 done
 
 
+# rm -rf starting_kit
+# rm -rf starting_kit_phase1
 
 
 mkdir starting_kit/data/

@@ -30,7 +30,7 @@ mkdir starting_kit
 #  generate baselines :
 rm -rf ~/projects/hadaca3/templates/tmp/
 Rscript ~/projects/hadaca3/templates/generate_baselines.R Phase_1  
-cp ~/projects/hadaca3/templates/tmp/* starting_kit/
+cp -R ~/projects/hadaca3/templates/tmp/* starting_kit/
 
 
 # rm -rf starting_kit_phase1
@@ -38,14 +38,15 @@ mkdir starting_kit_phase1
 
 rm -rf ~/projects/hadaca3/templates/tmp/
 Rscript ~/projects/hadaca3/templates/generate_baselines.R Phase_1_only  
-cp ~/projects/hadaca3/templates/tmp/* starting_kit_phase1/
+cp -R ~/projects/hadaca3/templates/tmp/* starting_kit_phase1/
 
 rm -r ~/projects/hadaca3/templates/tmp/ 
 
 
 #### Put input data inside the bundle ! 
-cd starting_kit/ ; zip  -FS  -r  ../bundle/starting_kit_phase2-3.zip *  -x \*submissions\* ; cd .. ; 
-cd starting_kit_phase1/ ; zip  -FS  -r  ../bundle/starting_kit_phase1.zip *  -x \*submissions\* ; cd .. ; 
+# cd starting_kit/ ; zip  -FS  -r  ../bundle/starting_kit_phase2-3.zip *  -x \*submissions\* ; cd .. ; 
+# cd starting_kit_phase1/ ; zip  -FS  -r  ../bundle/starting_kit_phase1.zip *  -x \*submissions\* ; cd .. ; 
+
 zip -FS -r -j bundle/input_data_phase2.zip input_data/
 zip -FS -r -j bundle/input_data_phase3.zip input_data_final/
 zip -FS -r -j bundle/input_data_phase1.zip input_data_phase1/
@@ -67,15 +68,15 @@ zip -FS -j -r  bundle/ground_truth_phase1.zip ground_truth_phase1/
 
 
 # ##### generate starting_kit and input_data outisde bundle.zip
-# cd starting_kit_phase1/ ; zip  -FS  -r  ../bundle/starting_kit_phase1.zip *  -x \*submissions\* -x \*data\* ; cd .. ; 
-# cd starting_kit/ ; zip  -FS  -r  ../bundle/starting_kit_phase2-3.zip *  -x \*submissions\* -x \*data\* ; cd .. ; 
+cd starting_kit_phase1/ ; zip  -FS  -r  ../bundle/starting_kit_phase1.zip *  -x \*submissions\* -x \*data\* ; cd .. ; 
+cd starting_kit/ ; zip  -FS  -r  ../bundle/starting_kit_phase2-3.zip *  -x \*submissions\* -x \*data\* ; cd .. ; 
 
-# zip -FS -r -j input_data_phase2.zip input_data/
-# zip -FS -r -j input_data_phase3.zip input_data_final/
-# zip -FS -r -j input_data_phase1.zip input_data_phase1/
+zip -FS -r -j input_data_phase2.zip input_data/
+zip -FS -r -j input_data_phase3.zip input_data_final/
+zip -FS -r -j input_data_phase1.zip input_data_phase1/
 
-# cd starting_kit/ ; zip  -FS  -r  ../starting_kit_phase2-3.zip *  -x \*submissions\* ; cd .. ; 
-# cd starting_kit_phase1/ ; zip  -FS  -r  ../starting_kit_phase1.zip *  -x \*submissions\* ; cd .. ; 
+cd starting_kit/ ; zip  -FS  -r  ../starting_kit_phase2-3.zip *  -x \*submissions\* ; cd .. ; 
+cd starting_kit_phase1/ ; zip  -FS  -r  ../starting_kit_phase1.zip *  -x \*submissions\* ; cd .. ; 
 
 
 

@@ -21,11 +21,9 @@ saveRDS= rpy2.robjects .r["saveRDS"]
 try:
     # Define the target and link name
     target = "../ingested_program/attachement/"
-    link_name = "attachement/"
+    link_name = "attachement"
     
-    # Create a symbolic link
     os.symlink(target, link_name)
-    # print(f"Symbolic link created: {link_name} -> {target}")
 except FileExistsError:
     # Handle the case where the symbolic link already exists
     os.unlink(link_name)  # Remove the existing symbolic link

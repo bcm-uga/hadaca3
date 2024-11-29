@@ -21,7 +21,7 @@ program <- function(mix_rna=NULL, ref_bulkRNA=NULL,
   ## YOUR CODE BEGINS HERE
   ##
   
-  source("attachement/link_gene_CpG.R")
+  source("attachement/Source_prior_known_features.R")
   
   
   
@@ -31,6 +31,10 @@ program <- function(mix_rna=NULL, ref_bulkRNA=NULL,
     idx_feat = intersect(rownames(mix_rna), rownames(ref_bulkRNA))
     mix_rna = mix_rna[idx_feat,]
     ref_bulkRNA = ref_bulkRNA[idx_feat,]
+    
+    mix_rna = mix_rna[random_choosen_features$random_choosen_genes,]
+    ref_bulkRNA = ref_bulkRNA[random_choosen_features$random_choosen_genes,]
+    
     
     prop_rna = apply(mix_rna, 2, function(b, A) {
       tmp_prop = nnls::nnls(b=b, A=A)$x
@@ -51,15 +55,8 @@ program <- function(mix_rna=NULL, ref_bulkRNA=NULL,
     mix_met = mix_met[idx_feat,]
     ref_met = ref_met[idx_feat,]
     
-    
-    
-    # select gene present mix_rna if present
-    if ( !( is.null(x = mix_rna) ) ) {
-      probes_feature = probes_feature[probes_feature$gene %in% rownames(mix_rna),]
-    }
-    
-    mix_met = mix_met[rownames(mix_met) %in% rownames(probes_feature),]
-    ref_met = ref_met[rownames(ref_met) %in% rownames(probes_feature),]
+    mix_met = mix_met[random_choosen_features$random_choosen_probes,]
+    ref_met = ref_met[random_choosen_features$random_choosen_probes,]
     
     
     prop_met = apply(mix_met, 2, function(b, A) {

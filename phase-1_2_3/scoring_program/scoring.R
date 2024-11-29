@@ -226,7 +226,7 @@ scoring_function <- function(A_real, A_pred) {
   else if (nrow(A_pred) > nrow(A_real) & setequal(rownames(A_real), c("basal",'classic'))) { # partial ground truth only for the in vivo dataset
     rmse = NA
     mae = NA
-    aitchison = eval_Aitchison(A_real, A_pred[rownames(A_real),])
+    aitchison = NA
     pearson_tot = NA
     pearson_col = NA
     pearson_row = correlationP_row(A_real, A_pred[rownames(A_real),])
@@ -277,6 +277,11 @@ scoring_function <- function(A_real, A_pred) {
   }
   judge_candidate_norm = apply(judge_candidate, 2, CenterScaleNorm)
 
+  # transform scores s.t. 1 is the best score
+  judge_candidate_norm = 1 - judge_candidate_norm
+  judge_candidate_norm[,grep("pearson",colnames(judge_candidate_norm))] = 1 - judge_candidate_norm[,grep("pearson",colnames(judge_candidate_norm))]
+  judge_candidate_norm[,grep("spearman",colnames(judge_candidate_norm))] = 1 - judge_candidate_norm[,grep("spearman",colnames(judge_candidate_norm))]
+  
   # Average over judges with the geometric mean for the candidate of interest
   #score_aggreg = exp(mean(log(judge_candidate_norm[1,]),na.rm=T))
   weights = c(1/3*1/2,1/3*1/2,

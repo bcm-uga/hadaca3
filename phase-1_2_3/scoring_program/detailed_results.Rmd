@@ -1,6 +1,6 @@
 ---
 title: "Visualize Results"
-author: "Elise Amblard, Hugo Barbot, Florent Chuffart and Magali Richard"
+# author: "Elise Amblard, Hugo Barbot, Florent Chuffart and Magali Richard"
 date: "`r Sys.Date()`"
 output: 
   # prettydoc::html_pretty: # create a styles.css file and snakemake doesn't like it

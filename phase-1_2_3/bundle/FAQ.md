@@ -16,20 +16,20 @@ If your submission fails on Codabench, don't panic, review the logs! You can acc
 
 Try interactive docker or conda environnement, it is especially useful for python user!
 
-A conda environment is provided follow this steps to install and activate it. Retrieve the file [environment-r.yml](https://github.com/bcm-uga/hadaca3/blob/main/docker/codabench_hadaca3_pyr/environment/environment-r.yml) from github as follow:
+A conda environment is provided follow this steps to install and activate it. Retrieve the file [env_final_pyr.yml](https://github.com/bcm-uga/hadaca3/blob/main/docker/codabench_hadaca_final/environment/env_final_pyr.yml) from github as follow:
 
 ``` 
-wget https://raw.githubusercontent.com/bcm-uga/hadaca3/main/docker/codabench_hadaca3_pyr/environment/environment-r.yml
-conda env create -f environment-r.yml && conda activate h3
+wget https://raw.githubusercontent.com/bcm-uga/hadaca3/refs/heads/main/docker/codabench_hadaca_final/environment/env_final_pyr.yml
+conda env create -f env_final_pyr.yml && conda activate h3_final
 ```
 
 To run the docker interactively you can run with: 
 
 ```
 ## for the R version
-sudo docker run -it -v .:/hadaca3 -w /hadaca3 hombergn/hadaca3_pyr R`  and then `source("submission_script.R") 
+sudo docker run -it -v .:/hadaca3 -w /hadaca3 hombergn/hadaca3_final R`  and then `source("submission_script.R") 
 ## for the python version
-sudo docker run -it -v .:/hadaca3 -w /hadaca3 hombergn/hadaca3_pyr python` and then `import submission_script
+sudo docker run -it -v .:/hadaca3 -w /hadaca3 hombergn/hadaca3_final python` and then `import submission_script
 ```
 
 Due to the usage of the super user (sudo) all files created by docker will be owned by root. In order to retrieve ownership, you can use this command:
