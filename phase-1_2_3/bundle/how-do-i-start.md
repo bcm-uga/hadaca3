@@ -7,85 +7,25 @@ This section will give you a description of the dataset and baseline methods sug
 ## Data   
 
 
-### Data source
+### Provided cell population reference data
 
 
-- **Reference data**
+The organizers provide cell population reference profiles for PDAC. Three reference datasets are available: **bulk RNAseq of isolated cell populations, bulk methylation profiles of isolated cell populations and single-cell RNAseq**. All references are using publicly available data. Each reference type contains 5 cell types: immune cells (immune), fibroblasts (fibro), endothelial cells (endo), and classical (classic) and basal-like (basal) tumor cells. 
 
+  \- **bulk RNAseq cell populations**:  immune cells and fibroblasts transcriptomic profiles were retrieved from the GTEx Analysis V10 ([GTEx portal](https://www.gtexportal.org/home/downloads/adult-gtex/bulk_tissue_expression), link to paper [1](https://www.liebertpub.com/doi/full/10.1089/bio.2015.0032) [2](https://www.nature.com/articles/ng.2653)), endothelial cell transcriptomic profiles were retrieved from GEO [GSE135123](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE135123) (link to [paper](https://pmc.ncbi.nlm.nih.gov/articles/PMC6890669/)). Basal-like and classical tumor cell transcriptomic profiles were retrieved from [this paper](https://pmc.ncbi.nlm.nih.gov/articles/PMC6082139/). **Preprocess**: this reference data has been normalized using edgeR.
 
-The organizers provide an example of reference profiles for PDAC. Three reference types are available : **bulk RNAseq, MethEPIC and single-cell RNAseq**. All references are publicly available. Each reference type contains 5 cell types: immune cells (immune), fibroblasts (fibro), endothelial cells (endo), and classic (classic) and basal (basal) cancer cells. 
-
-  \- bulk RNAseq:  immune cells and fibroblasts were retrieved from the GTEx Analysis V10 ([GTEx portal](https://www.gtexportal.org/home/downloads/adult-gtex/bulk_tissue_expression), link to paper [1](https://www.liebertpub.com/doi/full/10.1089/bio.2015.0032) [2](https://www.nature.com/articles/ng.2653)), endothelial cells were retrieved from GEO [GSE135123](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE135123) (link to [paper](https://pmc.ncbi.nlm.nih.gov/articles/PMC6890669/)), basal and classic cells were retrieved from [this paper](https://pmc.ncbi.nlm.nih.gov/articles/PMC6082139/).
   
-  \- MethEPIC: basal and classic cells were retrieved from [this paper](https://pmc.ncbi.nlm.nih.gov/articles/PMC6082139/). endo cells were retreived from [GSE82234](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE82234), [link to paper](https://pmc.ncbi.nlm.nih.gov/articles/PMC5242294/). Immune and fibro cells were retreived from XXXXX.
-  
-  \- single-cell RNAseq: 3 datasets were retrieved. For Peng we have all 5 cell types (link to [paper](https://www.nature.com/articles/s41422-019-0195-y) and [download](https://ngdc.cncb.ac.cn/gsa/browse/CRA001160)). For Baron we have endo, immune and  fibro (link to [paper](https://pmc.ncbi.nlm.nih.gov/articles/PMC5228327/#S26title) and [download](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE84133)). For Raghavan we have basal, classic, endo and immune (link to [paper](https://www.cell.com/cell/fulltext/S0092-8674(21)01332-5?_returnURL=https%3A%2F%2Flinkinghub.elsevier.com%2Fretrieve%2Fpii%2FS0092867421013325%3Fshowall%3Dtrue) and [download](https://singlecell.broadinstitute.org/single_cell/study/SCP1644/microenvironment-drives-cell-state-plasticity-and-drug-response-in-pancreatic-cancer))
-    
-- **Source data**
+  \- **bulk methylation profiles of cell populations**: Immune and fibroblasts methylation profiles cells were retrieved from [link to paper](from https://doi.org/10.1186/s12859-021-04381-4). Endothelial cell methylation profiles were retrieved from [GSE82234](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE82234), [link to paper](https://pmc.ncbi.nlm.nih.gov/articles/PMC5242294/).
+Basal-like and classical cells methylation profiles were retrieved from [this paper](https://pmc.ncbi.nlm.nih.gov/articles/PMC6082139/). **Preprocess**: this reference dataset consists of aggregated beta value profiles without specific batch effect correction.
 
-The challenge provides bulk mixtures ready to be tested for deconvolution. There are two types of -omic data: methylation and transcriptome.
-The majority of bulk mixtures are *in silico* simulations based on publicly available source datasets:
+  \- **single-cell RNAseq**: 3 datasets were retrieved. For Peng et al. the 5 cell types are present (link to [paper](https://www.nature.com/articles/s41422-019-0195-y) and [download](https://ngdc.cncb.ac.cn/gsa/browse/CRA001160)). For Baron et al. only endothelial, immune and fibroblast population are present (link to [paper](https://pmc.ncbi.nlm.nih.gov/articles/PMC5228327/#S26title) and [download](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE84133)). For Raghavan et al, basal-like, classical, endothelial and immune cell populations are present (link to [paper](https://www.cell.com/cell/fulltext/S0092-8674(21)01332-5?_returnURL=https%3A%2F%2Flinkinghub.elsevier.com%2Fretrieve%2Fpii%2FS0092867421013325%3Fshowall%3Dtrue) and [download](https://singlecell.broadinstitute.org/single_cell/study/SCP1644/microenvironment-drives-cell-state-plasticity-and-drug-response-in-pancreatic-cancer)). **Preprocess**: this reference dataset consists of aggregated beta value profiles without specific batch effect correction.
 
- \- bulk RNAseq: from GEO GSE281204 (available soon).
- 
- \- MethEPIC: from GEO GSE281305 (available soon).
- 
- \- single-cell RNAseq: Peng, link to [paper](https://www.nature.com/articles/s41422-019-0195-y) and [download](https://ngdc.cncb.ac.cn/gsa/browse/CRA001160). The dataset was processed with an in-house script for cell type labelling.
- 
-The other bulk mixtures are from *in vivo* or *in vitro* data sequencing, see description below. 
 
-### Data processing
+All references are contained in the file `data/reference_pdac.rds`. This object is a list with the following elements:
 
-The RNAseq reference data has been normalized using edgeR.
-
-The methylation reference data consists of aggregated beta values without specific batch effect correction.
-
-The single-cell RNAseq data has been processed according to the following steps: a Seurat object was created from the counts and metadata corresponding to cell type and sample for each cell was added. For Raghavan and Peng there were no distinction beween classic and basal cells. These datasets were subsetted with only the tumor cells, normalised (using SCTranform function from the Seurat package) and run through [PurIST](https://github.com/naimurashid/PurIST/tree/master) to label separately basal and classic cells. We only kept cells that were "likely" or "strong" for the assignation, filtering out "lean" cells. The datasets were not normalized (counts as downloaded from the paper). 
-
-### Data description
-
--  **Mixes**
-  
-All bulk mixtures (simulated or from *in vitro* or *in vivo* sequencing) contain DNA methylation and RNAseq data for 30 matched samples.
-
-Each mixture is a list of 2 elements:
-
-```
-- mix_rna: Matrix with dimension nb_genes x 30 (gene x sample)
-- mix_met: Matrix with dimension nb_probes x 30 (probe x sample)
-```
-
-Example to load and inspect the data:
-```
-## read mixture data
-> mixes = readRDS("mixes1_insilicodirichletEMFA_pdac.rds")
-> dim(mixes$mix_rna)
-    [1] 15908    30
-> dim(mixes$mix_met)
-    [1] 410460    30
-> mixes$mix_rna[1:5,1:5]
-                [,1]        [,2]       [,3]       [,4]        [,5]
-A1BG      175.672119  192.545376 159.730514 178.485733  222.423391
-A1BG-AS1  267.621892  260.162802 141.181363 208.780955  289.865525
-A1CF        2.366686    6.427183   7.452182   4.166786    2.354932
-A2M      1188.737986 1555.621759 945.910236 822.971807 2455.294006
-A2M-AS1    16.578611   15.646713  13.846738  14.359070   16.605442
-> mixes$mix_met[1:5,1:5]
-                 [,1]       [,2]       [,3]      [,4]       [,5]
-cg00000109 0.75610815 0.74979232 0.75328176 0.7513898 0.77448260
-cg00000165 0.05747755 0.06266522 0.02914655 0.0528465 0.04592764
-cg00000236 0.77793411 0.78411988 0.73972585 0.7964341 0.78363719
-cg00000321 0.55275824 0.51767339 0.51584411 0.6112040 0.47065240
-cg00000363 0.39013598 0.44852883 0.48662104 0.4155861 0.46907377
-```
-
-- **Reference**
-
-Additionally, reference matrices are provided: a RNAseq reference, a MethEPIC one and a single-cell RNAseq one.
-All references are contained in the file `data/reference_pdac.rds`. This file is a list with the following elements:
-
-    2 bulk reference datasets: RNAseq (ref_bulkRNA) and methylation (ref_met)
-    3 single-cell RNAseq reference datasets (ref_scRNA): Peng, Baron and Raghavan, each including the data (counts) and associated metadata, i.e. the sample and the cell type.
+  \- **ref_bulkRNA**: bulk RNAseq pure cell populations
+  \- **ref_met**: bulk methylation profiles of pure cell populations
+   \- **ref_scRNA**: single-cell RNAseq reference datasets from 3 differents studies; Peng, Baron and Raghavan, each including the data (counts) and associated metadata, i.e. the sample and the cell type.
 
 Example to load and inspect the reference data:
 
@@ -108,6 +48,9 @@ cg00000165 0.2302060 0.1527960 0.4541206 0.6928373 0.5090004
 cg00000236 0.8361639 0.8810673 0.8744915 0.8656830 0.8651425
 cg00000321 0.3017272 0.7842141 0.4368221 0.5817505 0.2712210
 
+> names(reference$ref_scRNA)
+[1] "ref_sc_peng"     "ref_sc_baron"    "ref_sc_raghavan"
+
 > reference$ref_scRNA$ref_sc_peng$counts[101:105,1:5]
 5 x 5 sparse Matrix of class "dgCMatrix"
               T1_AAAGTAGAGTCGTACT T1_AAGACCTGTCTGGTCG T1_AAGCCGCCAGTAAGAT T1_AAGTCTGAGCAAATCA T1_AATCCAGTCTCCTATA
@@ -116,33 +59,56 @@ RPL22                           2                   6                   5       
 RP1-120G22.11                   .                   .                   .                   .                   .
 RNF207                          .                   .                   .                   .                   .
 ICMT                            1                   .                   .                   .                   .
+
+> reference$ref_scRNA$ref_sc_peng$metadata[1:5,]
+                    cell_type sample
+T1_AAAGTAGAGTCGTACT    immune     T1
+T1_AAGACCTGTCTGGTCG      endo     T1
+T1_AAGCCGCCAGTAAGAT      endo     T1
+T1_AAGTCTGAGCAAATCA    immune     T1
+T1_AATCCAGTCTCCTATA     fibro     T1
+
+
 ```
 
-The data has the following structure:
-```
--ref_bulkRNA: Matrix with dimensions 15908 x 5 (gene x cell_type)
 
--ref_scRNA: List of 3 elements:
-    -ref_sc_peng: List of 2 elements:
-        counts: dgCMatrix with dimensions 24005 x 4976 (gene x cell)
-        metadata: List of 2 elements:
-          cell_type: Vector of 4976 elements
-          sample: Vector of 4976 elements
-    -ref_sc_baron: List of 2 elements:
-        counts: dgCMatrix with dimensions 20125 x 551 (gene x cell) 
-        metadata: List of 2 elements:
-          cell_type: Vector of 551 elements
-          sample: Vector of 551 elements
-    - ref_sc_raghavan: List of 2 elements:
-        counts: dgCMatrix with dimensions 18710 x 4953 (gene x cell)
-        metadata: List of 2 elements:
-          cell_type: Vector of 4953 elements
-          sample: Vector of 4953 elements
-    
--ref_met: Matrix with dimensions 410460 x 5 (probe x cell_type)
+### Bulk mixture data to deconvolve (PHASE 1)
+  
+The bulk mixture dataset contains DNA methylation and RNAseq data for 30 matched samples. Each bulk sample is a mixture of the 5 cell populations: immune cells (immune), fibroblasts (fibro), endothelial cells (endo), and classical (classic) and basal-like (basal) cancer cells. This dataset consist of in silico simulation using a Dirichlet distribution, with correlation between features, for 5 cell types.
+
+Each mixture is a list of 2 elements:
+
+```
+- mix_rna: Matrix with dimension nb_genes x 30 (gene x sample)
+- mix_met: Matrix with dimension nb_probes x 30 (probe x sample)
 ```
 
-## Mixes to deconvolve
+Example to load and inspect the data:
+```
+## read mixture data
+> mixes = readRDS("data/mixes1_insilicodirichletEMFA_pdac.rds")
+> dim(mixes$mix_rna)
+    [1] 15908    30
+> dim(mixes$mix_met)
+    [1] 23724    30
+> mixes$mix_rna[1:5,1:5]
+                [,1]        [,2]       [,3]       [,4]        [,5]
+A1BG      175.672119  192.545376 159.730514 178.485733  222.423391
+A1BG-AS1  267.621892  260.162802 141.181363 208.780955  289.865525
+A1CF        2.366686    6.427183   7.452182   4.166786    2.354932
+A2M      1188.737986 1555.621759 945.910236 822.971807 2455.294006
+A2M-AS1    16.578611   15.646713  13.846738  14.359070   16.605442
+> mixes$mix_met[1:5,1:5]
+                 [,1]       [,2]       [,3]      [,4]       [,5]
+cg00000109 0.75610815 0.74979232 0.75328176 0.7513898 0.77448260
+cg00000165 0.05747755 0.06266522 0.02914655 0.0528465 0.04592764
+cg00000236 0.77793411 0.78411988 0.73972585 0.7964341 0.78363719
+cg00000321 0.55275824 0.51767339 0.51584411 0.6112040 0.47065240
+cg00000363 0.39013598 0.44852883 0.48662104 0.4155861 0.46907377
+```
+
+
+### Bulk mixture data to deconvolve (PHASE 2)
 
 In Phase 2, multiple datasets are provided, each with different characteristics. These datasets are labelled as follows:
 
@@ -158,7 +124,7 @@ In Phase 2, multiple datasets are provided, each with different characteristics.
 
 Since `VITR` is an *in vitro* mixture, the true proportions for each cell type in each sample are controlled and therefore the ground truth can be assumed to be reliable.
 
-For the `VIVO` dataset, we don't know the ground truth. However, we have a proxy for the relative proportions of the cancer cell types, as measured on histological slides. Since we have a partial ground truth, we can only compute correlation metrics on the cancer types.
+For the `VIVO` dataset, we do not know the ground truth. However, we have a proxy for the relative proportions of the cancer cell types, as measured on histological slides. Since we have a partial ground truth, we can only compute correlation metrics on the cancer types.
 
 The principle of the `SBN5` pseudo-bulk simulation is based on how bulk samples are sequenced in real life. The global gene expression or DNA methylation in a bulk sample is measured from a multitude of heterogeneous cells. Single-cell technology measures gene expression or DNA methylation in one cell, so an *in silico* mixture of single-cell data of different cell types in known proportions produces a pseudo-bulk sample.
 
