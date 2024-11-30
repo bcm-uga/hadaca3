@@ -24,8 +24,10 @@ Basal-like and classical cells methylation profiles were retrieved from [this pa
 All references are contained in the file `data/reference_pdac.rds`. This object is a list with the following elements:
 
   \- **ref_bulkRNA**: bulk RNAseq pure cell populations
+  
   \- **ref_met**: bulk methylation profiles of pure cell populations
-   \- **ref_scRNA**: single-cell RNAseq reference datasets from 3 differents studies; Peng, Baron and Raghavan, each including the data (counts) and associated metadata, i.e. the sample and the cell type.
+  
+  \- **ref_scRNA**: single-cell RNAseq reference datasets from 3 differents studies; Peng, Baron and Raghavan, each including the data (counts) and associated metadata, i.e. the sample and the cell type.
 
 Example to load and inspect the reference data:
 
@@ -128,12 +130,12 @@ For the `VIVO` dataset, we do not know the ground truth. However, we have a prox
 
 The principle of the `SBN5` pseudo-bulk simulation is based on how bulk samples are sequenced in real life. The global gene expression or DNA methylation in a bulk sample is measured from a multitude of heterogeneous cells. Single-cell technology measures gene expression or DNA methylation in one cell, so an *in silico* mixture of single-cell data of different cell types in known proportions produces a pseudo-bulk sample.
 
-For all further *in silico* simulated datasets, the ground truth is generated based on a Dirichlet distribution with different sets of parameters, chosen to generate proportions close to the *in vitro* ones. The first dataset is a basic simulation with no explicit dependence or correlation introduced between genes and CpG probes. Based on this simple simulation, we produced two other datasets: one with only 4 cell types, and one with 6 cell types, while there are 5 cell types in the reference used for the reference-based deconvolution.
+For all further *in silico* simulated datasets, the ground truth is generated based on a Dirichlet distribution with different sets of parameters, chosen to generate proportions close to the *in vitro* ones. The first dataset `SDN5` is a basic simulation with no explicit dependence or correlation introduced between genes and CpG probes. Based on this simple simulation, we produced two other datasets: one with only 4 cell types `SDN4`, and one with 6 cell types `SDN6`, while there are 5 cell types in the reference used for the reference-based deconvolution.
 
 The last 3 *in silico* simulations introduce a dependence structure between genes and CpG probes. These dependences are estimated from the *in vitro* dataset by two different approaches:
 
-- EMFA: We estimate a factor model of the conditionnal variance-covariance matrix in the *in vitro* data. The factor model is estimated by an Expectation-Maximisation algorithm (https://doi.org/10.1198/jasa.2009.tm08332)
-- Copula: Copulas characterise the type of dependence, such as non-linear or tail dependence, between multiple variables. We estimate the empirical copula of the residuals between *in vitro* bulk samples and *in vitro* references (https://doi.org/10.18637/jss.v021.i04).
+- EMFA `SDE5` : We estimate a factor model of the conditionnal variance-covariance matrix in the *in vitro* data. The factor model is estimated by an Expectation-Maximisation algorithm (https://doi.org/10.1198/jasa.2009.tm08332)
+- Copula `SDC5`: Copulas characterise the type of dependence, such as non-linear or tail dependence, between multiple variables. We estimate the empirical copula of the residuals between *in vitro* bulk samples and *in vitro* references (https://doi.org/10.18637/jss.v021.i04).
 
 The dataset `SDEL` is derived from the EMFA simulation procedure, but with very low proportion for one cell type.
 
