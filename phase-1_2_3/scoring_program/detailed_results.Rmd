@@ -109,7 +109,6 @@ max_time <- 86400
 
 
 if (!  (    any(names(dic_longnames2short) %in% names(time))   )) {
-  # Initialize `score` if it doesn't already exist
   time <- list()
   # Loop through each dataset and set the corresponding score
   for (name in datasets) {
@@ -117,14 +116,13 @@ if (!  (    any(names(dic_longnames2short) %in% names(time))   )) {
   }
 }else{
   stopifnot(identical(names(prediction), names(time)))
+  for (name in names(prediction)) {
+    names(time)[which(name == names(prediction))] = dic_longnames2short[name]
+  }
 }
 
-
-
 for (name in names(prediction)) {
-  names(time)[which(name == names(prediction))] = dic_longnames2short[name]
   names(prediction)[which(name == names(prediction))] = dic_longnames2short[name]
-  
 }
 
 
