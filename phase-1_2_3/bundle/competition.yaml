@@ -51,10 +51,10 @@ phases:
 - index: 0
   name: INTRODUCTORY PHASE - Cell type proportion estimation from transcriptome and methylome data, using multimodal references.
   description: good luck 
-  start: '2024-02-20 '
-  # start: '2024-11-29 '
-  end: '2024-03-20 10:40'
-  # end: '2024-12-03 17:30'
+  # start: '2024-02-20 '
+  start: '2024-11-29 '
+  # end: '2024-03-20 10:40'
+  end: '2024-12-03 17:30'
   max_submissions_per_day: 20
   max_submissions: 100
   execution_time_limit: 600000
@@ -66,10 +66,10 @@ phases:
 - index: 1
   name: MAIN PHASE - Cell type proportion estimation from transcriptome and methylome data, using multimodal references.
   description: good luck 
-  start: '2024-03-20 10:41'
-  # start: '2024-12-04 9:00'
-  end: '2024-12-28 11:00'
-  # end: '2024-12-05 12:00'
+  # start: '2024-03-20 10:41'
+  start: '2024-12-04 9:00'
+  # end: '2024-12-28 11:00'
+  end: '2024-12-05 12:00'
   max_submissions_per_day: 100
   max_submissions: 200
   execution_time_limit: 600000
@@ -81,10 +81,10 @@ phases:
 - index: 2
   name: FINAL PHASE - Cell type proportion estimation from transcriptome and methylome data, using multimodal references.
   description: good luck
-  start: '2024-12-28 11:01'
-  # start: '2024-12-05 13:00'
+  # start: '2024-12-28 11:01'
+  start: '2024-12-05 13:00'
   # end: '2024-10-20T00:10'
-  max_submissions_per_day: 5
+  max_submissions_per_day: 100
   max_submissions: 100
   execution_time_limit: 600000
   auto_migrate_to_this_phase: true

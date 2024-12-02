@@ -32,20 +32,20 @@ options(knitr.duplicate.label = "allow")
 
 library(ggplot2)
 
-dic_datasets2short <- list(
-  invitro = "VITR" , 
-  invivo = "VIVO" , 
-  insilicopseudobulk = "SBN5" , 
-  insilicodirichletNoDep = "SDN5" , 
-  insilicodirichletNoDep4CTsource = "SDN4" , 
-  insilicodirichletNoDep6CTsource = "SDN6" , 
-  insilicodirichletEMFA = "SDE5" , 
-  insilicodirichletEMFAImmuneLowProp = "SDEL" , 
-  insilicodirichletCopule =  "SDC5" 
-)
+# dic_datasets2short <- list(
+#   invitro = "VITR" , 
+#   invivo = "VIVO" , 
+#   insilicopseudobulk = "SBN5" , 
+#   insilicodirichletNoDep = "SDN5" , 
+#   insilicodirichletNoDep4CTsource = "SDN4" , 
+#   insilicodirichletNoDep6CTsource = "SDN6" , 
+#   insilicodirichletEMFA = "SDE5" , 
+#   insilicodirichletEMFAImmuneLowProp = "SDEL" , 
+#   insilicodirichletCopule =  "SDC5" 
+# )
 
-# input = "../test_output/"
-# output = "../test_output/"
+# input = "phase-1_2_3/test_output/"
+# output = "phase-1_2_3/test_output/"
 
 
 datasets = c("VITR", "VIVO", "SBN5", "SDN5", "SDN4", "SDN6", "SDE5", "SDEL", "SDC5")
@@ -57,7 +57,11 @@ groundtruh_list = list.files(dir_name,pattern="groundtruth*")
 # print(groundtruh_list)
 
 
-dic_longnames2short =list()
+dic_longnames2short =list() 
+
+
+# method_readed = c()
+# method_index = 1
 
 ground_truth= list()
 score = list()
@@ -69,32 +73,64 @@ for (groundthruth_name in groundtruh_list){
 
   dataset_name = paste0("mixes",phase,"_",methods_name,'_pdac.rds')
 
-  dic_longnames2short[[dataset_name]] = dic_datasets2short[[methods_name]]
+  # method_readed[method_index] = methods_name
+  # method_index = method_index +1
+  # print(dataset_name)
+
+  # dic_longnames2short[[dataset_name]] = dic_datasets2short[[methods_name]]
+  dic_longnames2short[[dataset_name]] = methods_name
   # dic_longnames2short_gt[[groundthruth_name]] = dic_datasets2short[[methods_name]]
+  # dic_longnames2short_gt[[groundthruth_name]] = methods_name
 
   gt_file =  readRDS(file = paste0(dir_name,.Platform$file.sep, groundthruth_name) )
 
-  ground_truth[[dic_datasets2short[[methods_name]]]] = gt_file
+  # ground_truth[[dic_datasets2short[[methods_name]]]] = gt_file
+  ground_truth[[methods_name]] = gt_file
 
 
   score_file = paste0(output, .Platform$file.sep, "scores_",dataset_name)
   score_data = readRDS(file = score_file )
-  score[[dic_datasets2short[[methods_name]] ]] = score_data
+  # score[[dic_datasets2short[[methods_name]] ]] = score_data
+  score[[methods_name ]] = score_data
 }
 
 prediction <- readRDS(paste0(input,.Platform$file.sep,"res",.Platform$file.sep,"prediction.rds"))
 time = readRDS(file = paste0(input, .Platform$file.sep, "res", .Platform$file.sep, "Rprof.rds") )
 
-stopifnot(identical(names(prediction), names(time)))
+
+    # total_time =  #24 h in seconds! 
+
+# datasets <- c("VITR", "VIVO", "SBN5", "SDN5", "SDN4", "SDN6", "SDE5", "SDEL", "SDC5")
+max_time <- 86400
+# l_time <- list()
+
+# Check if the first dataset is not in the names of `times`
+# if (!(any(datasets %in% names(time)))) {
+
+
+if (!  (    any(names(dic_longnames2short) %in% names(time))   )) {
+  # Initialize `score` if it doesn't already exist
+  time <- list()
+  # Loop through each dataset and set the corresponding score
+  for (name in datasets) {
+    time[[name]] <- max_time
+  }
+}else{
+  stopifnot(identical(names(prediction), names(time)))
+}
+
 
 
 for (name in names(prediction)) {
   names(time)[which(name == names(prediction))] = dic_longnames2short[name]
   names(prediction)[which(name == names(prediction))] = dic_longnames2short[name]
+  
 }
 
 
 datasets <- datasets[datasets %in%  unlist(dic_longnames2short)]
+# datasets <- datasets[datasets %in%  method_readed]
+
 
 # Try with only one dataset (like phase 1)
 # datasets = datasets[1] # 1:4

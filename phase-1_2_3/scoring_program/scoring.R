@@ -380,7 +380,7 @@ for (groundthruth_name in groundtruh_list){
   print(dim(Atruth))
   Atruth = as.matrix(Atruth)
   
-  timing=profiling[[dataset_name]]
+  # timing=profiling[[dataset_name]]
 
   # baseline_scores = baseline_scoring_function(A_real=Atruth, A_pred=Aest, time=as.numeric(timing))
   baseline_scores = scoring_function(A_real=Atruth,  A_pred=Aest)

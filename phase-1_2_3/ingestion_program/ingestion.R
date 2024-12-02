@@ -71,8 +71,29 @@ if (file.exists(file_R)) {
 
  } else { 
     print("no program to execute, go straight to scoring step") 
-}
+    print(paste0(" output_profiling file:", output_profiling_rds))
+    # l_time = list()
+ 
+    # # dir_name = paste0(input, .Platform$file.sep, "ref", .Platform$file.sep)
+    # dir_name = paste0(output, .Platform$file.sep, "ref", .Platform$file.sep)
+    # groundtruh_list = list.files(dir_name,pattern="groundtruth*")
+    total_time = 86400 #24 h in seconds! 
 
+    # for (groundthruth_name in groundtruh_list){
+      
+    #   gt_list = unlist(strsplit(groundthruth_name, "_"))
+    #   methods_name =  gt_list[2]
+    #   phase =  substr(gt_list[1], nchar(gt_list[1]), nchar(gt_list[1]))
+
+    #   l_time[[methods_name]] = total_time
+    # }
+
+
+    saveRDS(
+      object = total_time,
+      file   = output_profiling_rds
+    )
+}
 
 
 
