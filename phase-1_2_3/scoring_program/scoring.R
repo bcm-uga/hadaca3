@@ -242,6 +242,7 @@ scoring_function <- function(A_real, A_pred) {
                             "spearman_tot"=spearman_tot,
                             "spearman_col"=spearman_col,
                             "spearman_row"=spearman_row)
+    weights_spec = c(rep(0,5),1/2,rep(0,2),1/2)
   }
   
   # generate best/worst possible metrics
@@ -287,6 +288,7 @@ scoring_function <- function(A_real, A_pred) {
   weights = c(1/3*1/2,1/3*1/2,
               1/3,
               rep(1/3*1/6,6))
+  if (nrow(A_pred) > nrow(A_real) & setequal(rownames(A_real), c("basal",'classic'))) {weights = weights_spec}
   score_aggreg = weighgeomMean(judge_candidate_norm[1,],
                                weights)
 
