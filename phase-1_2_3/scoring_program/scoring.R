@@ -53,9 +53,11 @@ prepare_A <- function(A_real, A_pred) {
 #########################
 # Global Pearson/Spearman correlation coefficients
 correlationP_tot = function(A_real, A_pred) {
+  if (all(c(var(A_pred))==0)) {return(-1)} #worst case scenario where all cell types are predicted with the same proportions
   return(cor(c(A_real), c(A_pred), method = "pearson"))
 }
 correlationS_tot = function(A_real, A_pred) {
+  if (all(c(var(A_pred))==0)) {return(-1)} #worst case scenario where all cell types are predicted with the same proportions
   return(cor(c(A_real), c(A_pred), method = "spearman"))
 }
 
@@ -70,6 +72,7 @@ correlationP_col = function(A_real, A_pred) {
   }
   res = res[!is.na(res)]
   print(paste0(length(res), " columns are kept for correlation analysis"))
+  if (length(res)==0) {return(-1)}
   return(mean(res))
 }
 correlationS_col = function(A_real, A_pred) {
@@ -81,6 +84,7 @@ correlationS_col = function(A_real, A_pred) {
   }
   res = res[!is.na(res)]
   print(paste0(length(res), " columns are kept for correlation analysis"))
+  if (length(res)==0) {return(-1)}
   return(mean(res))
 }
 
@@ -95,6 +99,7 @@ correlationP_row = function (A_real, A_pred) {
   }
   res = res[!is.na(res)]
   print(paste0(length(res), " rows are kept for correlation analysis"))
+  if (length(res)==0) {return(-1)}
   return(mean(res))
 }
 correlationS_row = function (A_real, A_pred) {
@@ -106,6 +111,7 @@ correlationS_row = function (A_real, A_pred) {
   }
   res = res[!is.na(res)]
   print(paste0(length(res), " rows are kept for correlation analysis"))
+  if (length(res)==0) {return(-1)}
   return(mean(res))
 }
 
