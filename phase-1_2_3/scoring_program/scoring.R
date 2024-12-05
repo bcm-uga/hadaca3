@@ -277,10 +277,16 @@ scoring_function <- function(A_real, A_pred) {
                                      "spearman_row"=-1))
   
   # normalize scores
+  #CenterScaleNorm <- function(x) {
+  #  tr1 = x - mean(x, na.rm=T)
+  #  tr2 = tr1/sd(x, na.rm=T)
+  #  return(pnorm(tr2))
+  #}
+  # strategy when normalizing only one method
   CenterScaleNorm <- function(x) {
-    tr1 = x - mean(x, na.rm=T)
-    tr2 = tr1/sd(x, na.rm=T)
-    return(pnorm(tr2))
+    tr1 = x - min(x, na.rm=T)
+    tr2 = tr1/(max(tr1, na.rm=T))
+    return(tr2)
   }
   judge_candidate_norm = apply(judge_candidate, 2, CenterScaleNorm)
 
