@@ -36,10 +36,28 @@ source(
 
 base::set.seed(seed = 1)
 
-# total_time <- 0
+
 l_time = list()
 predi_list = list()
-# l_time= c()
+
+
+
+install.packages = function (pkgs, repos="https://cloud.r-project.org", ...) {
+  installed_packages <- installed.packages( )
+  for (package in pkgs ) {
+    if ( !{ package %in% installed_packages } ) {
+     print(x = paste("Installation of ", package, sep = "") )
+      utils::install.packages(
+        pkgs = package,
+        repos = repos,
+        ...
+      )
+    } else {
+      print(x = paste(package, " is installed.", sep = "") )
+    }
+  }
+}
+
 
 
 dir_name = paste0(input,.Platform$file.sep)

@@ -13,7 +13,7 @@ print(x = "")
 
 # Create symbolic link with 
 
-try(system("ln -sf  ../ingested_program/modules/ modules", intern = TRUE, ignore.stderr = TRUE))
+# try(system("ln -sf  ../ingested_program/modules/ modules", intern = TRUE, ignore.stderr = TRUE))
 
 
 # source(file = "Detach_packages.R")
