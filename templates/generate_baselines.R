@@ -73,7 +73,8 @@ create_base_script <- function(dict_name, suffix_file){
         }
         if(identical(suffix_file,".py"))  {
             dir.create(file.path(output_path, "attachement/"), showWarnings = FALSE)
-            for ( file in c("attachement/additionnal_script.py")     ){
+            
+            for ( file in c("attachement/read_data_python.py","attachement/ref_sc_baron.rds","attachement/ref_sc_peng.rds","attachement/ref_sc_raghavan.rds")     ){
                 copy_file(file)
             }
         }

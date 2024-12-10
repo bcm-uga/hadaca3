@@ -13,7 +13,9 @@ type Rscript >/dev/null 2>&1 || { echo >&2 "Rscript requiered but it's not insta
 
 # docker_name=hombergn/hadaca3_light
 # docker_name=hombergn/hadaca3_pyr
-docker_name=hombergn/hadaca3_final
+# docker_name=hombergn/hadaca3_final
+# docker_name=hombergn/hadaca3_finalv2
+docker_name=hombergn/hadaca3_finalv3
 
 
 echo generate baselines. 
@@ -38,7 +40,7 @@ cd starting_kit/
 rm -rf submissions
 # Rscript submission_script.R >> logs
 Rscript submission_script.R 
-# python submission_script.py
+# python submission_script.py   
 cd - 
 echo "Done"
 

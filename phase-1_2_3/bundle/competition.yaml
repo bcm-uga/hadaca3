@@ -3,7 +3,8 @@ title: Multimodal data integration to quantify tumor heterogeneity in cancer res
 # docker_image: hombergn/hadaca3_light
 # docker_image: hombergn/hadaca3_pyr
 docker_image: hombergn/hadaca3_final
-queue:  a05e3a5f-09df-40e3-978e-02f147289877 
+# queue:  a05e3a5f-09df-40e3-978e-02f147289877 
+# queue:  a05e3a5f-09df-40e3-978e-02f147289877 
 description: HADACA3
 registration_auto_approve: true
 enable_detailed_results: true
@@ -69,7 +70,7 @@ phases:
   # start: '2024-03-20 10:41'
   start: '2024-12-04 9:00'
   # end: '2024-12-28 11:00'
-  end: '2024-12-05 12:00'
+  end: '2024-12-05 16:00'
   max_submissions_per_day: 100
   max_submissions: 200
   execution_time_limit: 600000
@@ -82,7 +83,7 @@ phases:
   name: FINAL PHASE - Cell type proportion estimation from transcriptome and methylome data, using multimodal references.
   description: good luck
   # start: '2024-12-28 11:01'
-  start: '2024-12-05 13:00'
+  start: '2024-12-06 13:00'
   # end: '2024-10-20T00:10'
   max_submissions_per_day: 100
   max_submissions: 100

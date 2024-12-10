@@ -1,4 +1,4 @@
-
+install.packages("coda.base")
 
 weighgeomMean <- function(x,w) {
   prod(mapply(function(a,b) a^b, a=x, b=w), na.rm=T)^(1/sum(w))
