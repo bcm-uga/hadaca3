@@ -25,6 +25,7 @@ DEBUG = FALSE
 #Number of cells types  /!\ change also cell_name_list
 k = 5 
 cell_name_list =  c("endo" ,   "fibro"  , "immune" , "classic" ,"basal" )
+datasets = c("VITR", "VIVO", "SBN5", "SDN5", "SDN4", "SDN6", "SDE5", "SDEL", "SDC5")
 
 # sample_name_list =  paste0("sample", 1:30)
 #Number of Probes
@@ -191,19 +192,20 @@ Ref_m = create_ref_matrix(k,nb_met_sondes, rna_mean,rna_sd,rna_min,rna_max)
 write_to_disk_ref(Ref_m)
 
 
-i = 1
+phase = 1
 #### nb_datasets is hte number of datasets per phase ! 
 for (dataset_name in 1:(nb_datasets *2)){
 
-    dataset_name = paste0(toString( dataset_name))
+    # dataset_name = paste0(toString( dataset_name))
+    dataset_name = datasets[dataset_name]
     print(paste0("generating dataset:",dataset_name ))
 
     ground_truth = create_ground_truth(nb_probes,k)
     Bulk_m = create_bulk(Ref_m,ground_truth)
 
-    write_to_disk_bulk_gt(ground_truth,Bulk_m,dataset_name,i+1)
+    write_to_disk_bulk_gt(ground_truth,Bulk_m,dataset_name,phase+1)
     
-    i = (i +1)%%2
+    phase = (phase +1)%%2
     # if (DEBUG){
     #     ### re Read data 
     #     dir_name = paste0("data/",dataset_name,'/')
