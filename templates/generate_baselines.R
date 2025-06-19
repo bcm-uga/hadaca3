@@ -15,9 +15,12 @@ dir_h3_p = "~/projects/hadaca3_private/"
 baselines_tables = 'starter_kit_baselines.R'
 
 #  read the baselines to implement the dictionnary for each phase. 
+# source(paste0(dir_h3_p,baselines_tables))
 source(paste0(dir_h3_p,baselines_tables))
+# baselines <- lapply(read.csv(paste0(dir_h3_p,"baselines.csv"), header = FALSE, comment.char = "#", col.names = c("baselines", "env")),function(x) trimws(sub("#.*", "", x)))$baselines
 
-baseline_file_prefix = "baseline_"
+
+baseline_file_prefix = "baselines/baseline_"
 
 
 # mainDir = paste0("~/projects/hadaca3/templates/",Phase,"/")

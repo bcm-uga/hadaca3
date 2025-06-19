@@ -47,9 +47,9 @@ rm -r ~/projects/hadaca3/templates/tmp/
 # cd starting_kit/ ; zip  -FS  -r  ../bundle/starting_kit_phase2-3.zip *  -x \*submissions\* ; cd .. ; 
 # cd starting_kit_phase1/ ; zip  -FS  -r  ../bundle/starting_kit_phase1.zip *  -x \*submissions\* ; cd .. ; 
 
-zip -FS -r -j bundle/input_data_phase2.zip input_data/
-zip -FS -r -j bundle/input_data_phase3.zip input_data_final/
-zip -FS -r -j bundle/input_data_phase1.zip input_data_phase1/
+# zip -FS -r -j bundle/input_data_phase2.zip input_data/
+# zip -FS -r -j bundle/input_data_phase3.zip input_data_final/
+# zip -FS -r -j bundle/input_data_phase1.zip input_data_phase1/
 
 
 zip -FS -j -r  bundle/ground_truth_phase2.zip ground_truth/
@@ -58,11 +58,11 @@ zip -FS -j -r  bundle/ground_truth_phase1.zip ground_truth_phase1/
 
 
 #### genereate empty input_data to load data challenge by hand
-# mkdir empty
-# touch empty/empty.txt
-# zip -FS -r -j bundle/input_data_phase2.zip empty/
-# zip -FS -r -j bundle/input_data_phase3.zip empty/
-# zip -FS -r -j bundle/input_data_phase1.zip empty/
+mkdir empty
+touch empty/empty.txt
+zip -FS -r -j bundle/input_data_phase2.zip empty/
+zip -FS -r -j bundle/input_data_phase3.zip empty/
+zip -FS -r -j bundle/input_data_phase1.zip empty/
 
 
 

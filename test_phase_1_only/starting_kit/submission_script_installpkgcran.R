@@ -9,7 +9,7 @@
 #' @param ref a matrix pure types (columns) and features (rows)
 #' @param ... other parameters that will be ignored
 #' 
-#' @return an estimation of matrix A
+#' @return the estimated A matrix
 #' 
 program = function(mix=NULL, ref=NULL, ...) {
 
@@ -17,13 +17,15 @@ program = function(mix=NULL, ref=NULL, ...) {
   ## YOUR CODE BEGINS HERE
   ##
 
-  # idx_feat corresponds to the intersection of features present in the references and in the mixtures.
+  install.packages("beeswarm")
+
+  # Creation of an index, idx_feat, corresponding to the intersection of features present in the references and those present in the mixtures.
   idx_feat = intersect(rownames(mix), rownames(ref))
   
   # Estimation of proportions
   prop = apply(mix[idx_feat,], 2, function(b, A) {
     tmp_prop = lm(b ~ A - 1)$coefficients  # Using `-1` to remove the intercept
-    tmp_prop[tmp_prop < 0] = 0
+    # tmp_prop = nnls::nnls(b=b,A=A)$x  
     tmp_prop = tmp_prop / sum(tmp_prop)    # Sum To One
     return(tmp_prop)
   }, A=ref[idx_feat,])
@@ -33,16 +35,50 @@ program = function(mix=NULL, ref=NULL, ...) {
   return(prop)
   
   ##
-  ## YOUR CODE ENDS HERE
+  ## YOUR CODE ENDS HERE nnls()
   ##
 }
+
+install.packages = function (pkgs, repos="https://cloud.r-project.org", ...) {
+  installed_packages <- installed.packages( )
+  for (package in pkgs ) {
+    if ( !{ package %in% installed_packages } ) {
+     print(x = paste("Installation of ", package, sep = "") )
+      utils::install.packages(
+        pkgs = package,
+        repos = repos,
+        ...
+      )
+    } else {
+      print(x = paste(package, " is installed.", sep = "") )
+    }
+  }
+}
+
 
 
 ##############################################################
 ### Generate a prediction file /!\ DO NOT CHANGE THIS PART ###
 ##############################################################
 
-validate_pred <- function(pred, nb_samples = ncol(mix_rna) , nb_cells= ncol(ref_rna),col_names = colnames(ref_met) ){
+
+
+mixes_data = readRDS("mixes_smoothies_fruits.rds")
+reference_data = readRDS("reference_fruits.rds")
+
+# we use the previously defined function 'program' to estimate A :
+pred_prop <- program(
+  mix = mixes_data ,
+  ref = reference_data
+)
+
+
+
+##############################################################
+### Validate the prediction /!\ DO NOT CHANGE THIS PART ###
+##############################################################
+
+validate_pred <- function(pred, nb_samples , nb_cells,col_names ){
 
   error_status = 0   # 0 means no errors, 1 means "Fatal errors" and 2 means "Warning"
   error_informations = ''
@@ -70,7 +106,6 @@ validate_pred <- function(pred, nb_samples = ncol(mix_rna) , nb_cells= ncol(ref_
 
   if(error_status == 1){
     # The error is blocking and should therefor stop the execution. 
-    # tryCatch(message("hello\n"), message=function(e){cat("goodbye\n")})  use this here ? 
     stop(error_informations)
   }
   if(error_status == 2){
@@ -79,62 +114,13 @@ validate_pred <- function(pred, nb_samples = ncol(mix_rna) , nb_cells= ncol(ref_
   }  
 }
 
-dir_name = paste0("data",.Platform$file.sep)
-dataset_list = list.files(dir_name,pattern="mixes*")
-
-reference_data <- readRDS(file =  paste0(dir_name, "reference_pdac.rds"))
 
 
-predi_list = list()
-for (dataset_name in dataset_list){
-
-  print(paste0("generating prediction for dataset:",toString(dataset_name) ))
-
-  mixes_data <- readRDS(file = paste0(dir_name, dataset_name))
-
-  if ("mix_rna" %in% names(mixes_data)) {
-    mix_rna = mixes_data$mix_rna
-  } else {
-    mix_rna = mixes_data
-  }
-  if ("mix_met" %in% names(mixes_data)) {
-    mix_met = mixes_data$mix_met  
-  } else {
-    mix_met = NULL
-  }
-
-  if ("ref_bulkRNA" %in% names(reference_data)) {
-    ref_bulkRNA = reference_data$ref_bulkRNA
-  } else {
-    ref_bulkRNA = reference_data
-  }
-  if ("ref_met" %in% names(reference_data)) {
-    ref_met = reference_data$ref_met  
-  } else {
-    ref_met = NULL
-  }
-  if ("ref_scRNA" %in% names(reference_data)) {
-    ref_scRNA = reference_data$ref_scRNA  
-  } else {
-    ref_scRNA = NULL
-  }
-
-  # we use the previously defined function 'program' to estimate A :
-  pred_prop <- program(mix_rna, ref_bulkRNA, mix_met=mix_met, ref_met=ref_met, ref_scRNA=ref_scRNA)
-  validate_pred(pred_prop,nb_samples = ncol(mix_rna),nb_cells = ncol(ref_bulkRNA),col_names = colnames(ref_met))
-  predi_list[[dataset_name]] = pred_prop
-
-}
-
-
-##############################################################
-### Check the prediction /!\ DO NOT CHANGE THIS PART ###
-##############################################################
+validate_pred <- function(pred, nb_samples = ncol(mixes_data) , nb_cells= ncol(reference_data),col_names = colnames(reference_data) )
 
 
 ###############################
 ### Code submission mode
-
 
 print("")
 for (package in c("zip") ) {
@@ -149,7 +135,7 @@ for (package in c("zip") ) {
 
 
 # we generate a zip file with the 'program' source code
-
+print('')
 if ( !dir.exists(paths = "submissions") ) {
     dir.create(path = "submissions")
 }
@@ -163,36 +149,15 @@ dump(
 
 date_suffix = format(x = Sys.time( ), format = "%Y_%m_%d_%H_%M_%S")
 
-
-
+# we create the associated zip file :
 zip_program <- paste0("submissions", .Platform$file.sep, "program_", date_suffix, ".zip")
 zip::zip(zipfile= zip_program
-  , files   = paste0("submissions", .Platform$file.sep, "program.R")
-  , mode = "cherry-pick")
-
-if(dir.exists("attachement")) {
-  zip::zip_append(
-      zipfile = zip_program
-      , files= paste0("attachement", .Platform$file.sep)
-    , mode = "cherry-pick"
-  )
-}
+                , files= paste0("submissions", .Platform$file.sep, "program.R")
+                , mode = "cherry-pick"
+                )
 
 zip::zip_list(zip_program)
 print(x = zip_program)
-
-
-
-
-# # we create the associated zip file :
-# zip_program <- paste0("submissions", .Platform$file.sep, "program_", date_suffix, ".zip")
-# zip::zip(zipfile= zip_program
-#                 , files= paste0("submissions", .Platform$file.sep, "program.R")
-#                 , mode = "cherry-pick"
-#                 )
-
-# zip::zip_list(zip_program)
-# print(x = zip_program)
 
 ###############################
 ### Result submission mode  
@@ -206,8 +171,9 @@ prediction_name = "prediction.rds"
 
 ## we save the estimated A matrix as a rds file named 'results.rds' :
 saveRDS(
-object = predi_list
-, file   = paste0("submissions", .Platform$file.sep, prediction_name)) 
+object = pred_prop
+, file   = paste0("submissions", .Platform$file.sep, prediction_name)
+) 
 
 # write_rds(pred_prop, file = "prediction_hugo.rds")
 

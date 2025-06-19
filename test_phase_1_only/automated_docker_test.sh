@@ -12,36 +12,18 @@ type Rscript >/dev/null 2>&1 || { echo >&2 "Rscript requiered but it's not insta
 # echo "Docker created"
 
 # docker_name=hombergn/hadaca3_light
-# docker_name=hombergn/hadaca3_pyr
-# docker_name=hombergn/hadaca3_final
-# docker_name=hombergn/hadaca3_finalv2
-# docker_name=hombergn/hadaca3_finalv3
-docker_name=hombergn/hadaca3_final_light
-
-
-echo generate baselines. 
-
-rm -rf starting_kit
-mkdir starting_kit
-Rscript ~/projects/hadaca3/templates/generate_baselines.R Phase_1  
-cp -R ~/projects/hadaca3/templates/tmp/* starting_kit/
-
+docker_name=hombergn/hadaca3_pyr
 
 echo "Generate data"
 sh generate_data.sh $1
 # sh generate_data.sh real
 echo "data Generated"
 
-
-
-
-
 echo "Create submission program"
 cd starting_kit/
 rm -rf submissions
-# Rscript submission_script.R >> logs
-Rscript submission_script.R 
-# python submission_script.py   
+Rscript submission_script.R >> logs
+# python submission_script.py
 cd - 
 echo "Done"
 

@@ -1,10 +1,8 @@
 version: '2'
-title: HADACA3-datacamp, Multimodal data integration to quantify tumor heterogeneity in cancer research
-# docker_image: hombergn/hadaca3_light
+title: Phase 1 only- Multimodal data integration to quantify tumor heterogeneity in cancer research
 # docker_image: hombergn/hadaca3_pyr
-docker_image: hombergn/hadaca3_final_light
-# queue:  a05e3a5f-09df-40e3-978e-02f147289877 
-# queue:  a05e3a5f-09df-40e3-978e-02f147289877 
+docker_image: hombergn/hadaca3_final
+queue: null
 description: HADACA3
 registration_auto_approve: true
 enable_detailed_results: true
@@ -27,72 +25,27 @@ pages:
   file: about.md  
 tasks:
 - index: 0
-  name: INTRODUCTORY Evaluation LIGHT Cell type proportion estimation from transcriptome data1
+  name: PHASE 1_test - LIGHT Cell type proportion estimation from transcriptome data1
   description: LIGHT COMETH data challenge
-  reference_data: ground_truth_phase1.zip 
+  reference_data: ground_truth_phase1.zip  #rename to ground_truth! 
   input_data: input_data_phase1.zip
-  scoring_program: scoring_program.zip
-  ingestion_program: ingestion_program.zip
-- index: 1
-  name: LIGHT Cell type proportion estimation from transcriptome data1
-  description: LIGHT COMETH data challenge
-  reference_data: ground_truth_phase2.zip 
-  input_data: input_data_phase2.zip
-  scoring_program: scoring_program.zip
-  ingestion_program: ingestion_program.zip
-- index: 2
-  name: FINAL Evaluation LIGHT Cell type proportion estimation from transcriptome data1
-  description: LIGHT COMETH data challenge
-  reference_data: ground_truth_phase3.zip 
-  input_data: input_data_phase3.zip
   scoring_program: scoring_program.zip
   ingestion_program: ingestion_program.zip
 solutions: []
 phases:
 - index: 0
-  name: INTRODUCTORY PHASE - Cell type proportion estimation from transcriptome and methylome data, using multimodal references.
+  name: Cell type proportion estimation from transcriptome and methylome data, using multimodal references.
   description: good luck 
-  # start: '2024-02-20 '
-  start: '2024-11-29 '
-  # end: '2024-03-20 10:40'
-  end: '2024-12-03 17:30'
+  start: '2024-03-20 '
+  end: '2024-12-20 11:00'
   max_submissions_per_day: 20
   max_submissions: 100
-  execution_time_limit: 600000
+  execution_time_limit: 60000
   auto_migrate_to_this_phase: false
   hide_output: false
   starting_kit: starting_kit_phase1.zip
   tasks:
   - 0
-- index: 1
-  name: MAIN PHASE - Cell type proportion estimation from transcriptome and methylome data, using multimodal references.
-  description: good luck 
-  # start: '2024-03-20 10:41'
-  start: '2024-12-04 9:00'
-  # end: '2024-12-28 11:00'
-  end: '2026-12-05 16:00'
-  max_submissions_per_day: 100
-  max_submissions: 200
-  execution_time_limit: 600000
-  auto_migrate_to_this_phase: false
-  hide_output: false
-  starting_kit: starting_kit_phase2-3.zip
-  tasks:
-  - 1
-- index: 2
-  name: FINAL PHASE - Cell type proportion estimation from transcriptome and methylome data, using multimodal references.
-  description: good luck
-  # start: '2024-12-28 11:01'
-  start: '2026-12-06 13:00'
-  # end: '2024-10-20T00:10'
-  max_submissions_per_day: 100
-  max_submissions: 100
-  execution_time_limit: 600000
-  auto_migrate_to_this_phase: true
-  hide_output: false
-  # starting_kit: starting_kit.zip
-  tasks:
-  - 2
 
 # Fact sheets to add more information in the leaderboard
 fact_sheet: {

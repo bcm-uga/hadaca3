@@ -2,34 +2,29 @@
 ### PLEASE only edit the program function between YOUR CODE BEGINS/ENDS HERE                   ###
 ##################################################################################################
 
-#' The function to estimate the A matrix
-#' In the provided example, we use basic non-negative least squares (package "nnls"), which consists of minimizing the error term $||Mix - Ref \times Prop||^2$ with only positive entries in the prop matrix.
+#' The function to predict the A matrix
+#' In the provided example, we use basic non-negative least squares (package "nnls"), which consists in minimizing the error term $||Mix - Ref \times Prop||^2$ with only positive entries in the prop matrix.
 #'
-#' @param mix a matrix of bulks (columns) and features (rows)
-#' @param ref a matrix pure types (columns) and features (rows)
+#' @param mix a matrix of bulk samples (columns) and features (rows)
+#' @param ref a matrix of pure cell types (columns) and features (rows)
 #' @param ... other parameters that will be ignored
 #' 
-#' @return an estimation of matrix A
+#' @return the predicted A matrix
+#' @examples
 #' 
 program = function(mix=NULL, ref=NULL, ...) {
-
   ##
   ## YOUR CODE BEGINS HERE
   ##
-
-  # idx_feat corresponds to the intersection of features present in the references and in the mixtures.
-  idx_feat = intersect(rownames(mix), rownames(ref))
   
-  # Estimation of proportions
+  idx_feat = intersect(rownames(mix), rownames(ref))
   prop = apply(mix[idx_feat,], 2, function(b, A) {
-    tmp_prop = lm(b ~ A - 1)$coefficients  # Using `-1` to remove the intercept
-    tmp_prop[tmp_prop < 0] = 0
-    tmp_prop = tmp_prop / sum(tmp_prop)    # Sum To One
+    tmp_prop = nnls::nnls(b=b, A=A)$x
+    tmp_prop = tmp_prop / sum(tmp_prop) # Sum To One
     return(tmp_prop)
-  }, A=ref[idx_feat,])
-
-  # Labeling of estimated proportions 
+  }, A=ref[idx_feat,])  
   rownames(prop) = colnames(ref)
+  
   return(prop)
   
   ##
@@ -42,42 +37,7 @@ program = function(mix=NULL, ref=NULL, ...) {
 ### Generate a prediction file /!\ DO NOT CHANGE THIS PART ###
 ##############################################################
 
-validate_pred <- function(pred, nb_samples = ncol(mix_rna) , nb_cells= ncol(ref_rna),col_names = colnames(ref_met) ){
 
-  error_status = 0   # 0 means no errors, 1 means "Fatal errors" and 2 means "Warning"
-  error_informations = ''
-
-  ## Ensure that all sum ofcells proportion approximately equal 1
-  if (!all(sapply(colSums(pred), function(x) isTRUE(all.equal(x, 1) )))) {
-    msg = "The prediction matrix does not respect the laws of proportions: the sum of each columns should be equal to 1\n"
-    error_informations = paste(error_informations,msg)
-    error_status = 2
-  }
-
-  ##Ensure that the prediction have the correct names ! 
-  if(! setequal(rownames(pred),col_names) ){
-    msg = paste0(    "The row names in the prediction matrix should match: ", toString(col_names),"\n")
-    error_informations = paste(error_informations,msg)
-    error_status = 2
-  }
-
-  ## Ensure that the prediction return the correct number of samples and  number of cells. 
-  if (nrow(pred) != nb_cells  | ncol(pred) != nb_samples)  {
-    msg= paste0('The prediction matrix has the dimention: ',toString(dim(pred))," whereas the dimention: ",toString(c(nb_cells,nb_samples))," is expected\n"   )
-    error_informations = paste(error_informations,msg)
-    error_status = 1
-  }
-
-  if(error_status == 1){
-    # The error is blocking and should therefor stop the execution. 
-    # tryCatch(message("hello\n"), message=function(e){cat("goodbye\n")})  use this here ? 
-    stop(error_informations)
-  }
-  if(error_status == 2){
-    print("Warning: ")
-    warning(error_informations)
-  }  
-}
 
 dir_name = paste0("data",.Platform$file.sep)
 dataset_list = list.files(dir_name,pattern="mixes*")
@@ -121,7 +81,7 @@ for (dataset_name in dataset_list){
 
   # we use the previously defined function 'program' to estimate A :
   pred_prop <- program(mix_rna, ref_bulkRNA, mix_met=mix_met, ref_met=ref_met, ref_scRNA=ref_scRNA)
-  validate_pred(pred_prop,nb_samples = ncol(mix_rna),nb_cells = ncol(ref_bulkRNA),col_names = colnames(ref_met))
+  
   predi_list[[dataset_name]] = pred_prop
 
 }
@@ -130,6 +90,64 @@ for (dataset_name in dataset_list){
 ##############################################################
 ### Check the prediction /!\ DO NOT CHANGE THIS PART ###
 ##############################################################
+
+# validate_pred <- function(pred, nb_samples = ncol(mix_rna) , nb_cells= ncol(ref_rna),col_names = colnames(ref_met) ){
+
+#   error_status = 0   # 0 means no errors, 1 means "Fatal errors" and 2 means "Warning"
+#   error_informations = ''
+
+#   ## Ensure that all sum ofcells proportion approximately equal 1
+#   if (!all(sapply(colSums(pred), function(x) isTRUE(all.equal(x, 1) )))) {
+#     msg = "The prediction matrix does not respect the laws of proportions: the sum of each columns should be equal to 1\n"
+#     error_informations = paste(error_informations,msg)
+#     error_status = 2
+#   }
+
+#   ##Ensure that the prediction have the correct names ! 
+#   if(! setequal(rownames(pred),col_names) ){
+#     msg = paste0(    "The row names in the prediction matrix should match: ", toString(col_names),"\n")
+#     error_informations = paste(error_informations,msg)
+#     error_status = 2
+#   }
+
+#   ## Ensure that the prediction return the correct number of samples and  number of cells. 
+#   if (nrow(pred) != nb_cells  | ncol(pred) != nb_samples)  {
+#     msg= paste0('The prediction matrix has the dimention: ',toString(dim(pred))," whereas the dimention: ",toString(c(nb_cells,nb_samples))," is expected\n"   )
+#     error_informations = paste(error_informations,msg)
+#     error_status = 1
+#   }
+
+#   if(error_status == 1){
+#     # The error is blocking and should therefor stop the execution. 
+#     # tryCatch(message("hello\n"), message=function(e){cat("goodbye\n")})  use this here ? 
+#     stop(error_informations)
+#   }
+#   if(error_status == 2){
+#     print("Warning: ")
+#     warning(error_informations)
+#   }  
+# }
+
+# for (dataset_name in 1:nb_datasets){
+#   ### Validate the prediction 
+#   pred_prop = predi_list[[dataset_name]] 
+#       tryCatch(
+#         #try to do this
+#         {
+#           validate_pred(pred_prop)
+#         },
+#         error=function(e) {
+#             message(paste('An Error Occurred for the dataset : ',dataset_name))
+#             stop(e)
+#         },
+#         warning=function(w) {
+#             message(paste('An Warning Occurred for the dataset : ',dataset_name))
+#             warning(w)
+#         }
+#     )
+
+# }
+
 
 
 ###############################
@@ -163,36 +181,15 @@ dump(
 
 date_suffix = format(x = Sys.time( ), format = "%Y_%m_%d_%H_%M_%S")
 
-
-
+# we create the associated zip file :
 zip_program <- paste0("submissions", .Platform$file.sep, "program_", date_suffix, ".zip")
 zip::zip(zipfile= zip_program
-  , files   = paste0("submissions", .Platform$file.sep, "program.R")
-  , mode = "cherry-pick")
-
-if(dir.exists("attachement")) {
-  zip::zip_append(
-      zipfile = zip_program
-      , files= paste0("attachement", .Platform$file.sep)
-    , mode = "cherry-pick"
-  )
-}
+                , files= paste0("submissions", .Platform$file.sep, "program.R")
+                , mode = "cherry-pick"
+                )
 
 zip::zip_list(zip_program)
 print(x = zip_program)
-
-
-
-
-# # we create the associated zip file :
-# zip_program <- paste0("submissions", .Platform$file.sep, "program_", date_suffix, ".zip")
-# zip::zip(zipfile= zip_program
-#                 , files= paste0("submissions", .Platform$file.sep, "program.R")
-#                 , mode = "cherry-pick"
-#                 )
-
-# zip::zip_list(zip_program)
-# print(x = zip_program)
 
 ###############################
 ### Result submission mode  

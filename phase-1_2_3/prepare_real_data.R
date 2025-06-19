@@ -18,7 +18,8 @@ dic_datasets2short <- list(
 path_data="~/projects/hadaca3_private/"
 
 
-source(paste0(path_data,"datasets.R"))
+# source(paste0(path_data,"datasets.R"))
+datasets = lapply(read.csv(paste0(path_data,"datasets.csv"), header = FALSE, comment.char = "#", col.names = c("datasets", "names_dataset")),trimws)[["datasets"]]
 
 dir.create("data/", showWarnings = FALSE)
 
@@ -40,10 +41,11 @@ for (phase in 1:2){
         dir.create(dir_name, showWarnings = FALSE)
 
 
-        file.copy(from = paste0(path_data, mix_dataset_name),   # Copy files
+        # file.copy(from = paste0(path_data,"01_mixes/filtered", mix_dataset_name),   # Copy files
+        file.copy(from = paste0(path_data,"01_mixes/", mix_dataset_name),   # Copy files
             to = paste0(dir_name,target_mix_dataset_name))
 
-        file.copy(from = paste0(path_data, ground_truth_name),   # Copy files
+        file.copy(from = paste0(path_data, "01_groundtruth/",ground_truth_name),   # Copy files
             to = paste0(dir_name,target_ground_truth_name))
 
     }
@@ -55,15 +57,9 @@ reference_name = "reference_pdac.rds"
 dir_name = paste0("data/reference_data/")
 dir.create(dir_name, showWarnings = FALSE)
 
-file.copy(from = paste0(path_data, reference_name),   # Copy files
+# file.copy(from = paste0(path_data,"01_references/filtered", reference_name),   # Copy files
+file.copy(from = paste0(path_data,"01_references/", reference_name),   # Copy files
         to = paste0("data/", paste0("/reference_data/",reference_name)))
-
-
-
-
-
-
-
 
 
 
