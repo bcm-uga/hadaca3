@@ -16,6 +16,11 @@ The HADACA 3 challenge begins with a bulk dataset in the form of a matrix, conta
 Participants will submit their method in the form of an R program, which will then be ingested and scored using a ground truth matrix. In the final phase of this challenge, the best method submitted by each participant will be evaluated on a different dataset. The aim of this final phase is to ensure the method is not overfitted.
 
 
+This projects contains 3 main folder : 
+- phase-0-smoothie : The toy challenge
+- phase-1_2_3 : This folder contais all the pages that created the official challenge HADACA3 held on decemebr 2024
+- hadaca3 bootcamp : This folder contain a new challenge with only one phase 2 but benefit from post Hadaca3 update like usage of HDF5 data instead of RDS to improve python compatibility !  
+
 ## Conda environement
 
 Set up your conda environement as follow:
@@ -25,7 +30,7 @@ TODO: update the following chunk.
 ```
 conda create -n hadaca3_env
 conda activate hadaca3_env  
-#mamba install -y -c anaconda -c bioconda -c conda-forge -c r r-base snakemake=7.32.4 python=3.9 r-rmarkdown r-prettydoc r-seurat r-clue bioconductor-complexheatmap r-viridis r-magrittr r-dplyr r-nnls graphviz r-tictoc  graphviz python-kaleido tenacity plotly r-bisquerna r-extraDistr r-MASS r-EPIC
+#mamba install -y -c anaconda -c bioconda -c conda-forge -c r r-base snakemake=7.32.4 python=3.9 r-rmarkdown r-prettydoc r-seurat r-clue bioconductor-complexheatmap r-viridis r-magrittr r-dplyr r-nnls graphviz r-tictoc  python-kaleido tenacity plotly r-bisquerna r-extraDistr r-MASS r-EPIC
 ```
 
 
@@ -35,6 +40,7 @@ conda activate hadaca3_env
 cd phase-0-smoothie
 sh generate_bundle_smoothie.sh 
 ```
+
 ## Build `hadaca3_pyr` docker image
 
 The docker named hadaca3_pyr also has impleted python as well.
