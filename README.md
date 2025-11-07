@@ -16,10 +16,10 @@ The HADACA 3 challenge begins with a bulk dataset in the form of a matrix, conta
 Participants will submit their method in the form of an R program, which will then be ingested and scored using a ground truth matrix. In the final phase of this challenge, the best method submitted by each participant will be evaluated on a different dataset. The aim of this final phase is to ensure the method is not overfitted.
 
 
-This projects contains 3 main folder : 
-- phase-0-smoothie : The toy challenge
-- phase-1_2_3 : This folder contais all the pages that created the official challenge HADACA3 held on decemebr 2024
-- hadaca3 bootcamp : This folder contain a new challenge with only one phase 2 but benefit from post Hadaca3 update like usage of HDF5 data instead of RDS to improve python compatibility !  
+This project contains three main folders:
+- phase-0-smoothie: A toy challenge.
+- phase-1_2_3: This folder contains all the pages that created the official HADACA3 challenge, held in December 2024.
+- hadaca3-bootcamp: This folder contains a new challenge with only one phase (Phase 2) but benefits from post-HADACA3 updates, such as the use of HDF5 data instead of RDS to improve Python compatibility. In this version, the full dataset from the previous Phase 2 is provided to participants, including ground-truth files. However, the platform will evaluate participants on a Phase 3 dataset, which remains hidden.
 
 ## Conda environement
 
