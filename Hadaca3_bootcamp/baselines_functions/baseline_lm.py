@@ -16,8 +16,8 @@ def program(mix=None, ref=None, **kwargs):
   install_and_import_packages(required_packages)
   from sklearn.linear_model import LinearRegression
 
-  from attachement import additionnal_script
-  additionnal_script.useless_function()
+  # from attachement import additionnal_script
+  # additionnal_script.useless_function()
 
 
   def estimate_proportions(mix_df, ref_df):

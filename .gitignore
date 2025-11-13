@@ -67,3 +67,5 @@ phase-0-smoothie/starting_kit/
 
 docker/codabench_hadaca3_pyr/environment/requierement.txt
 *.h5
+
+Hadaca3_bootcamp/starting_kit*

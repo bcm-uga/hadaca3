@@ -3,7 +3,7 @@ mkdir -p data
 
 rm -rf participants
 rm -rf platform
-rm -rf starting_kit
+rm -rf starting_kit/submissions
 mkdir -p participants/input_data
 mkdir -p participants/ground_truth
 mkdir -p platform/input_data
@@ -123,7 +123,7 @@ for mixes_nb in {1..2};  do
         cd ../platform/input_data
 
     fi
-    ln -s ../../data/ref.h5 ref.h5
+    ln -s ../../data/ref.h5 reference_pdac.h5
     for file_type in mixes groundtruth ; do 
         if [[ $file_type == "mixes" ]]; then 
             cd  ../input_data
@@ -133,7 +133,7 @@ for mixes_nb in {1..2};  do
         for key in "${!dic_datasets2short[@]}"; do
             # complete_name="mixes1_${dic_datasets2short[$key]}_pdac.h5"
             complete_name="${file_type}${mixes_nb}_${dic_datasets2short[$key]}_pdac.h5"
-            short_name="${key}.h5"
+            short_name="${file_type}_${key}.h5"
 
             echo "Linking: $complete_name → $short_name"
 
@@ -150,8 +150,8 @@ done
 
 cd ..
 
-# create ground_truth folder
-# # cd ../ground_truth
+# # populate ground_truth folder
+# # # cd ../ground_truth
 # for key in "${!dic_datasets2short[@]}"; do
 #     complete_name="groundtruth1_${dic_datasets2short[$key]}_pdac.h5"
 #     short_name="groundtruth1_${key}_pdac.h5"
