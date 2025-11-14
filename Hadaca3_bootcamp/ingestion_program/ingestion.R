@@ -45,7 +45,7 @@ print(x = list.files(path = submission_program, all.files = TRUE, full.names = T
 print(x = "")
 
 ## output files
-output_profiling_rds <- paste0(output, .Platform$file.sep, "Rprof.rds"         )
+output_profiling_h5 <- paste0(output, .Platform$file.sep, "Rprof.h5"         )
 
 
 #Check it is a result submission or a program submission
@@ -61,7 +61,7 @@ if (file.exists(file_R)) {
   # source(data_processing_utils)
   cmd = paste("Rscript", paste0(ingestion_program, .Platform$file.sep, "sub_ingestion.R"), input, output_results, submission_program, sep = " ") 
   print(cmd)
-  system(command = paste("Rscript", paste0(ingestion_program, .Platform$file.sep, "sub_ingestion.R"), input, output_results, submission_program,output_profiling_rds, sep = " ") )
+  system(command = paste("Rscript", paste0(ingestion_program, .Platform$file.sep, "sub_ingestion.R"), input, output_results, submission_program,output_profiling_h5, sep = " ") )
 
  }else if (file.exists(file_py)) {
 
@@ -69,11 +69,11 @@ if (file.exists(file_R)) {
 
   cmd = paste("python", paste0(ingestion_program, .Platform$file.sep, "sub_ingestion.py"), input, output_results, submission_program, sep = " ") 
   print(cmd)
-  system(command = paste("python", paste0(ingestion_program, .Platform$file.sep, "sub_ingestion.py"), input, output_results, submission_program,output_profiling_rds, sep = " ") )
+  system(command = paste("python", paste0(ingestion_program, .Platform$file.sep, "sub_ingestion.py"), input, output_results, submission_program,output_profiling_h5, sep = " ") )
 
  } else { 
     print("no program to execute, go straight to scoring step") 
-    print(paste0(" output_profiling file:", output_profiling_rds))
+    print(paste0(" output_profiling file:", output_profiling_h5))
     # l_time = list()
  
     # # dir_name = paste0(input, .Platform$file.sep, "ref", .Platform$file.sep)
@@ -90,11 +90,11 @@ if (file.exists(file_R)) {
     #   l_time[[methods_name]] = total_time
     # }
 
-
-    saveRDS(
-      object = total_time,
-      file   = output_profiling_rds
-    )
+    write_hdf5(output_profiling_rds,total_time)
+    # saveRDS(
+    #   object = total_time,
+    #   file   = output_profiling_rds
+    # )
 }
 
 

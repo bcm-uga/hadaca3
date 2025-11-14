@@ -2,7 +2,7 @@ args <- commandArgs(trailingOnly = TRUE)
 
 
 
-try(system("ln -sf  ../ingested_program/attachement/ attachement", intern = TRUE, ignore.stderr = TRUE))
+# try(system("ln -sf  ../ingested_program/attachement/ attachement", intern = TRUE, ignore.stderr = TRUE))
 
 ## index of the input file :
 # i                  <- trimws(x = args[1] )
@@ -125,21 +125,26 @@ for (dataset_name in dataset_list){
   elapsed_time <- proc.time() - start_time
   print (paste0("Prediction has ", nrow(pred_prop), " rows and ", ncol(pred_prop), " columns"))
 
-  l_time[[dataset_name]] = as.numeric(elapsed_time["elapsed"])
 
-  predi_list[[dataset_name]] = pred_prop
+  cleaned_dataset_name <- sub("\\.h5$", "", unlist(strsplit(dataset_name, "_"))[2])
+  l_time[[cleaned_dataset_name]] = as.numeric(elapsed_time["elapsed"])
+  predi_list[[cleaned_dataset_name]] = pred_prop
 
 }
 
-saveRDS(
-    object = l_time
-  , file   = output_profiling_rds
-)
+
+message(l_time)
+write_hdf5(output_profiling_rds,l_time)
+
+# saveRDS(
+#     object = l_time
+#   , file   = output_profiling_rds
+# )
 
 
 print(paste0("Save predictions in .rds format"))
 
-write_global_hdf5(output_results,predi_list)
+write_hdf5(output_results,predi_list)
 # saveRDS(
 # object = predi_list
 # , file   = output_results

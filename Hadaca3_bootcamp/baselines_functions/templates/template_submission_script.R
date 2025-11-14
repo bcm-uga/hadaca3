@@ -91,7 +91,10 @@ for (dataset_name in dataset_list){
   # we use the previously defined function 'program' to estimate A :
   pred_prop <- program(mix_rna, ref_bulkRNA, mix_met=mix_met, ref_met=ref_met, ref_scRNA=ref_scRNA)
   validate_pred(pred_prop,nb_samples = ncol(mix_rna),nb_cells = ncol(ref_bulkRNA),col_names = colnames(ref_met))
-  predi_list[[dataset_name]] = pred_prop
+  
+  cleaned_dataset_name <- sub("\\.h5$", "", unlist(strsplit(dataset_name, "_"))[2])
+
+  predi_list[[cleaned_dataset_name]] = pred_prop
 
 }
 
@@ -174,7 +177,7 @@ if ( !dir.exists(paths = "submissions") ) {
 prediction_name = "prediction.h5"
 
 ## we save the estimated A matrix as a rds file named 'results.rds' :
-write_global_hdf5(paste0("submissions", .Platform$file.sep, prediction_name),predi_list)
+write_hdf5(paste0("submissions", .Platform$file.sep, prediction_name),predi_list)
 # saveRDS(
 # object = predi_list
 # , file   = paste0("submissions", .Platform$file.sep, prediction_name)) 

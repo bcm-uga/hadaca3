@@ -83,10 +83,11 @@ for dataset_name in datasets_list :
 
     # mix_rna = extract_data_element(mixes_data,file, 'mix_rna') 
     # mix_met = extract_data_element(mixes_data,file, 'mix_met')
+    cleaned_name=dataset_name.replace("mixes_", "").removesuffix(".h5")
 
     pred_prop = program(mixes_data["mix_rna"], reference_data["ref_bulkRNA"], mix_met=mixes_data["mix_met"], ref_met=reference_data["ref_met"]   )
     # validate_pred(pred_prop, nb_samples=mix_rna.shape[1], nb_cells=ref_bulkRNA.shape[1], col_names=ref_bulkRNA.columns)
-    predi_dic[dataset_name] = pred_prop
+    predi_dic[cleaned_name] = pred_prop
 
 ############################### 
 ### Code submission mode
@@ -134,7 +135,7 @@ if not os.path.exists("submissions"):
 
 prediction_name = "prediction.h5"
 
-dp.write_global_hdf5(os.path.join("submissions", prediction_name),predi_dic)
+dp.write_hdf5(os.path.join("submissions", prediction_name),predi_dic)
 
 
 

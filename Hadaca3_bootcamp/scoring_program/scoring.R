@@ -361,8 +361,8 @@ output_file <- paste0(output, .Platform$file.sep, "scores.txt")
 
 source("data_processing.R")
 ## load R profiling of the estimation of A :
-profiling <- readRDS(file = paste0(input, .Platform$file.sep, "res", .Platform$file.sep, "Rprof.rds") )
-# profiling <- read_hdf5(file = paste0(input, .Platform$file.sep, "res", .Platform$file.sep, "Rprof.h5") )
+# profiling <- readRDS(file = paste0(input, .Platform$file.sep, "res", .Platform$file.sep, "Rprof.rds") )
+profiling <- read_hdf5(paste0(input, .Platform$file.sep, "res", .Platform$file.sep, "Rprof.h5") )
 
 
 
@@ -381,22 +381,22 @@ groundtruh_list = list.files(dir_name,pattern="groundtruth*")
 for (groundthruth_name in groundtruh_list){
   
   gt_list = unlist(strsplit(groundthruth_name, "_"))
-  methods_name =  gt_list[2]
+  methods_name =  sub("\\.h5$", "", gt_list[2])  
   # phase =  substr(gt_list[1], nchar(gt_list[1]), nchar(gt_list[1]))
 
   # dataset_name = paste0("mixes","_",methods_name,'_pdac.h5')
-  dataset_name = paste0("mixes","_",methods_name,'.h5')
+  dataset_name = paste0("mixes","_",methods_name)
 
   message(dataset_name)
 
   # print(dim(Aest_l))
-  Aest = as.matrix(Aest_l[[dataset_name]])
+  Aest = as.matrix(Aest_l[[methods_name]])
   # print(dim(Aest))
   ## Load ground_thuth data
 
 
   # Atruth =  readRDS(file = paste0(input, .Platform$file.sep, "ref", .Platform$file.sep, groundthruth_name) )
-  Atruth =  read_hdf5(paste0(input, .Platform$file.sep, "ref", .Platform$file.sep, groundthruth_name) )
+  Atruth =  read_hdf5(paste0(input, .Platform$file.sep, "ref", .Platform$file.sep, groundthruth_name) )$groundtruth
 
   print(dim(Atruth))
   Atruth = as.matrix(Atruth)
@@ -414,7 +414,7 @@ for (groundthruth_name in groundtruh_list){
   scores = as.numeric(baseline_scores)
   names(scores) = names(baseline_scores)
 
-  saveRDS(scores, paste0(output,"/scores_",dataset_name))
+  write_hdf5(paste0(output,"/scores_",dataset_name,".h5"),scores)
 
   cat(scores)
   # stopifnot(exprs = all( !is.na(x = scores) ) )
@@ -424,7 +424,7 @@ for (groundthruth_name in groundtruh_list){
   # score_mean = as.numeric(scores$score_aggreg)
   cat(paste0("Accuracy_mean_",toString(methods_name), ": " , score_mean, "\n"), file = output_file, append = TRUE)
 
-  l_res[[dataset_name]] = score_mean
+  l_res[[methods_name]] = score_mean
 
   print(x = list.files(path = output, all.files = TRUE, full.names = TRUE, recursive = TRUE) )
 

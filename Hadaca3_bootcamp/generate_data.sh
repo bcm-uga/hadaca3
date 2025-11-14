@@ -4,11 +4,13 @@ mkdir -p data
 rm -rf participants
 rm -rf platform
 rm -rf starting_kit/submissions
+rm ingestion_program/data_processing.*
 mkdir -p participants/input_data
 mkdir -p participants/ground_truth
 mkdir -p platform/input_data
 mkdir -p platform/ground_truth
 
+cp utils/data_processing.* ingestion_program/
 
 
 base_url=http://epimed.univ-grenoble-alpes.fr/downloads/dmzfch/hadaca3_framework/data/

@@ -8,16 +8,16 @@ import subprocess
 import data_processing as dp
 
 
-try:
-    # Define the target and link name
-    target = "../ingested_program/attachement/"
-    link_name = "attachement"
+# try:
+#     # Define the target and link name
+#     target = "../ingested_program/attachement/"
+#     link_name = "attachement"
     
-    os.symlink(target, link_name)
-except FileExistsError:
-    # Handle the case where the symbolic link already exists
-    os.unlink(link_name)  # Remove the existing symbolic link
-    os.symlink(target, link_name)  # Recreate the
+#     os.symlink(target, link_name)
+# except FileExistsError:
+#     # Handle the case where the symbolic link already exists
+#     os.unlink(link_name)  # Remove the existing symbolic link
+#     os.symlink(target, link_name)  # Recreate the
 
 
 # Parsing command-line arguments
@@ -25,7 +25,7 @@ parser = argparse.ArgumentParser(description='Process some paths.')
 parser.add_argument('input', type=str, help='input data directory')
 parser.add_argument('output_results', type=str, help='output file')
 parser.add_argument('submission_program', type=str, help='directory of the code submitted by the participants')
-parser.add_argument('output_profiling_rds', type=str, help='output_profiling_rds')
+parser.add_argument('output_profiling_h5', type=str, help='output_profiling_h5')
 
 
 args = parser.parse_args()
@@ -40,8 +40,8 @@ print(f"output file: {output_results}")
 submission_program = args.submission_program.strip()
 print(f"directory of the code submitted by the participants: {submission_program}")
 
-output_profiling_rds = args.output_profiling_rds.strip()
-print(f"output_profiling file: {output_profiling_rds}")
+output_profiling_h5 = args.output_profiling_h5.strip()
+print(f"output_profiling file: {output_profiling_h5}")
 
 
 # Install and import each package
@@ -108,22 +108,13 @@ for dataset_name in datasets_list :
     pred_prop = program(mixes_data["mix_rna"], reference_data["ref_bulkRNA"], mix_met=mixes_data["mix_met"], ref_met=reference_data["ref_met"]   )
 
     prog_time = time.perf_counter() - start_time
-    d_time[dataset_name] = prog_time
+
+    cleaned_name=dataset_name.replace("mixes_", "").removesuffix(".h5")
+    d_time[cleaned_name] = prog_time
     total_time += prog_time
-    # predi_dic[dataset_name] = rpy2.robjects.conversion.py2rpy(pred_prop)
-    predi_dic[dataset_name] = pred_prop
+    predi_dic[cleaned_name] = pred_prop
 
 
-# print(total_time)
-# l_time.append(total_time)
-
-# prediction_name = "prediction.rds"
-# saveRDS(predi_list, os.path.join(output_results, prediction_name))
-
-saveRDS(rpy2.robjects.ListVector(predi_dic), os.path.join(output_results))
-
-
-# saveRDS(total_time, os.path.join(output_profiling_rds))
-saveRDS(rpy2.robjects.ListVector(d_time), os.path.join(output_profiling_rds))
-
+dp.write_hdf5(os.path.join(output_results),predi_dic)
+dp.write_hdf5(os.path.join(output_profiling_h5),d_time)
 

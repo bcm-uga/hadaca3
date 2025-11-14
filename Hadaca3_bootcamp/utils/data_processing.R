@@ -60,7 +60,7 @@ write_sparse_matrix <- function(group, path, counts, meta, data = NULL, scale_da
 }
 
 
-write_global_hdf5 <- function(path, data_list) {
+write_hdf5 <- function(path, data_list) {
   # Create the HDF5 file
   h5createFile(path)
 
