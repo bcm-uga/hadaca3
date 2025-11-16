@@ -12,8 +12,8 @@ def program(mix=None, ref=None, **kwargs):
   ## YOUR CODE BEGINS HERE
   ##
 
-  required_packages = ["sklearn","pandas",'scipy']
-  install_and_import_packages(required_packages)
+  # required_packages = ["sklearn","pandas",'scipy']
+  # install_and_import_packages(required_packages)
   from sklearn.linear_model import LinearRegression
 
   # from attachement import additionnal_script
