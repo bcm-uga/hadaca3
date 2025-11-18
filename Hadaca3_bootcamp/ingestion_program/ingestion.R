@@ -1,22 +1,11 @@
-## Authors: Alexis ARNAUD, UGA
-## alexis.arnaud@univ-grenoble-alpes.fr
-##
-## ------------------------------------
 
 
-
+source("data_processing.R")
 print(x = "System information :")
 print(x = Sys.info( ) )
 print(x = Sys.getenv( ) )
 print(x = "")
 
-
-# Create symbolic link with 
-
-# try(system("ln -sf  ../ingested_program/modules/ modules", intern = TRUE, ignore.stderr = TRUE))
-
-
-# source(file = "Detach_packages.R")
 
 ## define ingestion_program/input/output/submission_program from command line args and remove white spaces (should in principle never be changed)
 args <- commandArgs(trailingOnly = TRUE)
@@ -45,7 +34,7 @@ print(x = list.files(path = submission_program, all.files = TRUE, full.names = T
 print(x = "")
 
 ## output files
-output_profiling_h5 <- paste0(output, .Platform$file.sep, "Rprof.h5"         )
+output_profiling_h5 <- paste0(output, .Platform$file.sep, "Rprof.h5")
 
 
 #Check it is a result submission or a program submission
@@ -56,9 +45,6 @@ output_results <- paste0(output, .Platform$file.sep, "prediction.h5")
 if (file.exists(file_R)) { 
    
   print("Executing a R program") 
-  # data_processing_utils = paste0(ingestion_program, .Platform$file.sep, "data_processing.R")
-  # print(data_processing_utils)
-  # source(data_processing_utils)
   cmd = paste("Rscript", paste0(ingestion_program, .Platform$file.sep, "sub_ingestion.R"), input, output_results, submission_program, sep = " ") 
   print(cmd)
   system(command = paste("Rscript", paste0(ingestion_program, .Platform$file.sep, "sub_ingestion.R"), input, output_results, submission_program,output_profiling_h5, sep = " ") )
@@ -74,43 +60,22 @@ if (file.exists(file_R)) {
  } else { 
     print("no program to execute, go straight to scoring step") 
     print(paste0(" output_profiling file:", output_profiling_h5))
-    # l_time = list()
- 
-    # # dir_name = paste0(input, .Platform$file.sep, "ref", .Platform$file.sep)
-    # dir_name = paste0(output, .Platform$file.sep, "ref", .Platform$file.sep)
-    # groundtruh_list = list.files(dir_name,pattern="groundtruth*")
+    l_time = list()
+
+    dir_name = paste0(input,.Platform$file.sep)
+    dataset_list = list.files(dir_name,pattern="mixes*")
     total_time = 86400 #24 h in seconds! 
 
-    # for (groundthruth_name in groundtruh_list){
-      
-    #   gt_list = unlist(strsplit(groundthruth_name, "_"))
-    #   methods_name =  gt_list[2]
-    #   phase =  substr(gt_list[1], nchar(gt_list[1]), nchar(gt_list[1]))
+    for (dataset_name in dataset_list){
 
-    #   l_time[[methods_name]] = total_time
-    # }
+      cleaned_dataset_name <- sub("\\.h5$", "", unlist(strsplit(dataset_name, "_"))[2])
 
-    write_hdf5(output_profiling_rds,total_time)
-    # saveRDS(
-    #   object = total_time,
-    #   file   = output_profiling_rds
-    # )
+      l_time[[cleaned_dataset_name]] = total_time
+    }
+
+    write_hdf5(output_profiling_h5,l_time)
 }
 
-
-
-# execution_time <-  proc.time() - start_time
-
-# print(execution_time)
-
-# ## save profiling
-# saveRDS(
-#     object = execution_time
-#   , file   = output_profiling_rds
-# )
-
-## stop diverting R output to a text file
-## sink(file = NULL)
 
 print(x = "Output :")
 print(x = list.files(path = output , all.files = TRUE, full.names = TRUE, recursive = TRUE) )
