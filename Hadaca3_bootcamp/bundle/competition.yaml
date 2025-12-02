@@ -27,10 +27,17 @@ pages:
   file: about.md  
 tasks:
 - index: 0
-  name: HADACA3-Bootcamp - LIGHT Cell type proportion estimation from transcriptome data1
+  name: HADACA3-Bootcamp Training - LIGHT Cell type proportion estimation from transcriptome 
   description: LIGHT COMETH data challenge
-  reference_data: ground_truth.zip 
-  input_data: input_data.zip
+  reference_data: ground_truth_public.zip 
+  input_data: input_data_public.zip
+  scoring_program: scoring_program.zip
+  ingestion_program: ingestion_program.zip
+- index: 1
+  name: HADACA3-Bootcamp Evaluation - LIGHT Cell type proportion estimation from transcriptome
+  description: LIGHT COMETH data challenge
+  reference_data: ground_truth_private.zip 
+  input_data: input_data_private.zip
   scoring_program: scoring_program.zip
   ingestion_program: ingestion_program.zip
 solutions: []
@@ -38,10 +45,10 @@ phases:
 - index: 0
   name: Cell type proportion estimation from transcriptome and methylome data, using multimodal references.
   description: good luck 
-  # start: '2024-03-20 10:41'
-  start: '2024-12-04 9:00'
+  start: '2024-03-20'
+  # start: '2026-12-04 9:00'
   # end: '2024-12-28 11:00'
-  # end: '2026-12-05 16:00'
+  end: '2026-02-10 22:50'
   max_submissions_per_day: 100
   max_submissions: 200
   execution_time_limit: 600000
@@ -50,6 +57,21 @@ phases:
   starting_kit: starting_kit.zip
   tasks:
   - 0
+- index: 1
+  name: Final_evaluation-phase.
+  description: good luck 
+  # start: '2024-03-20 10:41'
+  start: '2026-02-10 22:55'
+  # end: '2024-12-28 11:00'
+  # end: '2026-12-05 16:00'
+  max_submissions_per_day: 3
+  max_submissions: 10
+  execution_time_limit: 600000
+  auto_migrate_to_this_phase: true
+  hide_output: false
+  # starting_kit: starting_kit.zip
+  tasks:
+  - 1
 
 
 # Fact sheets to add more information in the leaderboard
@@ -58,7 +80,7 @@ fact_sheet: {
         "key": "Language",
         "type": "select",
         "title": "Language",
-        "selection": ["R", "Python"],
+        "selection": ["Python","R"],
         "is_required": "true",
         "is_on_leaderboard": "true"
     },

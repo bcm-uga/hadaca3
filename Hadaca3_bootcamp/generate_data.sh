@@ -1,20 +1,30 @@
 # rm -rf data
 mkdir -p data
 
-rm -rf participants
-rm -rf platform
+
+########### Cleaning folders 
+rm -rf public_data
+rm -rf private_data
 rm -rf starting_kit/submissions
 rm ingestion_program/data_processing.*
-mkdir -p participants/input_data
-mkdir -p participants/ground_truth
-mkdir -p platform/input_data
-mkdir -p platform/ground_truth
+
+
+############  recreating folders 
+mkdir -p public_data/input_data
+mkdir -p public_data/ground_truth
+
+mkdir -p private_data/input_data
+mkdir -p private_data/ground_truth
+
 
 cp utils/data_processing.* ingestion_program/
 
 
 base_url=http://epimed.univ-grenoble-alpes.fr/downloads/dmzfch/hadaca3_framework/data/
 
+
+
+echo "downloading data"
 
 #######
 #get datas : 
@@ -113,16 +123,18 @@ done
 cd ../ 
 
 
-cd participants
+
+echo
+echo "Generating public and private folders"
+cd public_data
 # ln -s ../../data/ref.h5 ref.h5
 # cd ../
 
-#populating input_data folder. 
 for mixes_nb in {1..2};  do 
     if [[ $mixes_nb == 1 ]]; then 
-        cd  ../participants/input_data
+        cd  ../public_data/input_data
         else
-        cd ../platform/input_data
+        cd ../private_data/input_data
 
     fi
     ln -s ../../data/ref.h5 reference_pdac.h5
@@ -194,6 +206,6 @@ cd ..
 mkdir -p starting_kit/data/
 mkdir -p starting_kit/ground_truth/
 
-cp -r participants/input_data/* starting_kit/data/
-cp -r participants/ground_truth/* starting_kit/ground_truth/
+cp -r public_data/input_data/* starting_kit/data/
+cp -r public_data/ground_truth/* starting_kit/ground_truth/
 

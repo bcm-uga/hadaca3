@@ -9,14 +9,49 @@
 
 # Install and import each package
 def install_and_import_packages(required_packages):
-  for package in required_packages:
+    def try_pip_install(package_name):
+      """Try pip install; detect externally-managed-environment error."""
       try:
-          globals()[package] = importlib.import_module(package)
-      except ImportError:
-          print('impossible to import, installing packages',package)
-          package_to_install = 'scikit-learn' if package == 'sklearn' else package
-          subprocess.check_call([sys.executable, "-m", "pip", "install", package_to_install])
-          globals()[package] = importlib.import_module(package)
+          subprocess.check_call(
+              [sys.executable, "-m", "pip", "install", package_name]
+          )
+          return True
+      except subprocess.CalledProcessError as e:
+          if "externally-managed-environment" in str(e):
+              return False  # pip blocked by PEP 668
+          raise  # real error unrelated to PEP 668
+  
+
+    def try_conda_install(package_name):
+        """Attempt conda install."""
+        try:
+            subprocess.check_call(["conda", "install", "-y", package_name])
+            return True
+        except (subprocess.CalledProcessError, FileNotFoundError):
+            return False
+
+    for package in required_packages:
+        try:
+            globals()[package] = importlib.import_module(package)
+        except ImportError:
+            print('impossible to import, installing packages',package)
+            package_to_install = 'scikit-learn' if package == 'sklearn' else package
+            pip_ok = try_pip_install(package_to_install)
+
+            if pip_ok:
+              globals()[package] = importlib.import_module(package)
+              continue
+
+            # Pip failed due to externally-managed environment (Debian, Conda etc.)
+            print("⛔ pip installation blocked by externally-managed environment.")
+            print(f"➡️ Trying conda install: {package_to_install}")
+
+            conda_ok = try_conda_install(package_to_install)
+
+            if conda_ok:
+                globals()[package] = importlib.import_module(package)
+                continue
+            print(f"Unable to install package {package_to_install} automatically.")
 
 def validate_pred(pred, nb_samples=None, nb_cells=None, col_names=None):
     error_status = 0  # 0 means no errors, 1 means "Fatal errors" and 2 means "Warning"
@@ -58,6 +93,9 @@ required_packages = [
   "pandas",
   "zipfile",
   "inspect",
+  "h5py",
+  "scipy",
+  "sklearn"
 ]
 install_and_import_packages(required_packages)
 

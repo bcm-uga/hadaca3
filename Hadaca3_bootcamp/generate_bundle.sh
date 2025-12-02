@@ -3,10 +3,10 @@ rm *.zip
 rm bundle/*.zip
 # rm bundle.zip
 
-echo "generate data"
+echo "Prepare datas"
 bash generate_data.sh
 # sh generate_data.sh real
-echo 'data generated'
+echo 'data preparation finished!! '
 
 # THis will generate starting_kit folder. 
 cd baselines_functions
@@ -41,12 +41,14 @@ zip -FS -j -r  bundle/ingestion_program.zip ingestion_program/
 
 # #### Put input data inside the bundle ! 
 
-zip -FS -r -j bundle/input_data.zip platform/input_data/
+zip -FS -r -j bundle/input_data_public.zip public_data/input_data/
+zip -FS -r -j bundle/input_data_private.zip private_data/input_data/
 # # zip -FS -r -j bundle/input_data_phase3.zip input_data_final/
 # # zip -FS -r -j bundle/input_data_phase1.zip input_data_phase1/
 
 
-zip -FS -j -r  bundle/ground_truth.zip platform/ground_truth/
+zip -FS -j -r  bundle/ground_truth_public.zip public_data/ground_truth/
+zip -FS -j -r  bundle/ground_truth_private.zip private_data/ground_truth/
 # zip -FS -j -r  bundle/ground_truth_phase3.zip ground_truth_final/
 # zip -FS -j -r  bundle/ground_truth_phase1.zip ground_truth_phase1/
 

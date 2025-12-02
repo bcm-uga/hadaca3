@@ -7,7 +7,7 @@ mkdir -p test_output/ref
 
 
 cd test_output/ref/ 
-ln -s -r ../../platform/ground_truth/*  .
+ln -s -r ../../public_data/ground_truth/*  .
 cd ../../
 
 cd test_output/res/ 

@@ -27,10 +27,10 @@ mkdir starting_kit
 
 echo 
 echo 
-echo "generate data"
+echo "prepare data"
 bash generate_data.sh
 # sh generate_data.sh real
-echo 'data generated'
+echo 'data preparation Finished'
 
 
 cd baselines_functions
@@ -47,8 +47,8 @@ echo "Create submission program"
 cd starting_kit/
 rm -rf submissions
 # Rscript submission_script.R >> logs
-Rscript submission_script.R 
-# python submission_script.py   
+# Rscript submission_script.R 
+python submission_script.py   
 cd ..
 echo "Done"
 
@@ -66,7 +66,7 @@ echo
 echo 
 
 echo "Running ingestion Program, super user (sudo) is needed to run docker."
-sudo docker run --rm  -v $PWD/ingestion_program:/app/program   -v $PWD/test_output/res:/app/output  -v $PWD/starting_kit/submissions:/app/ingested_program  -v $PWD/data/:/data  -v $PWD/platform/input_data/:/app/input_data/ -w /app/program $docker_name Rscript /app/program/ingestion.R /app/program /app/input_data /app/output /app/ingested_program #>> logs
+sudo docker run --rm  -v $PWD/ingestion_program:/app/program   -v $PWD/test_output/res:/app/output  -v $PWD/starting_kit/submissions:/app/ingested_program  -v $PWD/data/:/data  -v $PWD/public_data/input_data/:/app/input_data/ -w /app/program $docker_name Rscript /app/program/ingestion.R /app/program /app/input_data /app/output /app/ingested_program #>> logs
 echo "Ingestion progam done"
 
 echo 
