@@ -75,40 +75,40 @@ phases:
 
 
 # Fact sheets to add more information in the leaderboard
-fact_sheet: {
-    "Language": {
-        "key": "Language",
-        "type": "select",
-        "title": "Language",
-        "selection": ["Python","R"],
-        "is_required": "true",
-        "is_on_leaderboard": "true"
-    },
-    "refererence": {
-        "key": "refererence",
-        "type": "select",
-        "title": "type of refererences used",
-        "selection": ["meth/rna/scrna", "meth/scrna", "meth/rna", "rna/scrna","rna/meth", "meth","rna","scrna"],
-        "is_required": "true",
-        "is_on_leaderboard": "true"
-    },
-    "method_name": {
-        "key": "method_name",
-        "type": "text",
-        "title": "Method name (single word)",
-        "selection": "",
-        "is_required": "true",
-        "is_on_leaderboard": "true"
-    },
-        "description": {
-        "key": "description",
-        "type": "text",
-        "title": "description",
-        "selection": "",
-        "is_required": "false",
-        "is_on_leaderboard": "true"
-    }
-}
+# fact_sheet: {
+#     "Language": {
+#         "key": "Language",
+#         "type": "select",
+#         "title": "Language",
+#         "selection": ["Python","R"],
+#         "is_required": "true",
+#         "is_on_leaderboard": "true"
+#     },
+#     "refererence": {
+#         "key": "refererence",
+#         "type": "select",
+#         "title": "type of refererences used",
+#         "selection": ["meth/rna/scrna", "meth/scrna", "meth/rna", "rna/scrna","rna/meth", "meth","rna","scrna"],
+#         "is_required": "true",
+#         "is_on_leaderboard": "true"
+#     },
+#     "method_name": {
+#         "key": "method_name",
+#         "type": "text",
+#         "title": "Method name (single word)",
+#         "selection": "",
+#         "is_required": "true",
+#         "is_on_leaderboard": "true"
+#     },
+#         "description": {
+#         "key": "description",
+#         "type": "text",
+#         "title": "description",
+#         "selection": "",
+#         "is_required": "false",
+#         "is_on_leaderboard": "true"
+#     }
+# }
 leaderboards:
 - index: 0
   title: Scores

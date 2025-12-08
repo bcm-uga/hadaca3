@@ -43,8 +43,8 @@ def install_and_import_packages(required_packages):
               continue
 
             # Pip failed due to externally-managed environment (Debian, Conda etc.)
-            print("⛔ pip installation blocked by externally-managed environment.")
-            print(f"➡️ Trying conda install: {package_to_install}")
+            print("pip installation blocked by externally-managed environment.")
+            print(f"Trying conda install: {package_to_install}")
 
             conda_ok = try_conda_install(package_to_install)
 

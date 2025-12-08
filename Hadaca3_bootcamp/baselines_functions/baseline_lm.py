@@ -48,15 +48,3 @@ def program(mix=None, ref=None, **kwargs):
   ##
   ## YOUR CODE ENDS HERE
   ##
-
-
-# Install and import each package
-def install_and_import_packages(required_packages):
-  for package in required_packages:
-      try:
-          globals()[package] = importlib.import_module(package)
-      except ImportError:
-          print('impossible to import, installing packages',package)
-          package_to_install = 'scikit-learn' if package == 'sklearn' else package
-          subprocess.check_call([sys.executable, "-m", "pip", "install", package_to_install])
-          globals()[package] = importlib.import_module(package)
