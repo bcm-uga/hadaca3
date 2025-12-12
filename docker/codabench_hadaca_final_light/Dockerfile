@@ -1,13 +1,14 @@
 
 FROM mambaorg/micromamba:2.0.3
 
-COPY environment/env_final_pyr.yml .
+# COPY environment/env_final_pyr.yml .
 
 # RUN micromamba env create -f env_final_pyr.yml && micromamba clean --all --yes
 RUN micromamba env create -n h3_final
 
-RUN micromamba run -n h3_final micromamba install -y  -c bioconda -c conda-forge -c r r-base snakemake=7.32.4 python=3.9 r-rmarkdown r-seurat r-clue r-coda.base r-ggpubr bioconductor-complexheatmap bioconductor-mofa2 r-viridis r-magrittr r-dplyr r-nnls graphviz r-tictoc  graphviz python-kaleido tenacity plotly r-bisquerna r-extraDistr r-MASS r-EPIC r-fmsb bioconductor-toast bioconductor-omicade4 r-mixomics r-mixkernel rpy2 scikit-learn keras tensorflow bioconductor-viper bioconductor-ADImpute r-WGCNA r-see r-ggfortify scanpy bioconda::bioconductor-graph  bioconda::r-wgcna  bioconda::bioconductor-edger bioconda::bioconductor-rgraphviz
+# RUN micromamba run -n h3_final micromamba install -y  -c bioconda -c conda-forge -c r r-base python=3.9 r-rmarkdown r-seurat r-clue r-coda.base r-ggpubr bioconductor-complexheatmap bioconductor-mofa2 r-viridis r-magrittr r-dplyr r-nnls graphviz r-tictoc  graphviz python-kaleido tenacity plotly r-bisquerna r-extraDistr r-MASS r-EPIC r-fmsb bioconductor-toast bioconductor-omicade4 r-mixomics r-mixkernel rpy2 scikit-learn keras tensorflow bioconductor-viper bioconductor-ADImpute r-WGCNA r-see r-ggfortify scanpy bioconda::bioconductor-graph  bioconda::r-wgcna  bioconda::bioconductor-edger bioconda::bioconductor-rgraphviz
 
+RUN micromamba run -n h3_final micromamba install -y  -c bioconda -c conda-forge -c r bioconductor-rhdf5 r-base python=3.9 r-rmarkdown r-seurat r-coda.base  bioconductor-complexheatmap r-dplyr r-nnls graphviz  graphviz python-kaleido tenacity plotly scikit-learn keras tensorflow bioconductor-viper r-ggfortify scanpy  bioconda::bioconductor-rgraphviz
 
 
 RUN micromamba run -n h3_final micromamba clean --all -y
@@ -15,8 +16,6 @@ RUN micromamba run -n h3_final micromamba clean --all -y
 
 SHELL ["micromamba", "run", "-n", "h3_final", "/bin/bash", "-c"]
 RUN Rscript -e 'install.packages( pkgs = "zip", repos = "https://cloud.r-project.org")'
-# RUN Rscript  -e 'BiocManager::install("ComplexHeatmap")'
-# RUN Rscript  -e 'BiocManager::install("Biobase")'
 
 ENTRYPOINT ["micromamba", "run", "-n", "h3_final"]
 
@@ -27,48 +26,4 @@ USER root
 RUN apt-get update && apt-get install -y --fix-missing r-base 
 RUN apt-get update && apt-get upgrade -y && apt-get install -y gzip
 RUN apt-get autoremove
-
-
-
-
-
-
-
-
-## OLD
-
-# mamba install -y -c anaconda -c bioconda -c conda-forge -c r r-base snakemake=7.32.4 python=3.9 r-rmarkdown r-prettydoc r-seurat r-clue bioconductor-complexheatmap r-viridis r-magrittr r-dplyr r-nnls graphviz r-tictoc  graphviz python-kaleido tenacity plotly r-bisquerna r-extraDistr r-MASS r-EPIC r-BiocManager numpy pandas rpy2 r-infotheo r-combinat scikit-learn
-
-# RUN micromamba create -n h3_final
-# # RUN micromamba run -n h3_final micromamba install -y -c anaconda -c bioconda -c conda-forge -c r r-base snakemake=7.32.4 python=3.9 r-rmarkdown r-prettydoc r-seurat r-clue bioconductor-complexheatmap r-viridis r-magrittr r-dplyr r-nnls graphviz r-tictoc  graphviz python-kaleido tenacity plotly r-bisquerna r-extraDistr r-MASS r-EPIC r-BiocManager numpy pandas rpy2 r-infotheo r-combinat scikit-learn
-# RUN micromamba run -n h3_final micromamba install -y -c anaconda -c bioconda -c conda-forge -c r r-base  python=3.10 r-rmarkdown r-prettydoc r-seurat r-clue r-coda.base r-ggpubr bioconductor-complexheatmap bioconductor-mofa2 r-viridis r-magrittr r-dplyr r-nnls r-tictoc  graphviz python-kaleido tenacity plotly r-bisquerna r-extraDistr r-MASS r-EPIC r-fmsb r-BiocManager numpy pandas rpy2 r-combinat scikit-learn
-# # RUN micromamba run -n h3_final micromamba install -y -c anaconda -c bioconda -c conda-forge -c r r-base snakemake=7.32.4 python=3.9 r-rmarkdown r-prettydoc r-seurat r-clue bioconductor-complexheatmap r-viridis r-magrittr r-dplyr r-nnls graphviz r-tictoc  graphviz python-kaleido tenacity plotly r-bisquerna r-extraDistr r-MASS r-EPIC r-BiocManager numpy pandas rpy2 r-infotheo r-combinat scikit-learn
-# # RUN micromamba run -n h3_final pip install smgantt==0.0.5
-# RUN micromamba clean --all --yes
-# RUN echo 'micromamba activate h3_final' >> ~/.bashrc
-# ENV PATH /opt/conda/bin:$PATH
-
-
-# ### Participants requested pacakges
-# ## Install R packages
-# RUN micromamba run -n h3_final micromamba install -y -c bioconda -c conda-forge -c r r-nnls r-mixOmics r-RGCCA r-bigsnpr  r-NMF r-fastICA r-ggplot2  r-CCA r-FactoMineR r-seurat r-velocyto.R 
-# #
-
-
-# RUN micromamba run -n h3_final micromamba clean --all -y
-
-
-# RUN micromamba run -n h3_final micromamba install -y -c bioconda -c conda-forge -c r  r-monocle3 r-RcppML  
-# RUN micromamba run -n h3_final micromamba install -y -c bioconda -c conda-forge -c r r-data.table r-ggrepel r-keras  r-JADE 
-# RUN micromamba run -n h3_final micromamba install -y -c bioconda -c conda-forge -c r  r-rstan r-bnlearn r-ranger r-randomForest r-tensorflow  
-# RUN micromamba run -n h3_final micromamba install -y -c bioconda -c conda-forge -c r  r-glmnet r-tree r-RWeka r-e1071  r-RSNNS r-caret  r-rgenoud r-kernlab 
-# RUN micromamba run -n h3_final micromamba install -y -c bioconda -c conda-forge -c r  r-rpart  r-mlr3 r-BART r-BayesTree  r-gbm r-elasticnet r-ctv r-ggpubr r-dplyr  r-pheatmap  r-future  r-devtools r-assertr r-assertthat
-
-
-# ## Intall Pyton packages
-# RUN micromamba run -n h3_final micro mamba  install -y -c bioconda -c conda-forge pandas matplotlib scipy scanpy squidpy anndata seaborn   umap-learn 
-# RUN micromamba run -n h3_final micromamba  install -y -c bioconda -c conda-forge  keras libtorch omicverse tensorflow  inmoose statsmodels nltk request xgboost 
-# RUN micromamba run -n h3_final micromamba  install -y -c bioconda -c conda-forge  biopython pytest pandera chardet codecarbon pyarrow pytables openpyxl coverage ruff pyspark networkx 
-
-
 
